@@ -89,4 +89,15 @@ public class GameModel {
         pile.add(stock.remove(stock.size()-1));
     }
 
+    /**
+     * Deal card from stock.
+     * Only player that have turn
+     * can make this action.
+     */
+    private void dealCard(){
+        turnPlayer.dealCard(stock.remove(stock.size()-1));
+    }
+
+
+
 }
