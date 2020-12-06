@@ -36,6 +36,13 @@ public class GameModel {
     private List<Card> pile;
 
     /**
+     * Actually played suit.
+     * Usually the same as top card on the pile
+     * but changes when crazy eight is played
+     */
+    private Suit suit;
+
+    /**
      * Prepare 52-card deck to put on table.
      * Shuffle cards at random.
      */
@@ -87,6 +94,7 @@ public class GameModel {
         }
 
         pile.add(stock.remove(stock.size()-1));
+        suit = pile.get(0).suit;
     }
 
     /**
@@ -98,6 +106,33 @@ public class GameModel {
         turnPlayer.dealCard(stock.remove(stock.size()-1));
     }
 
+    /**
+     * Play cards and put it on the pile.
+     * Only player that have turn
+     * can make this action.
+     * @return true if player played any card
+     */
+    private boolean playCards(){
+        if (turnPlayer.getSelectedCards().isEmpty()){
+            return false;
+        }
+        else if (turnPlayer.getSelectedCards().get(0).denomination.equals(Denomination.EIGHT)){
+            // Crazy eight is here!!! Player can select any suit!
+            turnPlayer.getSelectedCards().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
+            suit = turnPlayer.getSelectedSuit();
+            return true;
+        }
+        else if (turnPlayer.getSelectedCards().get(0).denomination.equals(pile.get(pile.size()-1).denomination)
+                || turnPlayer.getSelectedCards().get(0).suit.equals(suit)){
+            // Player can play many cards with the same denomination at once
+            // Player can play card with the same suit as card on the pile's top
+            turnPlayer.getSelectedCards().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
+            suit = pile.get(pile.size()-1).suit;
+            return true;
+        }
+
+        return false;
+    }
 
 
 }
