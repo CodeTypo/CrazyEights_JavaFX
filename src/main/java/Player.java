@@ -64,5 +64,26 @@ public class Player {
         return selectedSuit;
     }
 
+    /**
+     * Get cards number.
+     * Used by game model to know winner.
+     * @return number of cards in player collection
+     */
+    public int getCardsNumber() {
+        return cards.size() + selectedCards.size();
+    }
+
+    /**
+     * Get all player cards.
+     * Used by game model when the game ends
+     * to sum points collected by the winner.
+     * @return all player cards
+     */
+    public List<Card> getAllCards(){
+        cards.addAll(selectedCards);
+        selectedCards.clear();
+        return cards;
+    }
+
 
 }

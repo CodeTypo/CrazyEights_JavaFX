@@ -1,5 +1,7 @@
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Rules taken from this source:
@@ -72,11 +74,11 @@ public class GameModel {
     }
 
     /**
-     * Every player deals 5 cards from stock.
+     * Every player deals 8 cards from stock.
      */
     private void beginTheDeal(){
         for (Player player: players){
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 8; i++) {
                 player.dealCard(stock.remove(stock.size()-1));
             }
         }
@@ -87,7 +89,7 @@ public class GameModel {
      * Starter card cannot be eight.
      */
     private void putStarterOnPile(){
-        while (stock.get(stock.size()-1).denomination.equals(Denomination.EIGHT)){
+        while (stock.get(stock.size()-1).denomination == Denomination.EIGHT){
             // Put eight somewhere in the pile, but not near to the top
             stock.add(ThreadLocalRandom.current().nextInt(0,stock.size()-5),
                     stock.remove(stock.size()-1));
@@ -116,14 +118,14 @@ public class GameModel {
         if (turnPlayer.getSelectedCards().isEmpty()){
             return false;
         }
-        else if (turnPlayer.getSelectedCards().get(0).denomination.equals(Denomination.EIGHT)){
+        else if (turnPlayer.getSelectedCards().get(0).denomination == Denomination.EIGHT){
             // Crazy eight is here!!! Player can select any suit!
             turnPlayer.getSelectedCards().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
             suit = turnPlayer.getSelectedSuit();
             return true;
         }
-        else if (turnPlayer.getSelectedCards().get(0).denomination.equals(pile.get(pile.size()-1).denomination)
-                || turnPlayer.getSelectedCards().get(0).suit.equals(suit)){
+        else if (turnPlayer.getSelectedCards().get(0).denomination == pile.get(pile.size()-1).denomination
+                || turnPlayer.getSelectedCards().get(0).suit == suit){
             // Player can play many cards with the same denomination at once
             // Player can play card with the same suit as card on the pile's top
             turnPlayer.getSelectedCards().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
@@ -134,5 +136,55 @@ public class GameModel {
         return false;
     }
 
+    /**
+     * The player who is the first
+     * to have no cards left wins the game.
+     * Check if current player is winner.
+     * Usually called after playCards method
+     * returns true.
+     */
+    private boolean turnPlayerIsWinner(){
+        return turnPlayer.getCardsNumber() == 0;
+    }
+
+    /**
+     * Control which player has turn.
+     * Usually called after turnPlayerIsWinner
+     * returns false
+     */
+    private void nextPlayerTurn(){
+        if(players.indexOf(turnPlayer) == players.size()-1){
+            // Set current player to first in the players list
+            turnPlayer = players.get(0);
+        } else {
+            // Set current player to next in the players list
+            turnPlayer = players.get(players.indexOf(turnPlayer)+1);
+        }
+    }
+
+    /**
+     * The winning player collects
+     * from each other player
+     * the value of the cards
+     * remaining in that player's
+     * hand as follows:
+     * Each eight = 50 points
+     * Each K,Q,J or 10 = 10 points
+     * Each ace = 1 point
+     * @return points scored by winner
+     */
+    private int winnerPoints(){
+        AtomicInteger points = new AtomicInteger();
+
+        players.forEach(player -> player.getAllCards().forEach(card -> {
+            switch (card.denomination){
+                case ACE -> points.addAndGet(1);
+                case TEN, JACK, QUEEN, KING -> points.addAndGet(10);
+                case EIGHT -> points.addAndGet(50);
+            }
+        }));
+
+        return points.get();
+    }
 
 }
