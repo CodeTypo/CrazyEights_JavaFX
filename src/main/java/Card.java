@@ -1,5 +1,5 @@
 enum Suit {
-    DIAMONDS, //komentarz
+    DIAMONDS, //komentarz KuBa
     CLUBS,
     HEARTS,
     SPADES
