@@ -1,5 +1,5 @@
 enum Suit {
-    DIAMONDS,
+    DIAMONDS, //komentarz
     CLUBS,
     HEARTS,
     SPADES
