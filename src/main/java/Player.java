@@ -84,6 +84,4 @@ public class Player {
         selectedCards.clear();
         return cards;
     }
-
-
 }
