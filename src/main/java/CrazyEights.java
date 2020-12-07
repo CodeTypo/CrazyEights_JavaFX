@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import static javafx.application.Application.launch;
-
+//Testowy komentarz
 public class CrazyEights extends Application {
 
     public static void main(String[] args) {
