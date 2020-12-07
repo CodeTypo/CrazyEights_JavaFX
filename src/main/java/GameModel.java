@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * https://bicyclecards.com/how-to-play/crazy-eights/
  */
 
-// mikolaj komentarz
+// mikolaj komentarz marek komentarz
 public class GameModel {
     /**
      * All players.
