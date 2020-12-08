@@ -12,3 +12,6 @@
     -fx-text-color: rgb(7, 0, 0);
     -fx-background-color: rgb(255,255,255);
 }
+.clicked{
+    -fx-opacity:0.75;
+}

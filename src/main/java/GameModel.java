@@ -110,8 +110,11 @@ public class GameModel {
      * Only player that have turn
      * can make this action.
      */
-    public void dealCard(){
+    public int dealCard(){
+        if(stock.size()>0){
         turnPlayer.dealCard(stock.remove(stock.size()-1));
+        return 0;}
+        else return 1;
     }
 
     /**
@@ -203,6 +206,10 @@ public class GameModel {
 
     public Player getTurnPlayer() {
         return turnPlayer;
+    }
+
+    public void setTurnPlayer(Player turnPlayer) {
+        this.turnPlayer = turnPlayer;
     }
 
     public List<Card> getStock() {

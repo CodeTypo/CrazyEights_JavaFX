@@ -31,7 +31,7 @@
          </padding></VBox>
    </left>
    <right>
-      <VBox fx:id="box2" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="480.0" prefWidth="150.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="box2" alignment="TOP_RIGHT" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="480.0" prefWidth="150.0" BorderPane.alignment="CENTER">
          <padding>
             <Insets left="20.0" right="20.0" />
          </padding></VBox>
