@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CrazyEightsController"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #aaa;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CrazyEightsController">
+    <bottom>
+        <HBox fx:id="box1" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+    </bottom>
+    <top>
+        <HBox fx:id="box3" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+    </top>
+    <center>
+        <Button fx:id="startButton" mnemonicParsing="false" onAction="#onClickStart" prefHeight="77.0" prefWidth="107.0" text="START" BorderPane.alignment="CENTER" />
+    </center>
+    <left>
+        <HBox fx:id="box4" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" rotate="90.0" BorderPane.alignment="CENTER" />
+    </left>
+    <right>
+        <HBox fx:id="box2" alignment="CENTER" prefHeight="100.0" prefWidth="200.0" rotate="-90.0" BorderPane.alignment="CENTER" />
+    </right>
+</BorderPane>
