@@ -1,7 +1,8 @@
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private List<Card> cards;
+    private List<Card> cards = new ArrayList<>();
     private List<Card> selectedCards;
     private Suit selectedSuit = Suit.SPADES;
 
@@ -82,6 +83,10 @@ public class Player {
     public List<Card> getAllCards(){
         cards.addAll(selectedCards);
         selectedCards.clear();
+        return cards;
+    }
+
+    public List<Card> getCards() {
         return cards;
     }
 }

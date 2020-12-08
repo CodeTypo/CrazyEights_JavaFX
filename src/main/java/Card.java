@@ -25,6 +25,14 @@ public class Card {
     Suit suit;
     Denomination denomination;
 
+    public Suit getSuit() {
+        return suit;
+    }
+
+    public Denomination getDenomination() {
+        return denomination;
+    }
+
     public Card(Suit suit, Denomination denomination) {
         this.suit = suit;
         this.denomination = denomination;
