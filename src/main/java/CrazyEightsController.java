@@ -6,6 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 public class CrazyEightsController {
@@ -23,13 +24,19 @@ public class CrazyEightsController {
     private HBox box3;
 
     @FXML
-    private HBox box4;
+    private VBox box4;
 
     @FXML
-    private HBox box2;
+    private VBox box2;
 
     @FXML
     private Button startButton;
+
+    @FXML
+    private ImageView pileImg;
+
+    @FXML
+    private ImageView deckImg;
 
 
 
@@ -39,15 +46,27 @@ public class CrazyEightsController {
     Player p3 = new Player();
     Player p4 = new Player();
 
+    public CrazyEightsController() {
+    }
 
-    public void addImageViewHBox (String id, String suit, String denomination,HBox hBox){
+
+    public void addImageViewHBox (String id, String suit, String denomination,Pane hBox,int boxId){
         ImageView imageView = new ImageView();
         imageView.setId(id);
 
-        Image image = new Image("images/"+denomination+suit+".jpg");
+        Image image = new Image("imagesPNG/"+denomination+suit+".png");
         imageView.setImage(image);
         imageView.setFitWidth(60);
-        imageView.setFitHeight(80);
+        imageView.setFitHeight(150);
+
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        imageView.setCache(true);
+        switch (boxId){
+            case 1 -> imageView.setRotate(imageView.getRotate()+270);
+            case 2 -> imageView.setRotate(imageView.getRotate()+180);
+            case 3 -> imageView.setRotate(imageView.getRotate()+90);
+        }
         hBox.getChildren().add(0, imageView);
         System.out.println(imageView.getId());
 
@@ -57,25 +76,37 @@ public class CrazyEightsController {
         gameModel.prepareCardDeck();
         gameModel.invitePlayers(p1,p2,p3,p4);
         gameModel.beginTheDeal();
-
     }
 
     public void onClickStart(){
-        HBox [] hBoxes = new HBox[4];
+        Pane[] hBoxes = new Pane[4];
         hBoxes [0] = box1;
         hBoxes [1] = box2;
         hBoxes [2] = box3;
         hBoxes [3] = box4;
         int j = 0;
+        int playerNumber  = 1;
         for (Player player : gameModel.getPlayers()) {
             for (int i = 0; i < player.getCards().size(); i++) {
-                System.out.println(player.getCards().get(i).getDenomination().toString() + "" + player.getCards().get(i).getSuit().toString() + ".jpg");
-                addImageViewHBox("p1" + i, player.getCards().get(i).getSuit().toString(), player.getCards().get(i).getDenomination().toString(), hBoxes[j]);
+                //System.out.println(player.getCards().get(i).getDenomination().toString() + "" + player.getCards().get(i).getSuit().toString() + ".jpg");
+                addImageViewHBox("p" + playerNumber + "card" + (i + 1),
+                            player.getCards().get(i).getSuit().toString(),
+                            player.getCards().get(i).getDenomination().toString(),
+                            hBoxes[j],
+                            j);
             }
+            playerNumber++;
             j++;
-        }
 
+        }
         startButton.setVisible(false);
+        Image image = new Image("imagesPNG/green_back.png");
+        deckImg.setImage(image);
+        gameModel.putStarterOnPile();
+        String denomination = gameModel.getPile().get(0).getDenomination().toString();
+        String suit =  gameModel.getPile().get(0).getSuit().toString();
+        Image pileImage = new Image("imagesPNG/"+denomination+suit+".png");
+        pileImg.setImage(pileImage);
     }
 
     @FXML
