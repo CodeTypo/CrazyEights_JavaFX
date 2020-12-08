@@ -1,0 +1,14 @@
+.table{
+    -fx-background-color: rgb(61, 136, 43);
+}
+.start-button{
+    -fx-font-family: "Helvetica";
+    -fx-background-color: rgb(7, 0, 0);
+    -fx-text-color: rgb(255,255,255);
+}
+
+.start-button:hover{
+    -fx-font-family: "Helvetica";
+    -fx-text-color: rgb(7, 0, 0);
+    -fx-background-color: rgb(255,255,255);
+}
