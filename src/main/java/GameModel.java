@@ -12,23 +12,23 @@ public class GameModel {
     /**
      * All players.
      */
-    public List<Player> players = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
 
     /**
      * PLayer selected at random
      * who starts the game.
      */
-    public Player dealer;
+    private Player dealer;
 
     /**
      * Player that has turn.
      */
-    public Player turnPlayer;
+    private Player turnPlayer;
 
     /**
      * Cards put on the table face down.
      */
-    public List<Card> stock = new ArrayList<>();
+    private List<Card> stock = new ArrayList<>();
 
     /**
      * Cards put on the table face up.
@@ -36,7 +36,7 @@ public class GameModel {
      * turned up after everyone
      * took his cards. Starter cannot be eight.
      */
-    public List<Card> pile = new ArrayList<>();
+    private List<Card> pile = new ArrayList<>();
 
     /**
      * Actually played suit.
