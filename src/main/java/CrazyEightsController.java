@@ -50,48 +50,6 @@ public class CrazyEightsController {
     Player p3 = new Player();
     Player p4 = new Player();
 
-    public CrazyEightsController() {
-    }
-
-    // change here if file naming convention changes
-    private String getSVGCardResourcePath(Card card){
-        StringBuilder stringBuilder = new StringBuilder();
-        // directory in resources folder
-        stringBuilder.append("/imagesSVG/");
-
-        // every name consists of denomination shortname and suit shortname
-        stringBuilder.append(card.getDenomination().getS());
-        stringBuilder.append(card.getSuit().getS());
-        stringBuilder.append(".svg");
-
-        return stringBuilder.toString();
-    }
-
-    private Image getImageFromSVG(String path){
-        Image image = null;
-
-        BufferedImageTranscoder transcoder = new BufferedImageTranscoder();
-
-        try (InputStream file = getClass().getResourceAsStream(path)) {
-            TranscoderInput transIn = new TranscoderInput(file);
-            try {
-                transcoder.transcode(transIn, null);
-                image = SwingFXUtils.toFXImage(transcoder.getBufferedImage(), null);
-            } catch (TranscoderException ex) {
-                ex.printStackTrace();
-            }
-        }
-        catch (IOException io) {
-            io.printStackTrace();
-        }
-
-        return image;
-    }
-
-    // SVG image should be set on ImageView in the last step,
-    // after all operations like rotation and sizing are performed.
-    // The nature of svg format force us to render it every time we need
-    // to change its attributes.
     private Image getCardFront(Card card){
         String path = getSVGCardResourcePath(card);
         Image image = getImageFromSVG(path);
@@ -181,20 +139,18 @@ public class CrazyEightsController {
             j++;
         }
 
-
         startButton.setVisible(false);
 
-        Image image = new Image("imagesPNG/purple_back.png");
+        Image image = getCardBack(gameModel.getTopCardFromStock());
         deckImg.setImage(image);
+        deckImg.setOnMouseClicked(event -> {cardDeal(); System.out.println("xd");});
 
         gameModel.putStarterOnPile();
 
-        String denomination = gameModel.getPile().get(0).getDenomination().toString();
-        String suit =  gameModel.getPile().get(0).getSuit().toString();
-        Image pileImage = new Image("imagesPNG/"+denomination+suit+".png");
+        Image pileImage = getCardFront(gameModel.getTopCardFromPile());
         pileImg.setImage(pileImage);
 
-        deckImg.setOnMouseClicked(event -> {cardDeal(); System.out.println("xd");});
+
     }
 
     private void cardDeal() {
@@ -205,13 +161,58 @@ public class CrazyEightsController {
             String suit = p1.getCards().get(pointer).getSuit().toString();
             String denomination = p1.getCards().get(pointer).getDenomination().toString();
             addImageViewHBox("p1" + denomination + suit, p1.getCards().get(pointer), box1, 0);
+            // change back cover of card from the deck
+            deckImg.setImage(getCardBack(gameModel.getTopCardFromStock()));
         } else {
             deckImg.setImage(null);
         }
+    }
+
+    public CrazyEightsController() {
     }
 
     @FXML
     void initialize() {
         initGame();
     }
+
+    // change here if file naming convention changes
+    private String getSVGCardResourcePath(Card card){
+        StringBuilder stringBuilder = new StringBuilder();
+        // directory in resources folder
+        stringBuilder.append("/imagesSVG/");
+
+        // every name consists of denomination shortname and suit shortname
+        stringBuilder.append(card.getDenomination().getS());
+        stringBuilder.append(card.getSuit().getS());
+        stringBuilder.append(".svg");
+
+        return stringBuilder.toString();
+    }
+
+    // SVG image should be set on ImageView in the last step,
+    // after all operations like rotation and sizing are performed.
+    // The nature of svg format force us to render it every time we need
+    // to change its attributes.
+    private Image getImageFromSVG(String path){
+        Image image = null;
+
+        BufferedImageTranscoder transcoder = new BufferedImageTranscoder();
+
+        try (InputStream file = getClass().getResourceAsStream(path)) {
+            TranscoderInput transIn = new TranscoderInput(file);
+            try {
+                transcoder.transcode(transIn, null);
+                image = SwingFXUtils.toFXImage(transcoder.getBufferedImage(), null);
+            } catch (TranscoderException ex) {
+                ex.printStackTrace();
+            }
+        }
+        catch (IOException io) {
+            io.printStackTrace();
+        }
+
+        return image;
+    }
+
 }

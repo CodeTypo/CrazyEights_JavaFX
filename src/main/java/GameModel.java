@@ -231,4 +231,8 @@ public class GameModel {
         return stock.get(stock.size()-1);
     }
 
+    public Card getTopCardFromPile(){
+        return pile.get(pile.size()-1);
+    }
+
 }
