@@ -104,8 +104,17 @@ public class CrazyEightsController {
         for(Node node : box1.getChildren()){
             node.getStyleClass().remove("clicked");
         }
-        System.out.println(imageView.getId());
         imageView.getStyleClass().add("clicked");
+
+        int index=0;
+        for(Card card : p1.getCards()){
+            if(card.toString().equals(imageView.getId()))
+                index = p1.getCards().indexOf(card);
+        }
+        System.out.println("Selected card: ");
+        System.out.println(imageView.getId());
+        System.out.println(index);
+
     }
 
 
@@ -125,7 +134,7 @@ public class CrazyEightsController {
         int playerNumber  = 1;
         for (Player player : gameModel.getPlayers()) {
             for (int i = 0; i < player.getCards().size(); i++) {
-                addImageViewHBox("p" + playerNumber + player.getCards().get(i).getDenomination().toString() + "" + player.getCards().get(i).getSuit().toString(),
+                addImageViewHBox( player.getCards().get(i).getDenomination().toString() + "" + player.getCards().get(i).getSuit().toString(),
                             player.getCards().get(i).getSuit().toString(),
                             player.getCards().get(i).getDenomination().toString(),
                             hBoxes[j],

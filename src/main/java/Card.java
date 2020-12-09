@@ -37,4 +37,10 @@ public class Card {
         this.suit = suit;
         this.denomination = denomination;
     }
+
+    @Override
+    public String toString() {
+        return denomination.toString() + suit.toString();
+
+    }
 }
