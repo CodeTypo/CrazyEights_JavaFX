@@ -227,4 +227,8 @@ public class GameModel {
         return suit;
     }
 
+    public Card getTopCardFromStock(){
+        return stock.get(stock.size()-1);
+    }
+
 }
