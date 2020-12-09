@@ -2,9 +2,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private List<Card> cards = new ArrayList<>();
-    private List<Card> selectedCards;
-    private Suit selectedSuit = Suit.SPADES;
+    protected List<Card> cards = new ArrayList<>();
+    protected List<Card> selectedCards;
+    protected Suit selectedSuit = Suit.SPADES;
 
     /**
      * Deal card and put into own cards.
