@@ -53,26 +53,30 @@ public class CrazyEightsController {
     public CrazyEightsController() {
     }
 
-    private String getSVGCardResource(Card card){
+    // change here if file naming convention changes
+    private String getSVGCardResourcePath(Card card){
         StringBuilder stringBuilder = new StringBuilder();
+        // directory in resources folder
+        stringBuilder.append("/imagesSVG/");
+
+        // every name consists of denomination shortname and suit shortname
         stringBuilder.append(card.getDenomination().getS());
         stringBuilder.append(card.getSuit().getS());
-        String name = "";
-        return name;
+        stringBuilder.append(".svg");
+
+        return stringBuilder.toString();
     }
 
-    // SVG image should be set on ImageView in the last step,
-    // after all operations like rotation and sizing are performed.
-    // The nature of svg format force us to render it every time we need
-    // to change its attributes.
-    private void setCardOnImageView(String path, ImageView imageView){
+    private Image getImageFromSVG(String path){
+        Image image = null;
+
         BufferedImageTranscoder transcoder = new BufferedImageTranscoder();
+
         try (InputStream file = getClass().getResourceAsStream(path)) {
             TranscoderInput transIn = new TranscoderInput(file);
             try {
                 transcoder.transcode(transIn, null);
-                Image img = SwingFXUtils.toFXImage(transcoder.getBufferedImage(), null);
-                imageView.setImage(img);
+                image = SwingFXUtils.toFXImage(transcoder.getBufferedImage(), null);
             } catch (TranscoderException ex) {
                 ex.printStackTrace();
             }
@@ -80,28 +84,40 @@ public class CrazyEightsController {
         catch (IOException io) {
             io.printStackTrace();
         }
+
+        return image;
     }
 
-    public void addImageViewHBox (String id, String suit, String denomination,Pane hBox,int boxId){
+    // SVG image should be set on ImageView in the last step,
+    // after all operations like rotation and sizing are performed.
+    // The nature of svg format force us to render it every time we need
+    // to change its attributes.
+    private Image getCardFront(Card card){
+        String path = getSVGCardResourcePath(card);
+        Image image = getImageFromSVG(path);
+        return image;
+    }
+
+    private Image getCardBack(Card card){
+        String path = "/imagesSVG/";
+        switch (card.getSuit()){
+            case CLUBS, SPADES -> path += "1B.svg";
+            case HEARTS,DIAMONDS -> path += "2B.svg";
+        }
+        Image image = getImageFromSVG(path);
+        return image;
+    }
+
+    public void addImageViewHBox (String id, Card card, Pane hBox, int boxId){
         ImageView imageView = new ImageView();
         imageView.setId(id);
 
-        String imagePath = "";
-        if(boxId == 0) {
-             imagePath = "/imagesSVG/2H.svg";
-        } else {
-            imagePath = "imagesSVG/1B.svg";
-        }
-
         imageView.setFitWidth(60);
         imageView.setFitHeight(150);
-
         imageView.setPreserveRatio(true);
+
         imageView.setSmooth(true);
         imageView.setCache(true);
-
-        if(boxId ==0)
-            imageView.setOnMouseClicked(event -> cardClicked(imageView));
 
         switch (boxId){
             case 1 -> imageView.setRotate(imageView.getRotate()+270);
@@ -111,9 +127,16 @@ public class CrazyEightsController {
 
         hBox.getChildren().add(0, imageView);
 
-        setCardOnImageView(imagePath, imageView);
-        System.out.println(imageView.getId());
+        Image image = null;
+        if (boxId == 0){
+            imageView.setOnMouseClicked(event -> cardClicked(imageView));
+            image = getCardFront(card);
+        } else {
+            image = getCardBack(card);
+        }
+        imageView.setImage(image);
 
+        System.out.println(imageView.getId());
     }
 
     private void cardClicked(ImageView imageView) {
@@ -136,7 +159,6 @@ public class CrazyEightsController {
 
     }
 
-
     public void initGame(){
         gameModel.prepareCardDeck();
         gameModel.invitePlayers(p1,p2,p3,p4);
@@ -151,38 +173,28 @@ public class CrazyEightsController {
         hBoxes [2] = box3;
         hBoxes [3] = box4;
 
-//        for (Player player : gameModel.getPlayers()) {
-//            for (Card card: player.getAllCards()){
-//
-//            }
-//        }
-
-
         int j = 0;
-        int playerNumber  = 1;
         for (Player player : gameModel.getPlayers()) {
-            for (int i = 0; i < player.getCards().size(); i++) {
-                addImageViewHBox( player.getCards().get(i).getDenomination().toString() + "" + player.getCards().get(i).getSuit().toString(),
-                            player.getCards().get(i).getSuit().toString(),
-                            player.getCards().get(i).getDenomination().toString(),
-                            hBoxes[j],
-                            j);
+            for (Card card: player.getCards()) {
+                addImageViewHBox(card.toString(), card, hBoxes[j], j);
             }
-            playerNumber++;
             j++;
         }
 
 
         startButton.setVisible(false);
+
         Image image = new Image("imagesPNG/purple_back.png");
         deckImg.setImage(image);
+
         gameModel.putStarterOnPile();
+
         String denomination = gameModel.getPile().get(0).getDenomination().toString();
         String suit =  gameModel.getPile().get(0).getSuit().toString();
         Image pileImage = new Image("imagesPNG/"+denomination+suit+".png");
         pileImg.setImage(pileImage);
-        deckImg.setOnMouseClicked(event -> {cardDeal(); System.out.println("xd");});
 
+        deckImg.setOnMouseClicked(event -> {cardDeal(); System.out.println("xd");});
     }
 
     private void cardDeal() {
@@ -192,7 +204,7 @@ public class CrazyEightsController {
             int pointer = p1.getCards().size() - 1;
             String suit = p1.getCards().get(pointer).getSuit().toString();
             String denomination = p1.getCards().get(pointer).getDenomination().toString();
-            addImageViewHBox("p1" + denomination + suit, suit, denomination, box1, 0);
+            addImageViewHBox("p1" + denomination + suit, p1.getCards().get(pointer), box1, 0);
         } else {
             deckImg.setImage(null);
         }

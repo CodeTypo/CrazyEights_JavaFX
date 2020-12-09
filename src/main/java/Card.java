@@ -33,10 +33,11 @@ enum Denomination {
     private String s;
 
     public String getS() {
-        return s;
+        return this.s;
     }
 
     Denomination(String s) {
+        this.s = s;
     }
 }
 
