@@ -1,13 +1,17 @@
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import org.apache.batik.transcoder.TranscoderException;
+import org.apache.batik.transcoder.TranscoderInput;
+import javafx.embed.swing.SwingFXUtils;
 
 public class CrazyEightsController {
 
@@ -51,13 +55,32 @@ public class CrazyEightsController {
 
 
     public void addImageViewHBox (String id, String suit, String denomination,Pane hBox,int boxId){
+
         ImageView imageView = new ImageView();
         imageView.setId(id);
 
-        Image image = new Image("imagesPNG/"+denomination+suit+".png");
-        imageView.setImage(image);
+        BufferedImageTranscoder transcoder = new BufferedImageTranscoder();
+        try (InputStream file = getClass().getResourceAsStream("/imagesSVG/3C.svg")) {
+            TranscoderInput transIn = new TranscoderInput(file);
+            try {
+                transcoder.transcode(transIn, null);
+                Image img = SwingFXUtils.toFXImage(transcoder.getBufferedImage(), null);
+                imageView.setImage(img);
+            } catch (TranscoderException ex) {
+                ex.printStackTrace();
+            }
+        }
+        catch (IOException io) {
+            io.printStackTrace();
+        }
+
+
+//        Image image = new Image("imagesPNG/"+denomination+suit+".png");
+//        imageView.setImage(image);
         imageView.setFitWidth(60);
         imageView.setFitHeight(150);
+//        imageView.setFitWidth(120);
+//        imageView.setFitHeight(300);
 
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
