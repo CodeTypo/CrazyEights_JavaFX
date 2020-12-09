@@ -1,36 +1,55 @@
 enum Suit {
-    DIAMONDS, //komentarz KuBa
-    CLUBS,
-    HEARTS,
-    SPADES
+    DIAMONDS("D"),
+    CLUBS("C"),
+    HEARTS("H"),
+    SPADES("S");
+
+    private String s;
+
+    public String getS() {
+        return s;
+    }
+
+    Suit(String s) {
+        this.s = s;
+    }
 }
 
 enum Denomination {
-    TWO,
-    THREE,
-    FOUR,
-    FIVE,
-    SIX,
-    SEVEN,
-    EIGHT,
-    NINE,
-    TEN,
-    JACK,
-    QUEEN,
-    KING,
-    ACE
+    TWO("2"),
+    THREE("3"),
+    FOUR("4"),
+    FIVE("5"),
+    SIX("6"),
+    SEVEN("7"),
+    EIGHT("8"),
+    NINE("9"),
+    TEN("T"),
+    JACK("J"),
+    QUEEN("Q"),
+    KING("K"),
+    ACE("A");
+
+    private String s;
+
+    public String getS() {
+        return s;
+    }
+
+    Denomination(String s) {
+    }
 }
 
 public class Card {
-    Suit suit;
-    Denomination denomination;
+    private Suit suit;
+    private Denomination denomination;
 
     public Suit getSuit() {
-        return suit;
+        return this.suit;
     }
 
     public Denomination getDenomination() {
-        return denomination;
+        return this.denomination;
     }
 
     public Card(Suit suit, Denomination denomination) {

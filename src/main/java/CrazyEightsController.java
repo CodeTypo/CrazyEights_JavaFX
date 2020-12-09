@@ -53,6 +53,14 @@ public class CrazyEightsController {
     public CrazyEightsController() {
     }
 
+    private String getSVGCardResource(Card card){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(card.getDenomination().getS());
+        stringBuilder.append(card.getSuit().getS());
+        String name = "";
+        return name;
+    }
+
     // SVG image should be set on ImageView in the last step,
     // after all operations like rotation and sizing are performed.
     // The nature of svg format force us to render it every time we need

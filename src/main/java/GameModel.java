@@ -98,14 +98,14 @@ public class GameModel {
      * Starter card cannot be eight.
      */
     public void putStarterOnPile() {
-        while (stock.get(stock.size() - 1).denomination == Denomination.EIGHT) {
+        while (stock.get(stock.size() - 1).getDenomination() == Denomination.EIGHT) {
             // Put eight somewhere in the pile, but not near to the top
             stock.add(ThreadLocalRandom.current().nextInt(0, stock.size() - 5),
                     stock.remove(stock.size() - 1));
         }
 
         pile.add(stock.remove(stock.size() - 1));
-        suit = pile.get(0).suit;
+        suit = pile.get(0).getSuit();
     }
 
     /**
@@ -130,17 +130,17 @@ public class GameModel {
     public boolean playCards() {
         if (turnPlayer.getSelectedCards().isEmpty()) {
             return false;
-        } else if (turnPlayer.getSelectedCards().get(0).denomination == Denomination.EIGHT) {
+        } else if (turnPlayer.getSelectedCards().get(0).getDenomination() == Denomination.EIGHT) {
             // Crazy eight is here!!! Player can select any suit!
             turnPlayer.getSelectedCards().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
             suit = turnPlayer.getSelectedSuit();
             return true;
-        } else if (turnPlayer.getSelectedCards().get(0).denomination == pile.get(pile.size() - 1).denomination
-                || turnPlayer.getSelectedCards().get(0).suit == suit) {
+        } else if (turnPlayer.getSelectedCards().get(0).getDenomination() == pile.get(pile.size() - 1).getDenomination()
+                || turnPlayer.getSelectedCards().get(0).getSuit() == suit) {
             // Player can play many cards with the same denomination at once
             // Player can play card with the same suit as card on the pile's top
             turnPlayer.getSelectedCards().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
-            suit = pile.get(pile.size() - 1).suit;
+            suit = pile.get(pile.size() - 1).getSuit();
             return true;
         }
 
@@ -189,7 +189,7 @@ public class GameModel {
         AtomicInteger points = new AtomicInteger();
 
         players.forEach(player -> player.getAllCards().forEach(card -> {
-            switch (card.denomination) {
+            switch (card.getDenomination()) {
                 case ACE -> points.addAndGet(1);
                 case TEN, JACK, QUEEN, KING -> points.addAndGet(10);
                 case EIGHT -> points.addAndGet(50);
