@@ -46,9 +46,9 @@ public class CrazyEightsController {
 
     GameModel gameModel = new GameModel();
     Player p1 = new Player();
-    Player p2 = new Player();
-    Player p3 = new Player();
-    Player p4 = new Player();
+    Player p2 = new BotPlayer();
+    Player p3 = new BotPlayer();
+    Player p4 = new BotPlayer();
 
     private Image getCardFront(Card card){
         String path = getSVGCardResourcePath(card);
@@ -149,8 +149,6 @@ public class CrazyEightsController {
 
         Image pileImage = getCardFront(gameModel.getTopCardFromPile());
         pileImg.setImage(pileImage);
-
-
     }
 
     private void cardDeal() {
