@@ -1,13 +1,13 @@
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 // imports for loading and converting external svg files
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,26 +52,24 @@ public class CrazyEightsController {
 
     private Image getCardFront(Card card){
         String path = getSVGCardResourcePath(card);
-        Image image = getImageFromSVG(path);
-        return image;
+        return getImageFromSVG(path);
     }
 
     private Image getCardBack(Card card){
-        String path = "/imagesSVG/";
+        String path = "/imagesSVG2/";
         switch (card.getSuit()){
             case CLUBS, SPADES -> path += "1B.svg";
             case HEARTS,DIAMONDS -> path += "2B.svg";
         }
-        Image image = getImageFromSVG(path);
-        return image;
+        return getImageFromSVG(path);
     }
 
-    public void addImageViewHBox (String id, Card card, Pane hBox, int boxId){
+    public void addImageViewToBox (String id, Card card, Pane hBox, int boxId){
         ImageView imageView = new ImageView();
         imageView.setId(id);
 
-        imageView.setFitWidth(60);
-        imageView.setFitHeight(150);
+        imageView.setFitWidth(80);
+        imageView.setFitHeight(100);
         imageView.setPreserveRatio(true);
 
         imageView.setSmooth(true);
@@ -85,7 +83,7 @@ public class CrazyEightsController {
 
         hBox.getChildren().add(0, imageView);
 
-        Image image = null;
+        Image image;
         if (boxId == 0){
             imageView.setOnMouseClicked(event -> cardClicked(card, imageView));
             image = getCardFront(card);
@@ -96,6 +94,7 @@ public class CrazyEightsController {
 
         System.out.println(imageView.getId());
     }
+
 
     private void cardClicked(Card card, ImageView imageView) {
         if (card.isSelected()){
@@ -126,26 +125,32 @@ public class CrazyEightsController {
 //        System.out.println(imageView.getId());
 //        System.out.println(index);
 
+
     }
 
     public void initGame(){
-        gameModel.prepareCardDeck();
+            gameModel.prepareCardDeck();
         gameModel.invitePlayers(p1,p2,p3,p4);
         gameModel.beginTheDeal();
     }
 
     public void onClickStart(){
 
-        Pane[] hBoxes = new Pane[4];
-        hBoxes [0] = box1;
-        hBoxes [1] = box2;
-        hBoxes [2] = box3;
-        hBoxes [3] = box4;
+        Pane[] Boxes = new Pane[4];
+        Boxes [0] = box1;
+        Boxes [1] = box2;
+        Boxes [2] = box3;
+        Boxes [3] = box4;
+
+        box1.setSpacing(4);
+        box3.setSpacing(4);
+        box2.setSpacing(-24);
+        box4.setSpacing(-24);
 
         int j = 0;
         for (Player player : gameModel.getPlayers()) {
             for (Card card: player.getCards()) {
-                addImageViewHBox(card.toString(), card, hBoxes[j], j);
+                addImageViewToBox(card.toString(), card, Boxes[j], j);
             }
             j++;
         }
@@ -153,12 +158,16 @@ public class CrazyEightsController {
         startButton.setVisible(false);
 
         Image image = getCardBack(gameModel.getTopCardFromStock());
+        deckImg.setFitWidth(100);
+        deckImg.setFitHeight(120);
         deckImg.setImage(image);
-        deckImg.setOnMouseClicked(event -> {cardDeal(); System.out.println("xd");});
+        deckImg.setOnMouseClicked(event -> {cardDeal(); System.out.println("deck clicked");});
 
         gameModel.putStarterOnPile();
 
         Image pileImage = getCardFront(gameModel.getTopCardFromPile());
+        pileImg.setFitWidth(100);
+        pileImg.setFitHeight(120);
         pileImg.setImage(pileImage);
     }
 
@@ -167,15 +176,31 @@ public class CrazyEightsController {
         int check = gameModel.dealCard();
         if(check == 0) {
             int pointer = p1.getCards().size() - 1;
+            System.out.println(pointer);
             String suit = p1.getCards().get(pointer).getSuit().toString();
             String denomination = p1.getCards().get(pointer).getDenomination().toString();
-            addImageViewHBox("p1" + denomination + suit, p1.getCards().get(pointer), box1, 0);
+            addImageViewToBox( denomination + suit, p1.getCards().get(pointer), box1, 0);
             // change back cover of card from the deck
             deckImg.setImage(getCardBack(gameModel.getTopCardFromStock()));
         } else {
             deckImg.setImage(null);
         }
     }
+
+
+    @FXML
+    void onConfirmedClicked(ActionEvent event) {
+        gameModel.setTurnPlayer(p1);
+        gameModel.playCards();
+    }
+
+    @FXML
+    void onResetClicked(ActionEvent event) {
+        for(Node node : box1.getChildren()){
+            node.getStyleClass().remove("clicked");
+        }
+    }
+
 
     public CrazyEightsController() {
     }
@@ -187,16 +212,14 @@ public class CrazyEightsController {
 
     // change here if file naming convention changes
     private String getSVGCardResourcePath(Card card){
-        StringBuilder stringBuilder = new StringBuilder();
         // directory in resources folder
-        stringBuilder.append("/imagesSVG/");
 
-        // every name consists of denomination shortname and suit shortname
-        stringBuilder.append(card.getDenomination().getS());
-        stringBuilder.append(card.getSuit().getS());
-        stringBuilder.append(".svg");
+        return "/imagesSVG2/" +
 
-        return stringBuilder.toString();
+                // every name consists of denomination shortname and suit shortname
+                card.getDenomination().getS() +
+                card.getSuit().getS() +
+                ".svg";
     }
 
     // SVG image should be set on ImageView in the last step,
