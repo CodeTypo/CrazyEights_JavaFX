@@ -44,6 +44,20 @@ enum Denomination {
 public class Card {
     private Suit suit;
     private Denomination denomination;
+    private boolean selected = false;
+
+    public Card(Suit suit, Denomination denomination) {
+        this.suit = suit;
+        this.denomination = denomination;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
 
     public Suit getSuit() {
         return this.suit;
@@ -51,11 +65,6 @@ public class Card {
 
     public Denomination getDenomination() {
         return this.denomination;
-    }
-
-    public Card(Suit suit, Denomination denomination) {
-        this.suit = suit;
-        this.denomination = denomination;
     }
 
     @Override
