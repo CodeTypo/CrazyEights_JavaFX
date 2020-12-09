@@ -20,7 +20,7 @@ public class Player {
      * with the same denomination.
      */
     public void selectCard(Card card){
-        if ( (selectedCards.isEmpty() || selectedCards.get(0).denomination.equals(card.denomination))
+        if ( (selectedCards.isEmpty() || selectedCards.get(0).getDenomination().equals(card.getDenomination()))
                 && !selectedCards.contains(card)){
             // Remove card from cards and put into selected cards
             selectedCards.add(cards.remove(cards.indexOf(card)));

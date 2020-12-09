@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -12,23 +14,23 @@ public class GameModel {
     /**
      * All players.
      */
-    public List<Player> players = new ArrayList<>();
+    private List<Player> players = new ArrayList<>();
 
     /**
      * PLayer selected at random
      * who starts the game.
      */
-    public Player dealer;
+    private Player dealer;
 
     /**
      * Player that has turn.
      */
-    public Player turnPlayer;
+    private Player turnPlayer;
 
     /**
      * Cards put on the table face down.
      */
-    public List<Card> stock = new ArrayList<>();
+    private List<Card> stock = new ArrayList<>();
 
     /**
      * Cards put on the table face up.
@@ -36,7 +38,7 @@ public class GameModel {
      * turned up after everyone
      * took his cards. Starter cannot be eight.
      */
-    public List<Card> pile = new ArrayList<>();
+    private List<Card> pile = new ArrayList<>();
 
     /**
      * Actually played suit.
@@ -49,9 +51,9 @@ public class GameModel {
      * Prepare 52-card deck to put on table.
      * Shuffle cards at random.
      */
-    public void prepareCardDeck(){
-        for (Suit suit: Suit.values()) {
-            for (Denomination denomination: Denomination.values()) {
+    public void prepareCardDeck() {
+        for (Suit suit : Suit.values()) {
+            for (Denomination denomination : Denomination.values()) {
                 stock.add(new Card(suit, denomination));
             }
         }
@@ -61,11 +63,12 @@ public class GameModel {
 
     /**
      * Invite players to game.
+     *
      * @param playersGroup custom number of players
      */
-    public void invitePlayers(Player... playersGroup){
-        for (Player player: playersGroup ) {
-            if(players.size() >= 7)
+    public void invitePlayers(Player... playersGroup) {
+        for (Player player : playersGroup) {
+            if (players.size() >= 7)
                 break;
 
             players.add(player);
@@ -75,17 +78,17 @@ public class GameModel {
     /**
      * Dealer starts the game.
      */
-    public void drawDealer(){
-        dealer = players.get(ThreadLocalRandom.current().nextInt(0,players.size()));
+    public void drawDealer() {
+        dealer = players.get(ThreadLocalRandom.current().nextInt(0, players.size()));
     }
 
     /**
      * Every player deals 8 cards from stock.
      */
-    public void beginTheDeal(){
-        for (Player player: players){
+    public void beginTheDeal() {
+        for (Player player : players) {
             for (int i = 0; i < 8; i++) {
-                player.dealCard(stock.remove(stock.size()-1));
+                player.dealCard(stock.remove(stock.size() - 1));
             }
         }
     }
@@ -94,15 +97,15 @@ public class GameModel {
      * Puts card from stock top as starter card.
      * Starter card cannot be eight.
      */
-    public void putStarterOnPile(){
-        while (stock.get(stock.size()-1).denomination == Denomination.EIGHT){
+    public void putStarterOnPile() {
+        while (stock.get(stock.size() - 1).getDenomination() == Denomination.EIGHT) {
             // Put eight somewhere in the pile, but not near to the top
-            stock.add(ThreadLocalRandom.current().nextInt(0,stock.size()-5),
-                    stock.remove(stock.size()-1));
+            stock.add(ThreadLocalRandom.current().nextInt(0, stock.size() - 5),
+                    stock.remove(stock.size() - 1));
         }
 
-        pile.add(stock.remove(stock.size()-1));
-        suit = pile.get(0).suit;
+        pile.add(stock.remove(stock.size() - 1));
+        suit = pile.get(0).getSuit();
     }
 
     /**
@@ -110,35 +113,34 @@ public class GameModel {
      * Only player that have turn
      * can make this action.
      */
-    public int dealCard(){
-        if(stock.size()>0){
-        turnPlayer.dealCard(stock.remove(stock.size()-1));
-        return 0;}
-        else return 1;
+    public int dealCard() {
+        if (stock.size() > 0) {
+            turnPlayer.dealCard(stock.remove(stock.size() - 1));
+            return 0;
+        } else return 1;
     }
 
     /**
      * Play cards and put it on the pile.
      * Only player that have turn
      * can make this action.
+     *
      * @return true if player played any card
      */
-    public boolean playCards(){
-        if (turnPlayer.getSelectedCards().isEmpty()){
+    public boolean playCards() {
+        if (turnPlayer.getSelectedCards().isEmpty()) {
             return false;
-        }
-        else if (turnPlayer.getSelectedCards().get(0).denomination == Denomination.EIGHT){
+        } else if (turnPlayer.getSelectedCards().get(0).getDenomination() == Denomination.EIGHT) {
             // Crazy eight is here!!! Player can select any suit!
             turnPlayer.getSelectedCards().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
             suit = turnPlayer.getSelectedSuit();
             return true;
-        }
-        else if (turnPlayer.getSelectedCards().get(0).denomination == pile.get(pile.size()-1).denomination
-                || turnPlayer.getSelectedCards().get(0).suit == suit){
+        } else if (turnPlayer.getSelectedCards().get(0).getDenomination() == pile.get(pile.size() - 1).getDenomination()
+                || turnPlayer.getSelectedCards().get(0).getSuit() == suit) {
             // Player can play many cards with the same denomination at once
             // Player can play card with the same suit as card on the pile's top
             turnPlayer.getSelectedCards().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
-            suit = pile.get(pile.size()-1).suit;
+            suit = pile.get(pile.size() - 1).getSuit();
             return true;
         }
 
@@ -152,7 +154,7 @@ public class GameModel {
      * Usually called after playCards method
      * returns true.
      */
-    public boolean turnPlayerIsWinner(){
+    public boolean turnPlayerIsWinner() {
         return turnPlayer.getCardsNumber() == 0;
     }
 
@@ -161,13 +163,13 @@ public class GameModel {
      * Usually called after turnPlayerIsWinner
      * returns false
      */
-    public void nextPlayerTurn(){
-        if(players.indexOf(turnPlayer) == players.size()-1){
+    public void nextPlayerTurn() {
+        if (players.indexOf(turnPlayer) == players.size() - 1) {
             // Set current player to first in the players list
             turnPlayer = players.get(0);
         } else {
             // Set current player to next in the players list
-            turnPlayer = players.get(players.indexOf(turnPlayer)+1);
+            turnPlayer = players.get(players.indexOf(turnPlayer) + 1);
         }
     }
 
@@ -180,13 +182,14 @@ public class GameModel {
      * Each eight = 50 points
      * Each K,Q,J or 10 = 10 points
      * Each ace = 1 point
+     *
      * @return points scored by winner
      */
-    public int winnerPoints(){
+    public int winnerPoints() {
         AtomicInteger points = new AtomicInteger();
 
         players.forEach(player -> player.getAllCards().forEach(card -> {
-            switch (card.denomination){
+            switch (card.getDenomination()) {
                 case ACE -> points.addAndGet(1);
                 case TEN, JACK, QUEEN, KING -> points.addAndGet(10);
                 case EIGHT -> points.addAndGet(50);
@@ -222,6 +225,14 @@ public class GameModel {
 
     public Suit getSuit() {
         return suit;
+    }
+
+    public Card getTopCardFromStock(){
+        return stock.get(stock.size()-1);
+    }
+
+    public Card getTopCardFromPile(){
+        return pile.get(pile.size()-1);
     }
 
 }
