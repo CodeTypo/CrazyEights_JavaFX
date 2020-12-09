@@ -1,5 +1,7 @@
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -42,9 +44,6 @@ public class CrazyEightsController {
     @FXML
     private ImageView deckImg;
 
-    @FXML
-    private AnchorPane table;
-
     GameModel gameModel = new GameModel();
     Player p1 = new Player();
     Player p2 = new BotPlayer();
@@ -53,8 +52,7 @@ public class CrazyEightsController {
 
     private Image getCardFront(Card card){
         String path = getSVGCardResourcePath(card);
-        Image image = getImageFromSVG(path);
-        return image;
+        return getImageFromSVG(path);
     }
 
     private Image getCardBack(Card card){
@@ -63,8 +61,7 @@ public class CrazyEightsController {
             case CLUBS, SPADES -> path += "1B.svg";
             case HEARTS,DIAMONDS -> path += "2B.svg";
         }
-        Image image = getImageFromSVG(path);
-        return image;
+        return getImageFromSVG(path);
     }
 
     public void addImageViewToBox (String id, Card card, Pane hBox, int boxId){
@@ -86,7 +83,7 @@ public class CrazyEightsController {
 
         hBox.getChildren().add(0, imageView);
 
-        Image image = null;
+        Image image;
         if (boxId == 0){
             imageView.setOnMouseClicked(event -> cardClicked(imageView));
             image = getCardFront(card);
@@ -102,9 +99,7 @@ public class CrazyEightsController {
         // I am not sure if we should unclick every other card
         // when another is clicked. Game rules allow player
         // to select many cards at once.
-        for(Node node : box1.getChildren()){
-            node.getStyleClass().remove("clicked");
-        }
+
         imageView.getStyleClass().add("clicked");
 
         int index = 0;
@@ -117,11 +112,12 @@ public class CrazyEightsController {
         System.out.println("Selected card: ");
         System.out.println(imageView.getId());
         System.out.println(index);
+        p1.selectCard(p1.getCards().get(index));
 
     }
 
     public void initGame(){
-        gameModel.prepareCardDeck();
+            gameModel.prepareCardDeck();
         gameModel.invitePlayers(p1,p2,p3,p4);
         gameModel.beginTheDeal();
     }
@@ -179,6 +175,21 @@ public class CrazyEightsController {
         }
     }
 
+
+    @FXML
+    void onConfirmedClicked(ActionEvent event) {
+        gameModel.setTurnPlayer(p1);
+        gameModel.playCards();
+    }
+
+    @FXML
+    void onResetClicked(ActionEvent event) {
+        for(Node node : box1.getChildren()){
+            node.getStyleClass().remove("clicked");
+        }
+    }
+
+
     public CrazyEightsController() {
     }
 
@@ -191,13 +202,12 @@ public class CrazyEightsController {
     private String getSVGCardResourcePath(Card card){
         // directory in resources folder
 
-        String stringBuilder = "/imagesSVG2/" +
+        return "/imagesSVG2/" +
 
                 // every name consists of denomination shortname and suit shortname
                 card.getDenomination().getS() +
                 card.getSuit().getS() +
                 ".svg";
-        return stringBuilder;
     }
 
     // SVG image should be set on ImageView in the last step,

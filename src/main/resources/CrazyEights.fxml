@@ -7,6 +7,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" styleClass="table" stylesheets="@CrazyEights.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="CrazyEightsController">
     <bottom>
@@ -21,6 +22,16 @@
                 <Button fx:id="startButton" layoutX="240.0" layoutY="148.0" mnemonicParsing="false" onAction="#onClickStart" prefHeight="77.0" prefWidth="107.0" styleClass="start-button" text="START" />
                 <ImageView fx:id="pileImg" fitHeight="200" fitWidth="120.0" layoutX="397.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="156.0" AnchorPane.leftAnchor="397.0" AnchorPane.rightAnchor="108.0" AnchorPane.topAnchor="129.0" />
                 <ImageView fx:id="deckImg" fitHeight="200" fitWidth="120.0" layoutX="94.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true" />
+            <Button layoutX="214.0" layoutY="286.0" mnemonicParsing="false" onAction="#onConfirmedClicked" styleClass="actionButton" text="Confirm" textFill="WHITE">
+               <font>
+                  <Font name="Gill Sans Ultra Bold" size="12.0" />
+               </font>
+            </Button>
+            <Button layoutX="321.0" layoutY="286.0" mnemonicParsing="false" onAction="#onResetClicked" styleClass="actionButton" text="Reset" textFill="WHITE">
+               <font>
+                  <Font name="Gill Sans Ultra Bold" size="12.0" />
+               </font>
+            </Button>
             </children>
         </AnchorPane>
     </center>

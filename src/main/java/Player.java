@@ -3,7 +3,7 @@ import java.util.List;
 
 public class Player {
     private List<Card> cards = new ArrayList<>();
-    private List<Card> selectedCards;
+    private List<Card> selectedCards = new ArrayList<>();
     private Suit selectedSuit = Suit.SPADES;
 
     /**

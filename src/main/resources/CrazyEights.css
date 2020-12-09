@@ -19,3 +19,7 @@
 .table{
     -fx-background-image: url('background.jpg');
 }
+
+.actionButton{
+    -fx-background-color: rgb(25,201,76);
+}
