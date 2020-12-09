@@ -1,17 +1,16 @@
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+// imports for loading and converting external svg files
+import java.io.IOException;
+import java.io.InputStream;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import javafx.embed.swing.SwingFXUtils;
@@ -45,8 +44,6 @@ public class CrazyEightsController {
     @FXML
     private ImageView deckImg;
 
-
-
     GameModel gameModel = new GameModel();
     Player p1 = new Player();
     Player p2 = new Player();
@@ -56,19 +53,13 @@ public class CrazyEightsController {
     public CrazyEightsController() {
     }
 
-
-    public void addImageViewHBox (String id, String suit, String denomination,Pane hBox,int boxId){
-        ImageView imageView = new ImageView();
-        imageView.setId(id);
-        String imagePath = "";
-        if(boxId == 0) {
-             imagePath = "imagesSVG/" + denomination + suit + ".png";
-        } else {
-            imagePath = "imagesSVG/purple_back.png";
-        }
-
+    // SVG image should be set on ImageView in the last step,
+    // after all operations like rotation and sizing are performed.
+    // The nature of svg format force us to render it every time we need
+    // to change its attributes.
+    private void setCardOnImageView(String path, ImageView imageView){
         BufferedImageTranscoder transcoder = new BufferedImageTranscoder();
-        try (InputStream file = getClass().getResourceAsStream(imagePath)) {
+        try (InputStream file = getClass().getResourceAsStream(path)) {
             TranscoderInput transIn = new TranscoderInput(file);
             try {
                 transcoder.transcode(transIn, null);
@@ -81,6 +72,18 @@ public class CrazyEightsController {
         catch (IOException io) {
             io.printStackTrace();
         }
+    }
+
+    public void addImageViewHBox (String id, String suit, String denomination,Pane hBox,int boxId){
+        ImageView imageView = new ImageView();
+        imageView.setId(id);
+
+        String imagePath = "";
+        if(boxId == 0) {
+             imagePath = "/imagesSVG/2H.svg";
+        } else {
+            imagePath = "imagesSVG/1B.svg";
+        }
 
         imageView.setFitWidth(60);
         imageView.setFitHeight(150);
@@ -88,19 +91,27 @@ public class CrazyEightsController {
         imageView.setPreserveRatio(true);
         imageView.setSmooth(true);
         imageView.setCache(true);
+
         if(boxId ==0)
-        imageView.setOnMouseClicked(event ->   cardClicked(imageView));
+            imageView.setOnMouseClicked(event -> cardClicked(imageView));
+
         switch (boxId){
             case 1 -> imageView.setRotate(imageView.getRotate()+270);
             case 2 -> imageView.setRotate(imageView.getRotate()+180);
             case 3 -> imageView.setRotate(imageView.getRotate()+90);
         }
+
         hBox.getChildren().add(0, imageView);
+
+        setCardOnImageView(imagePath, imageView);
         System.out.println(imageView.getId());
 
     }
 
     private void cardClicked(ImageView imageView) {
+        // I am not sure if we should unclick every other card
+        // when another is clicked. Game rules allow player
+        // to select many cards at once.
         for(Node node : box1.getChildren()){
             node.getStyleClass().remove("clicked");
         }
@@ -118,18 +129,27 @@ public class CrazyEightsController {
     }
 
 
-    public void start1(){
+    public void initGame(){
         gameModel.prepareCardDeck();
         gameModel.invitePlayers(p1,p2,p3,p4);
         gameModel.beginTheDeal();
     }
 
     public void onClickStart(){
+
         Pane[] hBoxes = new Pane[4];
         hBoxes [0] = box1;
         hBoxes [1] = box2;
         hBoxes [2] = box3;
         hBoxes [3] = box4;
+
+//        for (Player player : gameModel.getPlayers()) {
+//            for (Card card: player.getAllCards()){
+//
+//            }
+//        }
+
+
         int j = 0;
         int playerNumber  = 1;
         for (Player player : gameModel.getPlayers()) {
@@ -142,8 +162,9 @@ public class CrazyEightsController {
             }
             playerNumber++;
             j++;
-
         }
+
+
         startButton.setVisible(false);
         Image image = new Image("imagesPNG/purple_back.png");
         deckImg.setImage(image);
@@ -171,6 +192,6 @@ public class CrazyEightsController {
 
     @FXML
     void initialize() {
-        start1();
+        initGame();
     }
 }
