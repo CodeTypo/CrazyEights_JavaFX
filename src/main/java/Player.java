@@ -92,4 +92,9 @@ public class Player {
     public List<Card> getCards() {
         return cards;
     }
+
+    public void unselectCard(Card card) {
+        selectedCards.remove(card); // unselect card
+        cards.add(card); // and put it back to user usual cards
+    }
 }
