@@ -21,8 +21,8 @@ public class SVGUtils {
         Image image = null;
 
         BufferedImageTranscoder transcoder = new BufferedImageTranscoder();
-        transcoder.addTranscodingHint(ImageTranscoder.KEY_WIDTH, 79F);
-        transcoder.addTranscodingHint(ImageTranscoder.KEY_HEIGHT, 111F);
+        transcoder.addTranscodingHint(ImageTranscoder.KEY_WIDTH, 100F);
+        transcoder.addTranscodingHint(ImageTranscoder.KEY_HEIGHT, 140F);
         transcoder.addTranscodingHint(ImageTranscoder.KEY_BACKGROUND_COLOR, SVGColor.red);
 
         try (InputStream file = SVGUtils.class.getResourceAsStream(path)) {

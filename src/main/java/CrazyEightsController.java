@@ -85,10 +85,10 @@ public class CrazyEightsController {
 
         Pane[] Boxes = new Pane[]{box1,box2,box3,box4};   //A set of four boxes representing players hands is being created
         //Correct spacings between each card are being set
-        box1.setSpacing(4);
-        box3.setSpacing(4);
-        box2.setSpacing(-24);
-        box4.setSpacing(-24);
+        box1.setSpacing(-60);
+        box3.setSpacing(-60);
+        box2.setSpacing(-100);
+        box4.setSpacing(-100);
 
         int j = 0;
         for (Player player : gameModel.getPlayers()) {              //Each player that was invited to the gamemodel
@@ -111,7 +111,7 @@ public class CrazyEightsController {
         gameModel.putStarterOnPile();
 
         pileImg.setFitWidth(100);                                      //Setting its max width
-        pileImg.setFitHeight(120);                                     //Setting its max height
+        pileImg.setFitHeight(140);                                     //Setting its max height
         pileImg.setImage(gameModel.getTopCardFromPile().getImage());                                   //Filling the imageView with a card front image
     }
 
@@ -120,8 +120,8 @@ public class CrazyEightsController {
         ImageView imageView = new ImageView();  //Creating a new ImageView
         imageView.setId(id);                    //Settings its Id to represent the card it depictures
 
-        imageView.setFitWidth(79);              //Setting its max width
-        imageView.setFitHeight(111);            //Setting its max height
+        imageView.setFitWidth(100);              //Setting its max width
+        imageView.setFitHeight(140);            //Setting its max height
         imageView.setPreserveRatio(true);       //Keeps the original value of the image
         imageView.setSmooth(true);              //Smoothens the image a litte bit
         imageView.setCache(true);               //Sets image caching boolean value to true
@@ -143,6 +143,7 @@ public class CrazyEightsController {
         } else {                                  //If the box belongs to one of the 3 bot players left
             image = SVGUtils.getCardBack();            //Then the card back image is being shown
         }
+
         imageView.setImage(image);                //Populates the ImageView with selected image
         System.out.println(imageView.getId());    //outputs the image's id to the console, used to verify if everything is correct
     }
