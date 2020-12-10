@@ -45,7 +45,11 @@ public class CrazyEightsController {
     private ImageView deckImg;
 
     GameModel gameModel = new GameModel();
+    //Only p1 Player is interactive and controlled by user
     Player p1 = new Player();
+
+    //These players can be created automatically because in init method
+    // because we dont need reference to them
     Player p2 = new BotPlayer();
     Player p3 = new BotPlayer();
     Player p4 = new BotPlayer();
@@ -101,10 +105,14 @@ public class CrazyEightsController {
             //unselect card
             imageView.getStyleClass().remove("clicked");
             card.setSelected(false);
+            p1.unselectCard(card);
         } else {
-            //select card
-            imageView.getStyleClass().add("clicked");
-            card.setSelected(true);
+            //select card if it agree with rules
+            if (p1.selectCard(card)){
+                card.setSelected(true);
+                imageView.getStyleClass().add("clicked");
+            }
+
         }
 
         System.out.println(card.toString() + " selected: " + card.isSelected());
