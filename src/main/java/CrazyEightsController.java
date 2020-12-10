@@ -45,6 +45,7 @@ public class CrazyEightsController {
 
     @FXML
     private ImageView deckImg;
+
     //The whole game flow is being controlled by this class
     GameModel gameModel = new GameModel();
 
@@ -143,6 +144,20 @@ public class CrazyEightsController {
         System.out.println(imageView.getId());    //outputs the image's id to the console, used to verify if everything is correct
     }
 
+    public void render(){
+        Pane[] Boxes = new Pane[]{box1,box2,box3,box4};   //A set of four boxes representing players hands is being created
+        for (Pane pane : Boxes)
+            pane.getChildren().clear();
+
+        int j = 0;
+        for (Player player : gameModel.getPlayers()) {              //Each player that was invited to the gamemodel
+            for (Card card: player.getCards()) {
+                addImageViewToBox(card.toString(), card, Boxes[j]); //Gets a container for each card added to his box
+            }
+            j++;
+        }
+    }
+
     private Image getCardFront(Card card){
         //A method that returns a front image of the Card that is being passed as its argument
         String path = getSVGCardResourcePath(card);
@@ -227,7 +242,11 @@ public class CrazyEightsController {
     void onConfirmedClicked(ActionEvent event) {
         // A method executing when the user clicks a GUI "confirm" button
         gameModel.setTurnPlayer(p1);    // Usunąć w późniejszej wersji!!!!!!!!
-        gameModel.playCards();          // GameModel playCards() method is being called
+        if (gameModel.playCards()) {    // GameModel playCards() method is being called
+            render();
+            System.out.println("render");
+            System.out.println("TOP  "+gameModel.getTopCardFromPile().toString());
+        }
         pileImg.setImage(getCardFront(gameModel.getTopCardFromPile())); //A card from the users box is being put on the pile
     }
 
