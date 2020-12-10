@@ -11,9 +11,13 @@ import javafx.scene.layout.*;
 // imports for loading and converting external svg files
 import java.io.IOException;
 import java.io.InputStream;
+
+import org.apache.batik.svggen.SVGColor;
+import org.apache.batik.transcoder.SVGAbstractTranscoder;
 import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import javafx.embed.swing.SwingFXUtils;
+import org.apache.batik.transcoder.image.ImageTranscoder;
 
 public class CrazyEightsController {
 
@@ -96,7 +100,7 @@ public class CrazyEightsController {
 
         startButton.setVisible(false);                              //A start button is being hidden
 
-        Image image = getCardBack(gameModel.getTopCardFromStock()); //An image of deck laying on the table is being set
+        Image image = SVGUtils.getCardBack(); //An image of deck laying on the table is being set
         deckImg.setFitWidth(100);                                   //Setting its max width
         deckImg.setFitHeight(120);                                  //Setting its max height
         deckImg.setImage(image);                                    //Filling the imageView with a card back image
@@ -106,10 +110,9 @@ public class CrazyEightsController {
         //Calling a GameModel putStarterOnPile() method, it puts the first card from the stock and puts it on the pile
         gameModel.putStarterOnPile();
 
-        Image pileImage = getCardFront(gameModel.getTopCardFromPile());//An image of piel laying on the table is being set
         pileImg.setFitWidth(100);                                      //Setting its max width
         pileImg.setFitHeight(120);                                     //Setting its max height
-        pileImg.setImage(pileImage);                                   //Filling the imageView with a card front image
+        pileImg.setImage(gameModel.getTopCardFromPile().getImage());                                   //Filling the imageView with a card front image
     }
 
     public void addImageViewToBox (String id, Card card, Pane box){
@@ -136,9 +139,9 @@ public class CrazyEightsController {
         if (boxId.equals("box1")){                //If the card is going to be added to a player box
             //Then the card front image is being set and an onClick listener method is being added to it making it interactive
             imageView.setOnMouseClicked(event -> cardClicked(card, imageView));
-            image = getCardFront(card);
+            image = card.getImage();
         } else {                                  //If the box belongs to one of the 3 bot players left
-            image = getCardBack(card);            //Then the card back image is being shown
+            image = SVGUtils.getCardBack();            //Then the card back image is being shown
         }
         imageView.setImage(image);                //Populates the ImageView with selected image
         System.out.println(imageView.getId());    //outputs the image's id to the console, used to verify if everything is correct
@@ -156,47 +159,6 @@ public class CrazyEightsController {
             }
             j++;
         }
-    }
-
-    private Image getCardFront(Card card){
-        //A method that returns a front image of the Card that is being passed as its argument
-        String path = getSVGCardResourcePath(card);
-        return getImageFromSVG(path);
-    }
-
-    private Image getCardBack(Card card){
-        //A method that returns a back image of the Card that is being passed as its argument
-        String path = "/imagesSVG/1B.svg";
-        return getImageFromSVG(path);
-    }
-
-    private String getSVGCardResourcePath(Card card){
-        // change here if file naming convention changes
-        // directory in resources folder
-        return "/imagesSVG/" +
-                // every name consists of:
-                card.getDenomination().getS() + //denomination shortname
-                card.getSuit().getS() +         //and suit shortname
-                ".svg";
-    }
-
-    private Image getImageFromSVG(String path){
-        // SVG image should be set on ImageView in the last step,
-        // after all operations like rotation and sizing are performed.
-        // The nature of svg format force us to render it every time we need
-        // to change its attributes.
-        Image image = null;
-
-        BufferedImageTranscoder transcoder = new BufferedImageTranscoder();
-
-        try (InputStream file = getClass().getResourceAsStream(path)) {
-            TranscoderInput transIn = new TranscoderInput(file);
-            try {
-                transcoder.transcode(transIn, null);
-                image = SwingFXUtils.toFXImage(transcoder.getBufferedImage(), null);
-            } catch (TranscoderException ex) {ex.printStackTrace();}
-        } catch (IOException io) {io.printStackTrace();}
-        return image;
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Preparing the game ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -231,7 +193,7 @@ public class CrazyEightsController {
             String denomination = p1.getCards().get(pointer).getDenomination().toString();  //and denomination are saved
             addImageViewToBox( denomination + suit, p1.getCards().get(pointer), box1);   //Adds a card to a players box
             // change back cover of card from the deck
-            deckImg.setImage(getCardBack(gameModel.getTopCardFromStock()));//sets the stock image to the nex card's back   (Czy to jest potrzebne? Każda karta ma taki sam rewers)
+            deckImg.setImage(SVGUtils.getCardBack());//sets the stock image to the nex card's back   (Czy to jest potrzebne? Każda karta ma taki sam rewers)
         } else {
             deckImg.setImage(null);                         //If the method fails, an image is being removed, we are out of cards
         }
@@ -245,7 +207,7 @@ public class CrazyEightsController {
         if (gameModel.playCards()) {    // GameModel playCards() method is being called
             render();
         }
-        pileImg.setImage(getCardFront(gameModel.getTopCardFromPile())); //A card from the users box is being put on the pile
+        pileImg.setImage(gameModel.getTopCardFromPile().getImage()); //A card from the users box is being put on the pile
     }
 
     @FXML

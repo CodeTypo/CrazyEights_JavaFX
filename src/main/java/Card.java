@@ -1,3 +1,6 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.WritableImage;
+
 enum Suit {
     DIAMONDS("D"),
     CLUBS("C"),
@@ -46,9 +49,14 @@ public class Card {
     private Denomination denomination;
     private boolean selected = false;
 
+    private Image image;
+
+    //private WritableImage wimg;
+
     public Card(Suit suit, Denomination denomination) {
         this.suit = suit;
         this.denomination = denomination;
+        this.image = SVGUtils.getImageFromSVG(SVGUtils.getSVGCardResourcePath(suit, denomination));
     }
 
     public void setSelected(boolean selected) {
@@ -71,5 +79,13 @@ public class Card {
     public String toString() {
         return denomination.toString() + suit.toString();
 
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
     }
 }
