@@ -21,13 +21,18 @@ public class Player {
      * during player's turn.
      * Player can select many cards
      * with the same denomination.
+     * @return true if user selected card successfully
+     * false otherwise
      */
-    public void selectCard(Card card){
+    public boolean selectCard(Card card){
         if ( (selectedCards.isEmpty() || selectedCards.get(0).getDenomination().equals(card.getDenomination()))
                 && !selectedCards.contains(card)){
             // Remove card from cards and put into selected cards
-            selectedCards.add(cards.remove(cards.indexOf(card)));
+            cards.remove(card);
+            selectedCards.add(card);
+            return true;
         }
+        return false;
     }
 
     /**
