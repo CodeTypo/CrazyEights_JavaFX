@@ -4,9 +4,9 @@ import java.util.List;
 public class Player {
 
 
-    private List<Card> cards = new ArrayList<>();
-    private List<Card> selectedCards = new ArrayList<>();
-    private Suit selectedSuit = Suit.SPADES;
+    protected List<Card> cards = new ArrayList<>();
+    protected List<Card> selectedCards = new ArrayList<>();
+    protected Suit selectedSuit = Suit.SPADES;
 
 
     /**
