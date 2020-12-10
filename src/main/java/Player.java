@@ -1,5 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Player {
 
@@ -35,14 +34,15 @@ public class Player {
         return false;
     }
 
+
     /**
-     * Put chosen card on pile.
-     * @param card chosen card to play in this turn
-     * @return played card
+     * Because it is not so obvious to remove
+     * elements from list during iteration
+     * this helper method is provided.
+     * It is called immediately after putCardOnPile()
      */
-    public Card putCardOnPile(Card card){
-        //selectedCards.remove(card);
-        return card;
+    public void removeSelectedCards(){
+        selectedCards.clear();
     }
 
     /**

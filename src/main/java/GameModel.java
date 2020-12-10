@@ -133,28 +133,17 @@ public class GameModel {
             return false;
         } else if (turnPlayer.getSelectedCards().get(0).getDenomination() == Denomination.EIGHT) {
             // Crazy eight is here!!! Player can select any suit!
-            turnPlayer.getSelectedCards().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
+            pile.addAll(turnPlayer.getSelectedCards());
+            turnPlayer.removeSelectedCards();
+            //turnPlayer.getSelectedCards().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
             suit = turnPlayer.getSelectedSuit();
             return true;
         } else if (turnPlayer.getSelectedCards().get(0).getDenomination() == pile.get(pile.size() - 1).getDenomination()
                 || turnPlayer.getSelectedCards().get(0).getSuit() == suit) {
             // Player can play many cards with the same denomination at once
             // Player can play card with the same suit as card on the pile's top
-
-
-             //ConcurrentModificationException
-            turnPlayer.getSelectedCards().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
-
-//            turnPlayer.getSelectedCards().stream().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
-
-
-//            for (Iterator<Card> iterator = turnPlayer.getSelectedCards().iterator();
-//                 iterator.hasNext();){
-//                Card card = iterator.next();
-//                pile.add(turnPlayer.putCardOnPile(card));
-//            }
-
-
+            pile.addAll(turnPlayer.getSelectedCards());
+            turnPlayer.removeSelectedCards();
             suit = pile.get(pile.size() - 1).getSuit();
             return true;
         }
