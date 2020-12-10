@@ -108,28 +108,10 @@ public class CrazyEightsController {
         }
 
         System.out.println(card.toString() + " selected: " + card.isSelected());
-//        // I am not sure if we should unclick every other card
-//        // when another is clicked. Game rules allow player
-//        // to select many cards at once.
-//        for(Node node : box1.getChildren()){
-//            node.getStyleClass().remove("clicked");
-//        }
-//        imageView.getStyleClass().add("clicked");
-//
-//        int index=0;
-//        for(Card card : p1.getCards()){
-//            if(card.toString().equals(imageView.getId()))
-//                index = p1.getCards().indexOf(card);
-//        }
-//        System.out.println("Selected card: ");
-//        System.out.println(imageView.getId());
-//        System.out.println(index);
-
-
     }
 
     public void initGame(){
-            gameModel.prepareCardDeck();
+        gameModel.prepareCardDeck();
         gameModel.invitePlayers(p1,p2,p3,p4);
         gameModel.beginTheDeal();
     }
