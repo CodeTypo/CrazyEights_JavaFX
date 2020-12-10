@@ -41,7 +41,8 @@ public class Player {
      * @return played card
      */
     public Card putCardOnPile(Card card){
-        return selectedCards.remove(selectedCards.indexOf(card));
+        //selectedCards.remove(card);
+        return card;
     }
 
     /**

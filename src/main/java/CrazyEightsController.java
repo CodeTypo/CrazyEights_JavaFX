@@ -182,6 +182,7 @@ public class CrazyEightsController {
     void onConfirmedClicked(ActionEvent event) {
         gameModel.setTurnPlayer(p1);
         gameModel.playCards();
+        pileImg.setImage(getCardFront(gameModel.getTopCardFromPile()));
     }
 
     @FXML

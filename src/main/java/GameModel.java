@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -139,7 +140,21 @@ public class GameModel {
                 || turnPlayer.getSelectedCards().get(0).getSuit() == suit) {
             // Player can play many cards with the same denomination at once
             // Player can play card with the same suit as card on the pile's top
+
+
+             //ConcurrentModificationException
             turnPlayer.getSelectedCards().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
+
+//            turnPlayer.getSelectedCards().stream().forEach(card -> pile.add(turnPlayer.putCardOnPile(card)));
+
+
+//            for (Iterator<Card> iterator = turnPlayer.getSelectedCards().iterator();
+//                 iterator.hasNext();){
+//                Card card = iterator.next();
+//                pile.add(turnPlayer.putCardOnPile(card));
+//            }
+
+
             suit = pile.get(pile.size() - 1).getSuit();
             return true;
         }
