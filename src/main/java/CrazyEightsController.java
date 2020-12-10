@@ -116,8 +116,8 @@ public class CrazyEightsController {
         ImageView imageView = new ImageView();  //Creating a new ImageView
         imageView.setId(id);                    //Settings its Id to represent the card it depictures
 
-        imageView.setFitWidth(80);              //Setting its max width
-        imageView.setFitHeight(100);            //Setting its max height
+        imageView.setFitWidth(79);              //Setting its max width
+        imageView.setFitHeight(111);            //Setting its max height
         imageView.setPreserveRatio(true);       //Keeps the original value of the image
         imageView.setSmooth(true);              //Smoothens the image a litte bit
         imageView.setCache(true);               //Sets image caching boolean value to true
