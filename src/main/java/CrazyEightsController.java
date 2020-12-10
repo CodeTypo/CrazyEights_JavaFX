@@ -244,8 +244,6 @@ public class CrazyEightsController {
         gameModel.setTurnPlayer(p1);    // Usunąć w późniejszej wersji!!!!!!!!
         if (gameModel.playCards()) {    // GameModel playCards() method is being called
             render();
-            System.out.println("render");
-            System.out.println("TOP  "+gameModel.getTopCardFromPile().toString());
         }
         pileImg.setImage(getCardFront(gameModel.getTopCardFromPile())); //A card from the users box is being put on the pile
     }
