@@ -5,7 +5,14 @@ import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.util.Collections;
+import java.util.concurrent.ThreadLocalRandom;
+
 public class GameModelReactive {
+
+    private static final int FIRST_DEAL_CARDS = 8;
+
+    private ObservableList<Player> players = FXCollections.observableArrayList();
 
     /**
      * Make stock observable to gain insight what cards are left.
@@ -47,6 +54,65 @@ public class GameModelReactive {
                 stock.add(new Card(suit, denomination));
             }
         }
+
+        Collections.shuffle(stock);
+    }
+
+    /**
+     *
+     * @param player interactive player
+     * @param n number of bots
+     */
+    public void invitePlayers(Player player, int n){
+        players.add(player);
+        for (int i = 0; i < n; i++) {
+            players.add(new BotPlayer());
+        }
+    }
+
+    public void drawDealer(){
+        turnPlayer.add(
+                players.get(getRandomInt(0, players.size())));
+    }
+
+    public void beginTheDeal(){
+        for (Player player: players){
+            for (int i = 0; i < FIRST_DEAL_CARDS; i++) {
+                player.dealCard(takeTopCardFromStock());
+            }
+        }
+    }
+
+    public void putStarterOnPile(){
+        Card starter = takeTopCardFromStock();
+        while (starter.getDenomination() == Denomination.EIGHT){
+            // Put eight somewhere in the middle of stock
+            stock.add(getRandomInt(0, stock.size())-5, starter);
+        }
+
+        topPile.add(starter);
+    }
+
+    public Card takeTopCardFromStock(){
+        return stock.remove(stock.size()-1);
+    }
+
+    public Card getTopCardFromPile(){
+        return topPile.get(0);
+    }
+
+
+
+    /**
+     *
+     * @param a inclusive
+     * @param b exclusive
+     * @return number from range [a,b) without b
+     */
+    public int getRandomInt(int a, int b){
+        return ThreadLocalRandom
+                .current()
+                .nextInt(a, b);
     }
 
 
