@@ -7,6 +7,9 @@ import javafx.collections.ObservableList;
 
 public class GameModelReactive {
 
+    /**
+     * Make stock observable to gain insight what cards are left.
+     */
     private ObservableList<Card> stock = FXCollections.observableArrayList();
 
     /**
@@ -29,7 +32,10 @@ public class GameModelReactive {
     private ObservableObjectValue<Card> topPile = new SimpleObjectProperty<>();
 
 
+    /**
+     * We need to track actual suit, because when crazy eight
+     * is played, appropriate symbol must be updated on screen.
+     */
     private ObservableObjectValue<Suit> suit = new SimpleObjectProperty<>();
 
-    //Another test with shelves
 }
