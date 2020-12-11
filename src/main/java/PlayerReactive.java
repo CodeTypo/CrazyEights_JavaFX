@@ -1,5 +1,3 @@
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.value.ObservableObjectValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -40,5 +38,16 @@ public class PlayerReactive {
         return cards.filtered(Card::isSelected);
     }
 
+    public ObservableList<Card> getCards() {
+        return cards;
+    }
+
+    public void setCards(ObservableList<Card> cards) {
+        this.cards = cards;
+    }
+
+    public ObservableList<Suit> getSelectedSuit() {
+        return selectedSuit;
+    }
 
 }
