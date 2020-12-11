@@ -5,19 +5,26 @@ import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderInput;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
 public class SVGUtils {
+    public static Image clubsSymbol = getSVGSuitSymbol(Suit.CLUBS);
+    public static Image diamondsSymbol = getSVGSuitSymbol(Suit.DIAMONDS);
+    public static Image spadesSymbol = getSVGSuitSymbol(Suit.SPADES);
+    public static Image heartsSymbol = getSVGSuitSymbol(Suit.HEARTS);
 
-    // generate back image only once and reuse it every time
-    public static Image cardBack = getImageFromSVG("/imagesSVG/1B.svg");
+    public static Image getSymbol(Suit suit){
+        return switch (suit){
+            case SPADES -> spadesSymbol;
+            case CLUBS -> clubsSymbol;
+            case HEARTS -> heartsSymbol;
+            case DIAMONDS -> diamondsSymbol;
+        };
+    }
 
     public static Image getImageFromSVG(String path){
-        // SVG image should be set on ImageView in the last step,
-        // after all operations like rotation and sizing are performed.
-        // The nature of svg format force us to render it every time we need
-        // to change its attributes.
         Image image = null;
 
         BufferedImageTranscoder transcoder = new BufferedImageTranscoder();
@@ -35,12 +42,6 @@ public class SVGUtils {
         return image;
     }
 
-//    public static Image getCardFront(Card card){
-//        //A method that returns a front image of the Card that is being passed as its argument
-//        String path = getSVGCardResourcePath(card);
-//        return getImageFromSVG(path);
-//    }
-
     public static String getSVGCardResourcePath(Suit suit, Denomination denomination){
         // change here if file naming convention changes
         // directory in resources folder
@@ -51,18 +52,29 @@ public class SVGUtils {
                 ".svg";
     }
 
-//    public static String getSVGCardResourcePath(Card card){
-//        // change here if file naming convention changes
-//        // directory in resources folder
-//        return "/imagesSVG/" +
-//                // every name consists of:
-//                card.getDenomination().getS() + //denomination shortname
-//                card.getSuit().getS() +         //and suit shortname
-//                ".svg";
-//    }
+    public static Image getSVGSuitSymbol(Suit suit){
+        String path = getSVGCardResourcePath(suit, Denomination.TWO);
 
-    public static Image getCardBack() {
-        return cardBack;
+        Rectangle aoi = new Rectangle(-50,50,100,100);
+
+        Image image = null;
+
+        BufferedImageTranscoder transcoder = new BufferedImageTranscoder();
+
+        // Set hints to indicate the dimensions of the output image
+        // and the input area of interest.
+        transcoder.addTranscodingHint(ImageTranscoder.KEY_WIDTH, (float) aoi.width);
+        transcoder.addTranscodingHint(ImageTranscoder.KEY_HEIGHT, (float) aoi.height);
+        transcoder.addTranscodingHint(ImageTranscoder.KEY_AOI, aoi);
+
+
+        try (InputStream file = SVGUtils.class.getResourceAsStream(path)) {
+            TranscoderInput transIn = new TranscoderInput(file);
+            try {
+                transcoder.transcode(transIn, null);
+                image = SwingFXUtils.toFXImage(transcoder.getBufferedImage(), null);
+            } catch (TranscoderException ex) {ex.printStackTrace();}
+        } catch (IOException io) {io.printStackTrace();}
+        return image;
     }
-
 }
