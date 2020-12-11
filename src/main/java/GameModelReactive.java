@@ -22,20 +22,35 @@ public class GameModelReactive {
      * We need to track turnPlayer because only
      * he can make action like deal or play card.
      */
-    private ObservableObjectValue<Player> turnPlayer = new SimpleObjectProperty<>();
+    private ObservableList<Player> turnPlayer = FXCollections.observableArrayList();
 
     /**
-     * We don't need to track all cards in pile.
+     * We don't need to track all cards in pile
+     * but store it in observable list to track
+     * when element changes (this time only one element).
      * Only top card is tracked because
      * Controller needs to refresh its view.
      */
-    private ObservableObjectValue<Card> topPile = new SimpleObjectProperty<>();
+    private ObservableList<Card> topPile = FXCollections.observableArrayList();
 
 
     /**
      * We need to track actual suit, because when crazy eight
      * is played, appropriate symbol must be updated on screen.
      */
-    private ObservableObjectValue<Suit> suit = new SimpleObjectProperty<>();
+    private ObservableList<Suit> suit = FXCollections.observableArrayList();
+
+
+    public void prepareCardDeck(){
+        for (Suit suit: Suit.values()){
+            for (Denomination denomination: Denomination.values()){
+                stock.add(new Card(suit, denomination));
+            }
+        }
+    }
+
+
+
+
 
 }
