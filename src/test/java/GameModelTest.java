@@ -135,7 +135,7 @@ class GameModelTest {
     }
 
     @Test
-    void gettingCardByPlayer_When_InThePileAreZeroCards_ShouldReturnOne() {
+    void dealCard_When_InThePileAreZeroCards_ShouldReturnOne() {
         // Arrange
         Player player = new Player();
 
@@ -149,7 +149,7 @@ class GameModelTest {
     }
 
     @Test
-    void gettingCardByPlayer_When_InThePileAreMoreThanZeroCards_ShouldReturnZero() {
+    void dealCard_When_InThePileAreMoreThanZeroCards_ShouldReturnZero() {
         // Arrange
         Player player = new Player();
 
@@ -164,7 +164,7 @@ class GameModelTest {
     }
 
     @Test
-    void isItPossibleToPlay_WhenPlayerDoesNotChooseCard_ShouldReturnFalse() {
+    void playCards_WhenPlayerDoesNotChooseCard_ShouldReturnFalse() {
         //Arrange
         Player player = new Player();
 
@@ -177,59 +177,16 @@ class GameModelTest {
     }
 
     @Test
-    void isItPossibleToPlay_WhenPlayerChooseDiamondsEight_ShouldReturnTrue() {
+    void playCards_WhenPlayerChoosesEightAsFirst_ShouldReturnTrue() {
         //Arrange
         Player player = new Player();
-        Card diamondsEight = new Card(Suit.DIAMONDS,Denomination.EIGHT);
+        Card eightDiamonds = new Card(Suit.DIAMONDS,Denomination.EIGHT);
+        Card cardOtherThanEight = new Card(Suit.DIAMONDS, Denomination.JACK);
 
         //Act
         gameModel.setTurnPlayer(player);
-        player.selectCard(diamondsEight);
-        boolean actual = gameModel.playCards();
-
-        //Assert
-        assertTrue(actual);
-    }
-
-    @Test
-    void isItPossibleToPlay_WhenPlayerChooseClubsEight_ShouldReturnTrue() {
-        //Arrange
-        Player player = new Player();
-        Card clubsEight = new Card(Suit.CLUBS,Denomination.EIGHT);
-
-        //Act
-        gameModel.setTurnPlayer(player);
-        player.selectCard(clubsEight);
-        boolean actual = gameModel.playCards();
-
-        //Assert
-        assertTrue(actual);
-    }
-
-    @Test
-    void isItPossibleToPlay_WhenPlayerChooseHeartsEight_ShouldReturnTrue() {
-        //Arrange
-        Player player = new Player();
-        Card heartsEight = new Card(Suit.HEARTS,Denomination.EIGHT);
-
-        //Act
-        gameModel.setTurnPlayer(player);
-        player.selectCard(heartsEight);
-        boolean actual = gameModel.playCards();
-
-        //Assert
-        assertTrue(actual);
-    }
-
-    @Test
-    void isItPossibleToPlay_WhenPlayerChooseSpadesEight_ShouldReturnTrue() {
-        //Arrange
-        Player player = new Player();
-        Card spadesEight = new Card(Suit.SPADES,Denomination.EIGHT);
-
-        //Act
-        gameModel.setTurnPlayer(player);
-        player.selectCard(spadesEight);
+        player.selectCard(eightDiamonds);
+        player.selectCard(cardOtherThanEight);
         boolean actual = gameModel.playCards();
 
         //Assert
