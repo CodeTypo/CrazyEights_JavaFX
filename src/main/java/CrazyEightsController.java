@@ -137,7 +137,7 @@ public class CrazyEightsController {
         }
 
         imageView.setImage(image);                //Populates the ImageView with selected image
-        System.out.println(imageView.getId());    //outputs the image's id to the console, used to verify if everything is correct
+        //System.out.println(imageView.getId());    //outputs the image's id to the console, used to verify if everything is correct
     }
 
     public void render(){
