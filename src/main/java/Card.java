@@ -1,5 +1,4 @@
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 
 enum Suit {
     DIAMONDS("D"),
@@ -9,12 +8,12 @@ enum Suit {
 
     private String s;
 
-    public String getS() {
-        return s;
-    }
-
     Suit(String s) {
         this.s = s;
+    }
+
+    public String getS() {
+        return s;
     }
 }
 
@@ -35,36 +34,41 @@ enum Denomination {
 
     private String s;
 
-    public String getS() {
-        return this.s;
-    }
-
     Denomination(String s) {
         this.s = s;
+    }
+
+    public String getS() {
+        return this.s;
     }
 }
 
 public class Card {
+    private static Image cardBack = SVGUtils.getImageFromSVG("/imagesSVG/1B.svg");
+
     private Suit suit;
     private Denomination denomination;
     private boolean selected = false;
-
-    private Image image;
-
-    //private WritableImage wimg;
+    private Image cardFront;
 
     public Card(Suit suit, Denomination denomination) {
         this.suit = suit;
         this.denomination = denomination;
-        this.image = SVGUtils.getImageFromSVG(SVGUtils.getSVGCardResourcePath(suit, denomination));
+        this.cardFront = SVGUtils.getImageFromSVG(SVGUtils.getSVGCardResourcePath(suit, denomination));
     }
 
-    public void setSelected(boolean selected) {
-        this.selected = selected;
+    //private WritableImage wimg;
+
+    public static Image getCardBack() {
+        return cardBack;
     }
 
     public boolean isSelected() {
         return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public Suit getSuit() {
@@ -81,11 +85,11 @@ public class Card {
 
     }
 
-    public Image getImage() {
-        return image;
+    public Image getCardFront() {
+        return cardFront;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public void setCardFront(Image cardFront) {
+        this.cardFront = cardFront;
     }
 }
