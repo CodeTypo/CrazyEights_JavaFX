@@ -42,6 +42,9 @@ public class CrazyEightsController {
     @FXML
     private ImageView deckImg;
 
+    @FXML
+    private ImageView suitSymbol;
+
     //The whole game flow is being controlled by this class
     GameModel gameModel = new GameModel();
 
@@ -70,6 +73,11 @@ public class CrazyEightsController {
         gameModel.prepareCardDeck();            //Prepares a fresh, brand new deck of cards
         gameModel.invitePlayers(p1,p2,p3,p4);   //Adds four players to the game
         gameModel.beginTheDeal();               //Starts dealing 8 cards to each player
+
+        suitSymbol.setFitWidth(100);
+        suitSymbol.setFitHeight(100);
+        suitSymbol.setImage(Suit.CLUBS.getSymbol());
+
     }
 
     public void onClickStart(){

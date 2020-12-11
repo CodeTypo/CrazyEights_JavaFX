@@ -15,6 +15,10 @@ enum Suit {
     public String getS() {
         return s;
     }
+
+    public Image getSymbol() {
+        return SVGUtils.getSymbol(this);
+    }
 }
 
 enum Denomination {
