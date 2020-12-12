@@ -35,7 +35,11 @@ public abstract class PlayerReactive {
         selectedSuit.set(suit);
     }
 
-    public List<CardReactive> playCards(){
+    public void playCards(List<CardReactive> playedCards){
+        cards.removeAll(playedCards);
+    }
+
+    public List<CardReactive> getSelectedCards(){
         return cards.filtered(CardReactive::isSelected);
     }
 

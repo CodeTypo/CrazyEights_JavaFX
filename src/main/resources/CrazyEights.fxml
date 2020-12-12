@@ -22,7 +22,7 @@
                 <Button fx:id="startButton" layoutX="240.0" layoutY="148.0" mnemonicParsing="false" onAction="#onClickStart" prefHeight="77.0" prefWidth="107.0" styleClass="start-button" text="START" />
                 <ImageView fx:id="pileImg" fitHeight="200" fitWidth="120.0" layoutX="397.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="156.0" AnchorPane.leftAnchor="397.0" AnchorPane.rightAnchor="108.0" AnchorPane.topAnchor="129.0" />
                 <ImageView fx:id="deckImg" fitHeight="200" fitWidth="120.0" layoutX="94.0" layoutY="129.0" pickOnBounds="true" preserveRatio="true" />
-            <Button layoutX="214.0" layoutY="286.0" mnemonicParsing="false" onAction="#onConfirmedClicked" styleClass="actionButton" text="Confirm" textFill="WHITE">
+            <Button fx:id="confirmButton" layoutX="214.0" layoutY="286.0" mnemonicParsing="false" onAction="#onConfirmedClicked" styleClass="actionButton" text="Confirm" textFill="WHITE">
                <font>
                   <Font name="Gill Sans Ultra Bold" size="12.0" />
                </font>

@@ -85,9 +85,9 @@ public class GameModelReactive {
     }
 
     public void nextPlayerTurn(){
-        if (botPlayers.contains(turnPlayer.get())){
+        if (botPlayers.contains(getTurnPlayer())){
             // next turn belongs to another bot or interactive player depending on current player
-            int index = botPlayers.indexOf(turnPlayer.get());
+            int index = botPlayers.indexOf(getTurnPlayer());
             if (index == BOTS - 1) {
                 turnPlayer.set(interactivePlayer);
             }
@@ -138,7 +138,7 @@ public class GameModelReactive {
         prepareCardDeck();
         prepareBots();
 
-        turnPlayer.get().selectedSuitProperty().addListener((observable, oldValue, newValue) -> {
+        getTurnPlayer().selectedSuitProperty().addListener((observable, oldValue, newValue) -> {
             // Change gameModel suit according to turnPlayer choice.
             // Player can select suit only after crazy eight is played
             suit.set(newValue);
@@ -147,8 +147,38 @@ public class GameModelReactive {
         drawDealer();
     }
 
-    public void playCards(){
+    /**
+     *
+     * @return true if suit selector should be shown
+     * false otherwise.
+     * So if crazy eight is played, it returns true
+     * because turnPlayer must select suit.
+     * If false, next player have turn
+     */
+    public boolean playCards(){
+        List<CardReactive> selCards = getTurnPlayer().getSelectedCards();
+        if (!selCards.isEmpty()){
+            CardReactive firstCard = selCards.get(0);
 
+            // Uwaga!!! tutaj jest mala niescislosc,
+            // bo false jest zwracany zarowno wtedy gdy zagrana jest osemka
+            // lub nic nie zostalo zagrane wiec mozna oszukiwac i wybierac
+            // suita po raz drugi, gdy bot przed nami rzucil osemke i wybral suita,
+            // a my zaznaczymy bledna karte i wcisniemy od razu confirm.
+            // Wyeliminuje to chyba poprzez to samo zabezpieczenie co bylo w Playerze,
+            // ze juz na wstepie nie mozna zaznaczyc karty niezgodnie z regulaminem.
+            if (firstCard.getDenomination() == Denomination.EIGHT){
+                pile.addAll(selCards);
+                getTurnPlayer().playCards(selCards);
+                return true;
+            }else if(firstCard.getDenomination() == getTopCardFromPile().getDenomination()
+                    || firstCard.getSuit() == getTopCardFromPile().getSuit()){
+                pile.addAll(selCards);
+                getTurnPlayer().playCards(selCards);
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -236,5 +266,13 @@ public class GameModelReactive {
 
     public SimpleObjectProperty<PlayerReactive> turnPlayerProperty() {
         return turnPlayer;
+    }
+
+    public void setSuit(Suit suit) {
+        this.suit.set(suit);
+    }
+
+    public void setTurnPlayer(PlayerReactive turnPlayer) {
+        this.turnPlayer.set(turnPlayer);
     }
 }

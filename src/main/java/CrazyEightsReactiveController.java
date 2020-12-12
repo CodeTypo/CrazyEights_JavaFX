@@ -42,6 +42,9 @@ public class CrazyEightsReactiveController {
     private Button startButton;
 
     @FXML
+    private Button confirmButton;
+
+    @FXML
     private ImageView pileImg;
 
     @FXML
@@ -93,6 +96,8 @@ public class CrazyEightsReactiveController {
                 // it takes the first card from the stock and puts it on the pile
                 // When a GameModel putStarterOnPile() method is called, this event will be fired,
                 // as well as after every update
+
+                //A card from the users box is being put on the pile
                 pileImg.setImage(gameModel.getTopCardFromPile().getCardFront()); //Filling the imageView with a card front image
             }
         });
@@ -100,15 +105,16 @@ public class CrazyEightsReactiveController {
         gameModel.getStock().addListener((ListChangeListener<? super CardReactive>) c -> {
             if (c.wasRemoved()){
                 if (c.getRemovedSize() == 0){
-                    deckImg.setImage(null);
+                    deckImg.setImage(null); //An image is being removed, we are out of cards
                 }
             }
         });
 
         gameModel.turnPlayerProperty().addListener((observable, oldTurnPlayer, turnPlayer) -> {
-            if (turnPlayer == this.player){
-
-            }
+            // Only interactive player must confirm his actions.
+            // Bots make it automatically after they choose cards.
+            // Disable confirmButton, when interactive player doesn't have turn.
+            confirmButton.setDisable(turnPlayer != this.player);
         });
 
         gameModel.suitProperty().addListener((observable, oldSuit, newSuit) -> {
@@ -218,7 +224,13 @@ public class CrazyEightsReactiveController {
         deckImg.setFitHeight(120);                                  //Setting its max height
         deckImg.setImage(CardReactive.getCardBack());  //Filling the imageView with a card back image. An image of deck laying on the table is being set
         //Adding a onclick listener to the card laying on the top of the deck. While clicked, it executes cardDeal()
-        deckImg.setOnMouseClicked(event -> {onCardDealt(); System.out.println("deck clicked");});
+        deckImg.setOnMouseClicked(event -> {
+            if (gameModel.getTurnPlayer() == this.player){
+                // Call method only if interactive Player has turn
+                onCardDealt();
+            }
+//            System.out.println("deck clicked");
+        });
     }
 
     public void onClickStart(){
@@ -232,18 +244,10 @@ public class CrazyEightsReactiveController {
     void onSelectSuitClick(Event event) {
         ImageView object =  (ImageView) event.getSource();
         switch (object.getId()) {
-            case "spadesIV" -> {
-                player.selectSuit(Suit.SPADES);
-            }
-            case "diamondsIV" -> {
-                player.selectSuit(Suit.DIAMONDS);
-            }
-            case "heartsIV" -> {
-                player.selectSuit(Suit.HEARTS);
-            }
-            case "clubsIV" -> {
-                player.selectSuit(Suit.CLUBS);
-            }
+            case "spadesIV" -> player.selectSuit(Suit.SPADES);
+            case "diamondsIV" -> player.selectSuit(Suit.DIAMONDS);
+            case "heartsIV" -> player.selectSuit(Suit.HEARTS);
+            case "clubsIV" -> player.selectSuit(Suit.CLUBS);
         }
 
         hBoxsOfSuits.setVisible(false);
@@ -264,6 +268,7 @@ public class CrazyEightsReactiveController {
 //            player.unselectCard(card);                          //removes the card from player selected cards list
         } else {
             //select card if it agree with rules
+            // only cards of interactive player can be selected
             card.setSelected(true);
             imageView.getStyleClass().add("clicked");
 //            if (p1.selectCard(card)){                       //Checks if the game rules allow player to select this particular card
@@ -275,33 +280,28 @@ public class CrazyEightsReactiveController {
     }
 
     private void onCardDealt() {
-        gameModel.setTurnPlayer(p1);        //Usunąć w późniejszych wersjach !!!
-        int check = gameModel.dealCard();                   //calls the gameModel dealcard() method, the method returns 0 if succedeed, 1 when failed
-        if(check == 0) {                                    //if the card was drawn successfully
-            int pointer = p1.getCards().size() - 1;         //a pointer to the top card of the pile is being set
-            System.out.println(pointer);                    //a sout to check if everything is correct
-            String suit = p1.getCards().get(pointer).getSuit().toString();                  //A cards suit
-            String denomination = p1.getCards().get(pointer).getDenomination().toString();  //and denomination are saved
-            addImageViewToBox( denomination + suit, p1.getCards().get(pointer), box1);   //Adds a card to a players box
-            // change back cover of card from the deck
-            deckImg.setImage(Card.getCardBack());//sets the stock image to the nex card's back   (Czy to jest potrzebne? Każda karta ma taki sam rewers)
-        } else {
-            deckImg.setImage(null);                         //If the method fails, an image is being removed, we are out of cards
-        }
+        //gameModel.setTurnPlayer(player); //Usunąć w późniejszych wersjach !!!
+        player.dealCard(gameModel.takeTopCardFromStock());
     }
 
 
     @FXML
     void onConfirmedClicked(ActionEvent event) {
         // A method executing when the user clicks a GUI "confirm" button
-        gameModel.setTurnPlayer(p1);    // Usunąć w późniejszej wersji!!!!!!!!
-        if (p1.getSelectedCards().get(0).getDenomination() == Denomination.EIGHT && gameModel.playCards()) {// GameModel playCards() method is being called
+        // This button is enabled only when interactive player has turn
+
+        // gameModel.playCards() calls corresponding method from Player class
+        if (gameModel.playCards()){ // Play selected cards and check if show selector
+            // If after interactive player's turn, there is crazy eight
+            // on pile, he can select suit
             hBoxsOfSuits.setVisible(true);
-            render();
         }
-        else if (gameModel.playCards())
-            render();
-        pileImg.setImage(gameModel.getTopCardFromPile().getCardFront()); //A card from the users box is being put on the pile
+
+
+//        if (gameModel.getTopCardFromPile().getDenomination() == Denomination.EIGHT){
+//            hBoxsOfSuits.setVisible(true);
+//        }
+
     }
 
     @FXML
@@ -310,6 +310,7 @@ public class CrazyEightsReactiveController {
         for(Node node : box1.getChildren()){
             node.getStyleClass().remove("clicked"); //removes "clicked" styling from all of the players cards
             //Dodać tutaj usunięcie karty z listy Selected!!!!
+            //TO DO
         }
     }
 
