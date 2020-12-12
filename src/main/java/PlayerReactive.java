@@ -6,9 +6,9 @@ import java.util.List;
 public class PlayerReactive {
     /**
      * We need to track player's cards to update them on screen.
-     * Selected cards will be marked in Card's selected field.
+     * Selected cards will be marked in CardReactive's selected field.
      */
-    private ObservableList<Card> cards = FXCollections.observableArrayList();
+    private ObservableList<CardReactive> cards = FXCollections.observableArrayList();
 
     /**
      * We need to track actual suit, because when crazy eight
@@ -17,15 +17,15 @@ public class PlayerReactive {
      */
     private ObservableList<Suit> selectedSuit = FXCollections.observableArrayList();
 
-    public void selectCard(Card card){
+    public void selectCard(CardReactive card){
         card.setSelected(true);
     }
 
-    public void unselectCard(Card card){
+    public void unselectCard(CardReactive card){
         card.setSelected(false);
     }
 
-    public void dealCard(Card card){
+    public void dealCard(CardReactive card){
         cards.add(card);
     }
 
@@ -34,15 +34,15 @@ public class PlayerReactive {
         selectedSuit.add(suit);
     }
 
-    public List<Card> playCards(){
-        return cards.filtered(Card::isSelected);
+    public List<CardReactive> playCards(){
+        return cards.filtered(CardReactive::isSelected);
     }
 
-    public ObservableList<Card> getCards() {
+    public ObservableList<CardReactive> getCards() {
         return cards;
     }
 
-    public void setCards(ObservableList<Card> cards) {
+    public void setCards(ObservableList<CardReactive> cards) {
         this.cards = cards;
     }
 
