@@ -138,7 +138,7 @@ public class GameModel {
             suit = turnPlayer.getSelectedSuit();
             return true;
         } else if (turnPlayer.getSelectedCards().get(0).getDenomination() == pile.get(pile.size() - 1).getDenomination()
-                || turnPlayer.getSelectedCards().get(0).getSuit() == suit) {
+                || turnPlayer.getSelectedCards().get(0).getSuit() == pile.get(pile.size() - 1).getSuit()) {
             // Player can play many cards with the same denomination at once
             // Player can play card with the same suit as card on the pile's top
             pile.addAll(turnPlayer.getSelectedCards());
