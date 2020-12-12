@@ -1,3 +1,4 @@
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -16,6 +17,11 @@ public class PlayerReactive {
      * can be somewhat updated on screen.
      */
     private ObservableList<Suit> selectedSuit = FXCollections.observableArrayList();
+
+    /**
+     * We need to track if player has turn. Only player who has turn can deal and play cards.
+     */
+    private SimpleBooleanProperty hasTurn = new SimpleBooleanProperty();
 
     public void selectCard(CardReactive card){
         card.setSelected(true);
@@ -50,4 +56,19 @@ public class PlayerReactive {
         return selectedSuit;
     }
 
+    public void setSelectedSuit(ObservableList<Suit> selectedSuit) {
+        this.selectedSuit = selectedSuit;
+    }
+
+    public boolean isHasTurn() {
+        return hasTurn.get();
+    }
+
+    public SimpleBooleanProperty hasTurnProperty() {
+        return hasTurn;
+    }
+
+    public void setHasTurn(boolean hasTurn) {
+        this.hasTurn.set(hasTurn);
+    }
 }
