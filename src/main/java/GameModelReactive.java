@@ -76,7 +76,7 @@ public class GameModelReactive {
 
     public void drawDealer(){
         //Set player who starts game randomly
-        int randInt = getRandomInt(0, botPlayers.size());
+        int randInt = getRandomInt(0, BOTS+1);
         if (randInt == BOTS) {
             turnPlayer.set(interactivePlayer); // if random int is out of bots array range
         } else {

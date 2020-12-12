@@ -161,6 +161,7 @@ public class CrazyEightsReactiveController {
 
         gameModel.putStarterOnPile();
 
+        System.out.println(gameModel.getTurnPlayer());
 
         initSuitSymbolSelector();
     }
