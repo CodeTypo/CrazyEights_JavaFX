@@ -103,6 +103,7 @@ public class CrazyEightsReactiveController {
 
                     //A card from the users box is being put on the pile
                     pileImg.setImage(gameModel.getTopCardFromPile().getCardFront()); //Filling the imageView with a card front image
+                    gameModel.setSuit(gameModel.getTopCardFromPile().getSuit());
                 }
             }
         });
