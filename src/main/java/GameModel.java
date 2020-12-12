@@ -108,6 +108,8 @@ public class GameModel {
         suit = pile.get(0).getSuit();
     }
 
+
+
     /**
      * Deal card from stock.
      * Only player that have turn
@@ -228,6 +230,10 @@ public class GameModel {
 
     public Suit getSuit() {
         return suit;
+    }
+
+    public void selectSuit(Suit suit) {
+        this.suit = suit;
     }
 
     public Card getTopCardFromStock(){

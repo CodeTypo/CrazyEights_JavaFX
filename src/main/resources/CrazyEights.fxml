@@ -32,7 +32,31 @@
                   <Font name="Gill Sans Ultra Bold" size="12.0" />
                </font>
             </Button>
-            <ImageView fx:id="suitSymbol" fitHeight="150.0" fitWidth="200.0" layoutX="387.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="suitSymbol" fitHeight="150.0" fitWidth="200.0" layoutX="387.0" pickOnBounds="true" preserveRatio="true" rotate="180.0" />
+                <HBox fx:id="hBoxsOfSuits" alignment="CENTER" layoutX="192.0" layoutY="150.0" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #999; -fx-opacity: .8; -fx-padding: 20;" translateX="-125.0" visible="false">
+                    <children>
+                        <ImageView fx:id="spadesIV" fitHeight="80.0" fitWidth="80.0" onMouseClicked="#onSelectSuitClick" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+                            <HBox.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </HBox.margin>
+                        </ImageView>
+                        <ImageView fx:id="clubsIV" fitHeight="80.0" fitWidth="80.0" onMouseClicked="#onSelectSuitClick" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+                            <HBox.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </HBox.margin>
+                        </ImageView>
+                        <ImageView fx:id="heartsIV" fitHeight="80.0" fitWidth="80.0" onMouseClicked="#onSelectSuitClick" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+                            <HBox.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </HBox.margin>
+                        </ImageView>
+                        <ImageView fx:id="diamondsIV" fitHeight="80.0" fitWidth="80.0" onMouseClicked="#onSelectSuitClick" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+                            <HBox.margin>
+                                <Insets left="10.0" right="10.0" />
+                            </HBox.margin>
+                        </ImageView>
+                    </children>
+                </HBox>
             </children>
         </AnchorPane>
     </center>
