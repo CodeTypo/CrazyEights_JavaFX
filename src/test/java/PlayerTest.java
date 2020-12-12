@@ -37,7 +37,33 @@ class PlayerTest {
     }
 
     @Test
-    void selectCard_When_PlayerSelectsSomeCardsWithTheSameDenomination_ShouldReturnTrue() {
+    void selectCard_When_PlayerSelectsSomeCardsWithTheSameDenominations_ShouldReturnTrue() {
+        //Arrange
+        Card firstCardSelected = new Card(Suit.SPADES,Denomination.JACK);
+        Card secondCardSelected = new Card(Suit.HEARTS,Denomination.JACK);
+        List<Card> selectedCards = player.getSelectedCards();
+
+        //Act
+        selectedCards.add(firstCardSelected);
+        boolean actual = player.selectCard(secondCardSelected);
+
+        //Assert
+        assertTrue(actual);
+    }
+
+    @Test
+    void selectCard_When_PlayerSelectsSomeCardsWithOtherDenominations_ShouldReturnFalse() {
+        //Arrange
+        Card firstCardSelected = new Card(Suit.SPADES,Denomination.JACK);
+        Card secondCardSelected = new Card(Suit.HEARTS,Denomination.QUEEN);
+        List<Card> selectedCards = player.getSelectedCards();
+
+        //Act
+        selectedCards.add(firstCardSelected);
+        boolean actual = player.selectCard(secondCardSelected);
+
+        //Assert
+        assertFalse(actual);
     }
 
     @Test
