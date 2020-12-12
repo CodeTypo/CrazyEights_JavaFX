@@ -21,7 +21,7 @@ class GameModelTest {
         int actual = cardSet.size();
 
         // Assert
-        assertEquals(52,actual);
+        assertEquals(52, actual);
     }
 
     @Test
@@ -37,7 +37,7 @@ class GameModelTest {
         int actual = gameModel.getPlayers().size();
 
         // Assert
-        assertEquals(4,actual);
+        assertEquals(4, actual);
     }
 
     @Test
@@ -57,7 +57,7 @@ class GameModelTest {
         int actual = gameModel.getPlayers().size();
 
         // Assert
-        assertEquals(7,actual);
+        assertEquals(7, actual);
     }
 
     @Test
@@ -70,7 +70,7 @@ class GameModelTest {
         int actual = gameModel.getPlayers().size();
 
         // Assert
-        assertEquals(2,actual);
+        assertEquals(2, actual);
     }
 
     @Test
@@ -125,7 +125,7 @@ class GameModelTest {
 
         // Assert
         for(int i=1; i<=5; i++)
-            assertNotEquals(Denomination.EIGHT,stock.get(stockSize-i).getDenomination());
+            assertNotEquals(Denomination.EIGHT, stock.get(stockSize-i).getDenomination());
     }
 
     @Test
@@ -139,7 +139,7 @@ class GameModelTest {
         int actual = gameModel.dealCard();
 
         //Assert
-        assertEquals(1,actual);
+        assertEquals(1, actual);
     }
 
     @Test
@@ -154,7 +154,7 @@ class GameModelTest {
         int actual = gameModel.dealCard();
 
         //Assert
-        assertEquals(0,actual);
+        assertEquals(0, actual);
     }
 
     @Test
@@ -174,7 +174,7 @@ class GameModelTest {
     void playCards_When_PlayerChoosesEightAsFirst_ShouldReturnTrue() {
         //Arrange
         Player player = new Player();
-        Card eightDiamonds = new Card(Suit.DIAMONDS,Denomination.EIGHT);
+        Card eightDiamonds = new Card(Suit.DIAMONDS, Denomination.EIGHT);
         Card cardOtherThanEight = new Card(Suit.DIAMONDS, Denomination.JACK);
         gameModel.setTurnPlayer(player);
         player.selectCard(eightDiamonds);
@@ -191,8 +191,8 @@ class GameModelTest {
     void playCards_When_PlayerChoosesCardWithTheSameSuitLikeTheLastOneOnThePile_ShouldReturnTrue() {
         //Arrange
         Player player = new Player();
-        Card cardChosenByThePlayer = new Card(Suit.HEARTS,Denomination.THREE);
-        Card lastOneCardOnThePile = new Card(Suit.HEARTS,Denomination.QUEEN);
+        Card cardChosenByThePlayer = new Card(Suit.HEARTS, Denomination.THREE);
+        Card lastOneCardOnThePile = new Card(Suit.HEARTS, Denomination.QUEEN);
         List<Card> pile = gameModel.getPile();
         gameModel.setTurnPlayer(player);
         player.selectCard(cardChosenByThePlayer);
@@ -209,8 +209,8 @@ class GameModelTest {
     void playCards_When_PlayerChoosesCardWithTheSameDenominationLikeTheLastOneOnThePile_ShouldReturnTrue() {
         //Arrange
         Player player = new Player();
-        Card cardChosenByThePlayer = new Card(Suit.SPADES,Denomination.ACE);
-        Card lastOneCardOnThePile = new Card(Suit.HEARTS,Denomination.ACE);
+        Card cardChosenByThePlayer = new Card(Suit.SPADES, Denomination.ACE);
+        Card lastOneCardOnThePile = new Card(Suit.HEARTS, Denomination.ACE);
         List<Card> pile = gameModel.getPile();
         gameModel.setTurnPlayer(player);
         player.selectCard(cardChosenByThePlayer);
@@ -227,8 +227,8 @@ class GameModelTest {
     void playCards_When_PlayerChoosesCardWithTheDifferentDenominationAndSuitLikeTheLastOneOnThePile_ShouldReturnFalse() {
         //Arrange
         Player player = new Player();
-        Card cardChosenByThePlayer = new Card(Suit.SPADES,Denomination.ACE);
-        Card lastOneCardOnThePile = new Card(Suit.HEARTS,Denomination.QUEEN);
+        Card cardChosenByThePlayer = new Card(Suit.SPADES, Denomination.ACE);
+        Card lastOneCardOnThePile = new Card(Suit.HEARTS, Denomination.QUEEN);
         List<Card> pile = gameModel.getPile();
         gameModel.setTurnPlayer(player);
         player.selectCard(cardChosenByThePlayer);
@@ -259,7 +259,7 @@ class GameModelTest {
         //Arrange
         Player player = new Player();
         gameModel.setTurnPlayer(player);
-        player.selectCard(new Card(Suit.SPADES,Denomination.KING));
+        player.selectCard(new Card(Suit.SPADES, Denomination.KING));
 
         //Act
         boolean actual = gameModel.turnPlayerIsWinner();
@@ -283,7 +283,7 @@ class GameModelTest {
         Player actual = gameModel.getTurnPlayer();
 
         //Assert
-        assertEquals(player1,actual);
+        assertEquals(player1, actual);
     }
 
     @Test
@@ -301,7 +301,7 @@ class GameModelTest {
         Player actual = gameModel.getTurnPlayer();
 
         //Assert
-        assertEquals(player3,actual);
+        assertEquals(player3, actual);
     }
 
     @Test
@@ -311,10 +311,10 @@ class GameModelTest {
         Player player2 = new Player();
         Player player3 = new Player();
         List<Card> cards = new ArrayList();
-        cards.add(new Card(Suit.SPADES,Denomination.QUEEN));
-        cards.add(new Card(Suit.DIAMONDS,Denomination.THREE));
-        cards.add(new Card(Suit.CLUBS,Denomination.ACE));
-        cards.add(new Card(Suit.HEARTS,Denomination.EIGHT));
+        cards.add(new Card(Suit.SPADES, Denomination.QUEEN));
+        cards.add(new Card(Suit.DIAMONDS, Denomination.THREE));
+        cards.add(new Card(Suit.CLUBS, Denomination.ACE));
+        cards.add(new Card(Suit.HEARTS, Denomination.EIGHT));
         gameModel.invitePlayers(player1, player2, player3);
 
         //Act
@@ -327,6 +327,6 @@ class GameModelTest {
         }
 
         //Assert
-        assertEquals(61,actual);
+        assertEquals(61, actual);
     }
 }
