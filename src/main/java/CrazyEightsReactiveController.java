@@ -230,30 +230,8 @@ public class CrazyEightsReactiveController {
 
     public void removeCardFromHand(CardReactive card, PlayerReactive playerReactive){
         Pane pane = hands.get(playerReactive);
-        String cardId = card.getId();
-        System.out.println("Card id: " + cardId);
-        Node removeNode = null;
-        // we are sure there is only one card with given id, but method return sublist
-        for (Node node: pane.getChildren()) {
-            String nodeId = node.getId();
-            System.out.println("Node: "+ nodeId);
-            removeNode = node;
-            if (nodeId.equals(cardId)){
-                break;
-            }
-        }
-
-//        for (int i = 0; i < pane.getChildren().size(); i++) {
-//            Node node = pane.getChildren().get(i);
-//            String nodeId = node.getId();
-//            System.out.println("Node: "+ nodeId);
-//
-//            removeNode = node;
-//            if (nodeId.equals())
-//        }
-
-        pane.getChildren().remove(removeNode);
-
+        FilteredList<Node> toRemove = pane.getChildren().filtered(node -> node.getId().equals(card.getId()));
+        pane.getChildren().remove(toRemove.get(0));
     }
 
     public ImageView createCardView(CardReactive card, Pane pane){
