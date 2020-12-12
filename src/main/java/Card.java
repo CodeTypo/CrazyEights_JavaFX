@@ -1,52 +1,5 @@
 import javafx.scene.image.Image;
 
-enum Suit {
-    DIAMONDS("D"),
-    CLUBS("C"),
-    HEARTS("H"),
-    SPADES("S");
-
-    private String s;
-
-    Suit(String s) {
-        this.s = s;
-    }
-
-    public String getS() {
-        return s;
-    }
-
-    public Image getSymbol() {
-        return SVGUtils.getSymbol(this);
-    }
-}
-
-enum Denomination {
-    TWO("2"),
-    THREE("3"),
-    FOUR("4"),
-    FIVE("5"),
-    SIX("6"),
-    SEVEN("7"),
-    EIGHT("8"),
-    NINE("9"),
-    TEN("T"),
-    JACK("J"),
-    QUEEN("Q"),
-    KING("K"),
-    ACE("A");
-
-    private String s;
-
-    Denomination(String s) {
-        this.s = s;
-    }
-
-    public String getS() {
-        return this.s;
-    }
-}
-
 public class Card {
     private static Image cardBack = SVGUtils.getImageFromSVG("/imagesSVG/1B.svg");
 
