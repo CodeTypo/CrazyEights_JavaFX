@@ -1,5 +1,6 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +11,7 @@ class GameModelTest {
     GameModel gameModel = new GameModel();
 
     @Test
-    void areAllCardsInDeck() {
+    void prepareCardDeck_ShouldSetAllCardsInDeck() {
         // Arrange
         Set<Card> cardSet = new HashSet<>();
 
@@ -24,7 +25,7 @@ class GameModelTest {
     }
 
     @Test
-    void areInTheGameAsManyPlayersAsManyCanBeInvited(){
+    void invitePlayers_ShouldCreatePlayerListWithAsManyPlayersAsManyCanBeInvited(){
         // Arrange
         Player player1 = new Player();
         Player player2 = new Player();
@@ -40,7 +41,7 @@ class GameModelTest {
     }
 
     @Test
-    void areNoMorePlayersThanSeven() {
+    void invitePlayers_ShouldCreatePlayerListWithNoMoreThanSevenPlayers() {
         // Arrange
         Player player1 = new Player();
         Player player2 = new Player();
@@ -50,7 +51,6 @@ class GameModelTest {
         Player player6 = new Player();
         Player player7 = new Player();
         Player player8 = new Player();
-        gameModel.invitePlayers(player1, player2, player3, player4, player5, player6, player7, player8);
 
         // Act
         gameModel.invitePlayers(player1, player2, player3, player4, player5, player6, player7, player8);
@@ -61,7 +61,7 @@ class GameModelTest {
     }
 
     @Test
-    void areAtLeastTwoPlayers() {
+    void invitePlayers_ShouldCreatePlayerListWithAtLeastTwoPlayers() {
         // Arrange
         Player player1 = new Player();
 
@@ -74,18 +74,17 @@ class GameModelTest {
     }
 
     @Test
-    void shouldPlayersHaveEightCards_When_InTheGameAreNoMoreThanSixPlayers() {
+    void beginTheDeal_ShouldSetPlayersHaveEightCards_When_InTheGameAreNoMoreThanSixPlayers() {
         // Arrange
         Player player1 = new Player();
         Player player2 = new Player();
         Player player3 = new Player();
         Player player4 = new Player();
-
-        // Act
         gameModel.invitePlayers(player1,player2, player3, player4);
         gameModel.prepareCardDeck();
-        gameModel.beginTheDeal();
 
+        // Act
+        gameModel.beginTheDeal();
 
         // Assert
         for(Player players : gameModel.getPlayers())
@@ -93,7 +92,7 @@ class GameModelTest {
     }
 
     @Test
-    void shouldPlayersHaveSevenCards_When_InTheGameAreSevenPlayers() {
+    void beginTheDeal_ShouldSetThePlayersSevenCards_When_InTheGameAreSevenPlayers() {
         // Arrange
         Player player1 = new Player();
         Player player2 = new Player();
@@ -102,10 +101,10 @@ class GameModelTest {
         Player player5 = new Player();
         Player player6 = new Player();
         Player player7 = new Player();
-
-        // Act
         gameModel.invitePlayers(player1,player2, player3, player4, player5, player6, player7);
         gameModel.prepareCardDeck();
+
+        // Act
         gameModel.beginTheDeal();
 
         // Assert
@@ -114,12 +113,12 @@ class GameModelTest {
     }
 
     @Test
-    void isEightOneOfTheFirstFiveCardsOnThePile() {
+    void putStarterOnPile_ShouldSetFirstFiveCardsOnThePileOtherThanEight() {
         // Arrange
         List<Card> stock;
+        gameModel.prepareCardDeck();
 
         //Act
-        gameModel.prepareCardDeck();
         gameModel.putStarterOnPile();
         stock = gameModel.getStock();
         int stockSize = stock.size();
@@ -130,18 +129,13 @@ class GameModelTest {
     }
 
     @Test
-    void isTheDealerOneOfThePlayers() {
-
-    }
-
-    @Test
-    void dealCard_When_InThePileAreZeroCards_ShouldReturnOne() {
+    void dealCard_When_OnThePileAreZeroCards_ShouldReturnOne() {
         // Arrange
         Player player = new Player();
-
-        //Act
         gameModel.getStock();
         gameModel.setTurnPlayer(player);
+
+        //Act
         int actual = gameModel.dealCard();
 
         //Assert
@@ -149,14 +143,14 @@ class GameModelTest {
     }
 
     @Test
-    void dealCard_When_InThePileAreMoreThanZeroCards_ShouldReturnZero() {
+    void dealCard_When_OnThePileAreMoreThanZeroCards_ShouldReturnZero() {
         // Arrange
         Player player = new Player();
+        gameModel.prepareCardDeck();
+        gameModel.getStock();
+        gameModel.setTurnPlayer(player);
 
         //Act
-        gameModel.prepareCardDeck();
-        gameModel.setTurnPlayer(player);
-        gameModel.getStock();
         int actual = gameModel.dealCard();
 
         //Assert
@@ -164,12 +158,12 @@ class GameModelTest {
     }
 
     @Test
-    void playCards_WhenPlayerDoesNotChooseCard_ShouldReturnFalse() {
+    void playCards_When_PlayerDoesNotChooseCard_ShouldReturnFalse() {
         //Arrange
         Player player = new Player();
+        gameModel.setTurnPlayer(player);
 
         //Act
-        gameModel.setTurnPlayer(player);
         boolean actual = gameModel.playCards();
 
         //Assert
@@ -177,16 +171,16 @@ class GameModelTest {
     }
 
     @Test
-    void playCards_WhenPlayerChoosesEightAsFirst_ShouldReturnTrue() {
+    void playCards_When_PlayerChoosesEightAsFirst_ShouldReturnTrue() {
         //Arrange
         Player player = new Player();
         Card eightDiamonds = new Card(Suit.DIAMONDS,Denomination.EIGHT);
         Card cardOtherThanEight = new Card(Suit.DIAMONDS, Denomination.JACK);
-
-        //Act
         gameModel.setTurnPlayer(player);
         player.selectCard(eightDiamonds);
         player.selectCard(cardOtherThanEight);
+
+        //Act
         boolean actual = gameModel.playCards();
 
         //Assert
@@ -194,14 +188,145 @@ class GameModelTest {
     }
 
     @Test
-    void turnPlayerIsWinner() {
+    void playCards_When_PlayerChoosesCardWithTheSameSuitLikeTheLastOneOnThePile_ShouldReturnTrue() {
+        //Arrange
+        Player player = new Player();
+        Card cardChosenByThePlayer = new Card(Suit.HEARTS,Denomination.THREE);
+        Card lastOneCardOnThePile = new Card(Suit.HEARTS,Denomination.QUEEN);
+        List<Card> pile = gameModel.getPile();
+        gameModel.setTurnPlayer(player);
+        player.selectCard(cardChosenByThePlayer);
+        pile.add(lastOneCardOnThePile);
+
+        //Act
+        boolean actual = gameModel.playCards();
+
+        //Assert
+        assertTrue(actual);
     }
 
     @Test
-    void nextPlayerTurn() {
+    void playCards_When_PlayerChoosesCardWithTheSameDenominationLikeTheLastOneOnThePile_ShouldReturnTrue() {
+        //Arrange
+        Player player = new Player();
+        Card cardChosenByThePlayer = new Card(Suit.SPADES,Denomination.ACE);
+        Card lastOneCardOnThePile = new Card(Suit.HEARTS,Denomination.ACE);
+        List<Card> pile = gameModel.getPile();
+        gameModel.setTurnPlayer(player);
+        player.selectCard(cardChosenByThePlayer);
+        pile.add(lastOneCardOnThePile);
+
+        //Act
+        boolean actual = gameModel.playCards();
+
+        //Assert
+        assertTrue(actual);
     }
 
     @Test
-    void winnerPoints() {
+    void playCards_When_PlayerChoosesCardWithTheDifferentDenominationAndSuitLikeTheLastOneOnThePile_ShouldReturnFalse() {
+        //Arrange
+        Player player = new Player();
+        Card cardChosenByThePlayer = new Card(Suit.SPADES,Denomination.ACE);
+        Card lastOneCardOnThePile = new Card(Suit.HEARTS,Denomination.QUEEN);
+        List<Card> pile = gameModel.getPile();
+        gameModel.setTurnPlayer(player);
+        player.selectCard(cardChosenByThePlayer);
+        pile.add(lastOneCardOnThePile);
+
+        //Act
+        boolean actual = gameModel.playCards();
+
+        //Assert
+        assertFalse(actual);
+    }
+
+    @Test
+    void turnPlayerIsWinner_When_TurnPlayerHasZeroCards_ShouldReturnTrue() {
+        //Arrange
+        Player player = new Player();
+        gameModel.setTurnPlayer(player);
+
+        //Act
+        boolean actual = gameModel.turnPlayerIsWinner();
+
+        //Assert
+        assertTrue(actual);
+    }
+
+    @Test
+    void turnPlayerIsWinner_When_TurnPlayerHasMoreThanZeroCards_ShouldReturnFalse() {
+        //Arrange
+        Player player = new Player();
+        gameModel.setTurnPlayer(player);
+        player.selectCard(new Card(Suit.SPADES,Denomination.KING));
+
+        //Act
+        boolean actual = gameModel.turnPlayerIsWinner();
+
+        //Assert
+        assertFalse(actual);
+    }
+
+    @Test
+    void nextPlayerTurn_When_TurnPlayerIsTheLastOne_WillSetTurnPlayerAsFirstOne() {
+        //Arrange
+        Player player1 = new Player();
+        Player player2 = new Player();
+        Player player3 = new Player();
+        Player player4 = new Player();
+        gameModel.invitePlayers(player1,player2,player3,player4);
+        gameModel.setTurnPlayer(player4);
+
+        //Act
+        gameModel.nextPlayerTurn();
+        Player actual = gameModel.getTurnPlayer();
+
+        //Assert
+        assertEquals(player1,actual);
+    }
+
+    @Test
+    void nextPlayerTurn_When_TurnPlayerIsTheSecondOfFour_WillSetTurnPlayerAsThirdOne() {
+        //Arrange
+        Player player1 = new Player();
+        Player player2 = new Player();
+        Player player3 = new Player();
+        Player player4 = new Player();
+        gameModel.invitePlayers(player1, player2, player3, player4);
+        gameModel.setTurnPlayer(player2);
+
+        //Act
+        gameModel.nextPlayerTurn();
+        Player actual = gameModel.getTurnPlayer();
+
+        //Assert
+        assertEquals(player3,actual);
+    }
+
+    @Test
+    void winnerPoints_When_PlayerPutQueenThreeAceEightOnThePile_ShouldReturnSixtyOne() {
+        //Arrange
+        Player player1 = new Player();
+        Player player2 = new Player();
+        Player player3 = new Player();
+        List<Card> cards = new ArrayList();
+        cards.add(new Card(Suit.SPADES,Denomination.QUEEN));
+        cards.add(new Card(Suit.DIAMONDS,Denomination.THREE));
+        cards.add(new Card(Suit.CLUBS,Denomination.ACE));
+        cards.add(new Card(Suit.HEARTS,Denomination.EIGHT));
+        gameModel.invitePlayers(player1, player2, player3);
+
+        //Act
+        int actual = 0;
+
+        for(Card card : cards)
+        {
+            player1.selectCard(card);
+            actual = gameModel.winnerPoints();
+        }
+
+        //Assert
+        assertEquals(61,actual);
     }
 }
