@@ -137,6 +137,13 @@ public class GameModelReactive {
         // They are rather static and don't use observables.
         prepareCardDeck();
         prepareBots();
+
+        turnPlayer.get().selectedSuitProperty().addListener((observable, oldValue, newValue) -> {
+            // Change gameModel suit according to turnPlayer choice.
+            // Player can select suit only after crazy eight is played
+            suit.set(newValue);
+        });
+
         drawDealer();
     }
 

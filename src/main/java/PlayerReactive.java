@@ -1,4 +1,5 @@
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -16,10 +17,10 @@ public abstract class PlayerReactive {
      * is selected, player can select appropriate symbol which
      * can be somewhat updated on screen.
      */
-    private ObservableList<Suit> selectedSuit = FXCollections.observableArrayList();
+    private SimpleObjectProperty<Suit> selectedSuit = new SimpleObjectProperty<>();
 
     public void selectCard(CardReactive card){
-        card.setSelected(true);
+            card.setSelected(true);
     }
 
     public void unselectCard(CardReactive card){
@@ -31,8 +32,7 @@ public abstract class PlayerReactive {
     }
 
     public void selectSuit(Suit suit){
-        selectedSuit.clear();
-        selectedSuit.add(suit);
+        selectedSuit.set(suit);
     }
 
     public List<CardReactive> playCards(){
@@ -47,12 +47,12 @@ public abstract class PlayerReactive {
         this.cards = cards;
     }
 
-    public ObservableList<Suit> getSelectedSuit() {
-        return selectedSuit;
+    public Suit getSelectedSuit() {
+        return selectedSuit.get();
     }
 
-    public void setSelectedSuit(ObservableList<Suit> selectedSuit) {
-        this.selectedSuit = selectedSuit;
+    public SimpleObjectProperty<Suit> selectedSuitProperty() {
+        return selectedSuit;
     }
 
 }
