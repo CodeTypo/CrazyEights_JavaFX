@@ -1,16 +1,18 @@
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+
 import javafx.collections.ListChangeListener;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-
-import java.net.URL;
-import java.util.ResourceBundle;
+import javafx.scene.layout.*;
 // imports for loading and converting external svg files
 
 
@@ -45,33 +47,41 @@ public class CrazyEightsReactiveController {
     @FXML
     private ImageView deckImg;
 
+    @FXML
+    private ImageView suitSymbol;
+
+    @FXML
+    private HBox hBoxsOfSuits;
+
+    @FXML
+    private ImageView spadesIV;
+
+    @FXML
+    private ImageView clubsIV;
+
+    @FXML
+    private ImageView heartsIV;
+
+    @FXML
+    private ImageView diamondsIV;
+
     //The whole game flow is being controlled by this class
     GameModelReactive gameModel = new GameModelReactive();
 
+    //Only p1 Player is interactive and controlled by user
     InteractivePlayerReactive player;
+
+    // Map player hands to panes
+    Map<PlayerReactive, Pane> hands = new HashMap<>();
 
     public CrazyEightsReactiveController() {}
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Controller class fields ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Preparing the game ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     @FXML
     void initialize() {
-
-        gameModel.turnPlayerProperty().addListener((observable, oldTurnPlayer, turnPlayer) -> {
-            if (turnPlayer == this.player){
-
-            }
-        });
-
-
-        //Prepares a fresh, brand new deck of cards
-        //Adds four players to the game
-        //Deal 8 cards to each player
-        gameModel.init();
-        this.player = gameModel.getInteractivePlayer();
 
         gameModel.getPile().addListener((ListChangeListener<? super CardReactive>) c -> {
             if (c.wasAdded()){
@@ -88,21 +98,95 @@ public class CrazyEightsReactiveController {
             }
         });
 
-        gameModel.getTurnPlayer().getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
-            if (c.wasUpdated()){
-                // rerender appropriate pane
+        gameModel.turnPlayerProperty().addListener((observable, oldTurnPlayer, turnPlayer) -> {
+            if (turnPlayer == this.player){
+
             }
         });
 
-        gameModel.getBotPlayers().forEach(bot -> bot.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
+
+        //Prepares a fresh, brand new deck of cards
+        //Adds four players to the game
+
+        gameModel.init();
+        this.player = gameModel.getInteractivePlayer();
+
+        List<BotPlayerReactive> bots = gameModel.getBotPlayers();
+
+        hands.put(this.player, box1);
+        hands.put(bots.get(0), box2);
+        hands.put(bots.get(1), box3);
+        hands.put(bots.get(2), box4);
+
+
+        gameModel.getTurnPlayer().getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
             if (c.wasUpdated()){
-                //render appropriate pane
-
+                // rerender appropriate pane
+                addCardsToHand(gameModel.getTurnPlayer());
             }
-        }));
+        });
 
 
 
+        // We may want to animate this (eg card position)
+        //Deal 8 cards to each player
+        gameModel.beginTheDeal();
+
+        gameModel.putStarterOnPile();
+
+
+        initSuitSymbolSelector();
+
+    }
+
+    public void addCardsToHand(PlayerReactive pl){
+        Pane hand = hands.get(pl);
+        hand.getChildren().clear();
+
+        //A method being executed whenever a card needs to be added to a player's hand
+        ImageView imageView = new ImageView();  //Creating a new ImageView
+
+        imageView.setFitWidth(100);              //Setting its max width
+        imageView.setFitHeight(140);            //Setting its max height
+        imageView.setPreserveRatio(true);       //Keeps the original value of the image
+        imageView.setSmooth(true);              //Smoothens the image a litte bit
+        imageView.setCache(true);               //Sets image caching boolean value to true
+
+//        String boxId = box.getId();             //Gets the id of the box the card should be put into
+        switch (boxId){                         //Sets the appropriate imageview rotation depending on the box
+            case "box2" -> imageView.setRotate(imageView.getRotate()+270);
+            case "box3" -> imageView.setRotate(imageView.getRotate()+180);
+            case "box4" -> imageView.setRotate(imageView.getRotate()+90);
+        }
+
+        box.getChildren().add(0, imageView);// Adds the image view to the box
+
+        Image image;                              //A new Image object is being created
+        if (boxId.equals("box1")){                //If the card is going to be added to a player box
+            //Then the card front image is being set and an onClick listener method is being added to it making it interactive
+            imageView.setOnMouseClicked(event -> cardClicked(card, imageView));
+            image = card.getCardFront();
+        } else {                                  //If the box belongs to one of the 3 bot players left
+            image = Card.getCardBack();            //Then the card back image is being shown
+        }
+
+        imageView.setImage(image);                //Populates the ImageView with selected image
+        //System.out.println(imageView.getId());    //outputs the image's id to the console, used to verify if everything is correct
+
+
+
+
+    }
+
+    public void initSuitSymbolSelector(){
+        suitSymbol.setFitWidth(100);
+        suitSymbol.setFitHeight(100);
+        suitSymbol.setImage(Suit.SPADES.getSymbol());
+
+        clubsIV.setImage(Suit.CLUBS.getSymbol());
+        diamondsIV.setImage(Suit.DIAMONDS.getSymbol());
+        heartsIV.setImage(Suit.HEARTS.getSymbol());
+        spadesIV.setImage(Suit.SPADES.getSymbol());
     }
 
     public void onClickStart(){
@@ -138,53 +222,79 @@ public class CrazyEightsReactiveController {
         pileImg.setFitWidth(100);                                      //Setting its max width
         pileImg.setFitHeight(140);                                     //Setting its max height
         pileImg.setImage(gameModel.getTopCardFromPile().getCardFront());                                   //Filling the imageView with a card front image
+
+        render();
     }
 
-    public void addImageViewToBox (String id, Card card, Pane box){
-        //A method being executed whenever a card needs to be added to a player's hand
-        ImageView imageView = new ImageView();  //Creating a new ImageView
-        imageView.setId(id);                    //Settings its Id to represent the card it depictures
 
-        imageView.setFitWidth(100);              //Setting its max width
-        imageView.setFitHeight(140);            //Setting its max height
-        imageView.setPreserveRatio(true);       //Keeps the original value of the image
-        imageView.setSmooth(true);              //Smoothens the image a litte bit
-        imageView.setCache(true);               //Sets image caching boolean value to true
 
-        String boxId = box.getId();             //Gets the id of the box the card should be put into
-        switch (boxId){                         //Sets the appropriate imageview rotation depending on the box
-            case "box2" -> imageView.setRotate(imageView.getRotate()+270);
-            case "box3" -> imageView.setRotate(imageView.getRotate()+180);
-            case "box4" -> imageView.setRotate(imageView.getRotate()+90);
-        }
+//    public void addImageViewToBox (String id, Card card, Pane box){
+//        //A method being executed whenever a card needs to be added to a player's hand
+//        ImageView imageView = new ImageView();  //Creating a new ImageView
+//        imageView.setId(id);                    //Settings its Id to represent the card it depictures
+//
+//        imageView.setFitWidth(100);              //Setting its max width
+//        imageView.setFitHeight(140);            //Setting its max height
+//        imageView.setPreserveRatio(true);       //Keeps the original value of the image
+//        imageView.setSmooth(true);              //Smoothens the image a litte bit
+//        imageView.setCache(true);               //Sets image caching boolean value to true
+//
+//        String boxId = box.getId();             //Gets the id of the box the card should be put into
+//        switch (boxId){                         //Sets the appropriate imageview rotation depending on the box
+//            case "box2" -> imageView.setRotate(imageView.getRotate()+270);
+//            case "box3" -> imageView.setRotate(imageView.getRotate()+180);
+//            case "box4" -> imageView.setRotate(imageView.getRotate()+90);
+//        }
+//
+//        box.getChildren().add(0, imageView);// Adds the image view to the box
+//
+//        Image image;                              //A new Image object is being created
+//        if (boxId.equals("box1")){                //If the card is going to be added to a player box
+//            //Then the card front image is being set and an onClick listener method is being added to it making it interactive
+//            imageView.setOnMouseClicked(event -> cardClicked(card, imageView));
+//            image = card.getCardFront();
+//        } else {                                  //If the box belongs to one of the 3 bot players left
+//            image = Card.getCardBack();            //Then the card back image is being shown
+//        }
+//
+//        imageView.setImage(image);                //Populates the ImageView with selected image
+//        //System.out.println(imageView.getId());    //outputs the image's id to the console, used to verify if everything is correct
+//    }
 
-        box.getChildren().add(0, imageView);// Adds the image view to the box
+//    public void render(){
+//        Pane[] Boxes = new Pane[]{box1,box2,box3,box4};   //A set of four boxes representing players hands is being created
+//        for (Pane pane : Boxes)
+//            pane.getChildren().clear();
+//
+//        int j = 0;
+//        for (Player player : gameModel.getPlayers()) {              //Each player that was invited to the gamemodel
+//            for (Card card: player.getCards()) {
+//                addImageViewToBox(card.toString(), card, Boxes[j]); //Gets a container for each card added to his box
+//            }
+//            j++;
+//        }
+//        suitSymbol.setImage(gameModel.getSuit().getSymbol());
+//    }
 
-        Image image;                              //A new Image object is being created
-        if (boxId.equals("box1")){                //If the card is going to be added to a player box
-            //Then the card front image is being set and an onClick listener method is being added to it making it interactive
-            imageView.setOnMouseClicked(event -> cardClicked(card, imageView));
-            image = card.getCardFront();
-        } else {                                  //If the box belongs to one of the 3 bot players left
-            image = Card.getCardBack();            //Then the card back image is being shown
-        }
+    @FXML
+    void onSelectSuitClick(Event event) {
+        ImageView object =  (ImageView) event.getSource();
+        switch (object.getId()){
+            case "spadesIV": gameModel.selectSuit(Suit.SPADES);
+                suitSymbol.setImage(Suit.SPADES.getSymbol());
+                break;
+            case "diamondsIV": gameModel.selectSuit(Suit.DIAMONDS);
+                suitSymbol.setImage(Suit.DIAMONDS.getSymbol());
+                break;
+            case "heartsIV": gameModel.selectSuit(Suit.HEARTS);
+                suitSymbol.setImage(Suit.HEARTS.getSymbol());
+                break;
+            case "clubsIV": gameModel.selectSuit(Suit.CLUBS);
+                suitSymbol.setImage(Suit.CLUBS.getSymbol());
+                break;
 
-        imageView.setImage(image);                //Populates the ImageView with selected image
-        //System.out.println(imageView.getId());    //outputs the image's id to the console, used to verify if everything is correct
-    }
-
-    public void render(){
-        Pane[] Boxes = new Pane[]{box1,box2,box3,box4};   //A set of four boxes representing players hands is being created
-        for (Pane pane : Boxes)
-            pane.getChildren().clear();
-
-        int j = 0;
-        for (Player player : gameModel.getPlayers()) {              //Each player that was invited to the gamemodel
-            for (Card card: player.getCards()) {
-                addImageViewToBox(card.toString(), card, Boxes[j]); //Gets a container for each card added to his box
-            }
-            j++;
-        }
+        };
+        hBoxsOfSuits.setVisible(false);
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Preparing the game ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -209,30 +319,33 @@ public class CrazyEightsReactiveController {
         System.out.println(card.toString() + " selected: " + card.isSelected()); //An output statement to check if everything worked well
     }
 
-//    private void cardDeal() {
-//        gameModel.setTurnPlayer(p1);        //Usunąć w późniejszych wersjach !!!
-//        int check = gameModel.dealCard();                   //calls the gameModel dealcard() method, the method returns 0 if succedeed, 1 when failed
-//        if(check == 0) {                                    //if the card was drawn successfully
-//            int pointer = p1.getCards().size() - 1;         //a pointer to the top card of the pile is being set
-//            System.out.println(pointer);                    //a sout to check if everything is correct
-//            String suit = p1.getCards().get(pointer).getSuit().toString();                  //A cards suit
-//            String denomination = p1.getCards().get(pointer).getDenomination().toString();  //and denomination are saved
-//            addImageViewToBox( denomination + suit, p1.getCards().get(pointer), box1);   //Adds a card to a players box
-//            // change back cover of card from the deck
-//            deckImg.setImage(Card.getCardBack());//sets the stock image to the nex card's back   (Czy to jest potrzebne? Każda karta ma taki sam rewers)
-//        } else {
-//            deckImg.setImage(null);                         //If the method fails, an image is being removed, we are out of cards
-//        }
-//    }
+    private void cardDeal() {
+        gameModel.setTurnPlayer(p1);        //Usunąć w późniejszych wersjach !!!
+        int check = gameModel.dealCard();                   //calls the gameModel dealcard() method, the method returns 0 if succedeed, 1 when failed
+        if(check == 0) {                                    //if the card was drawn successfully
+            int pointer = p1.getCards().size() - 1;         //a pointer to the top card of the pile is being set
+            System.out.println(pointer);                    //a sout to check if everything is correct
+            String suit = p1.getCards().get(pointer).getSuit().toString();                  //A cards suit
+            String denomination = p1.getCards().get(pointer).getDenomination().toString();  //and denomination are saved
+            addImageViewToBox( denomination + suit, p1.getCards().get(pointer), box1);   //Adds a card to a players box
+            // change back cover of card from the deck
+            deckImg.setImage(Card.getCardBack());//sets the stock image to the nex card's back   (Czy to jest potrzebne? Każda karta ma taki sam rewers)
+        } else {
+            deckImg.setImage(null);                         //If the method fails, an image is being removed, we are out of cards
+        }
+    }
 
 
     @FXML
     void onConfirmedClicked(ActionEvent event) {
         // A method executing when the user clicks a GUI "confirm" button
         gameModel.setTurnPlayer(p1);    // Usunąć w późniejszej wersji!!!!!!!!
-        if (gameModel.playCards()) {    // GameModel playCards() method is being called
+        if (p1.getSelectedCards().get(0).getDenomination() == Denomination.EIGHT && gameModel.playCards()) {// GameModel playCards() method is being called
+            hBoxsOfSuits.setVisible(true);
             render();
         }
+        else if (gameModel.playCards())
+            render();
         pileImg.setImage(gameModel.getTopCardFromPile().getCardFront()); //A card from the users box is being put on the pile
     }
 

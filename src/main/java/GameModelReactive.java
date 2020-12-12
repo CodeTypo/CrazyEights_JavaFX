@@ -137,31 +137,7 @@ public class GameModelReactive {
         // They are rather static and don't use observables.
         prepareCardDeck();
         prepareBots();
-
-        //Setup observables to do dirty job.
-
-        turnPlayer.addListener((observable, oldValue, newValue) -> {
-            if (newValue instanceof BotPlayerReactive){
-                //Bot has turn
-            }
-        });
-
-
-
-
-//        botPlayers.forEach(bot -> {
-//            bot.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
-//                c.
-//            });
-//        });
-
-
-
-
-
         drawDealer();
-        beginTheDeal();
-        putStarterOnPile();
     }
 
     public void playCards(){
