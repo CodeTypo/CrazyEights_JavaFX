@@ -1,5 +1,8 @@
 import javafx.scene.image.Image;
 
+// WILL BE REMOVED SOON!!! DO NOT EDIT!!!
+// EDIT CardReactive INSTEAD!!!
+
 public class Card {
     private static Image cardBack = SVGUtils.getImageFromSVG("/imagesSVG/1B.svg");
 

@@ -11,6 +11,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 // imports for loading and converting external svg files
 
+// WILL BE REMOVED SOON!!! DO NOT EDIT!!!
+// EDIT CrazyEightsReactiveController INSTEAD!!!
 
 public class CrazyEightsController {
 

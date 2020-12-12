@@ -1,5 +1,8 @@
 import java.util.*;
 
+// WILL BE REMOVED SOON!!! DO NOT EDIT!!!
+// EDIT PlayerReactive INSTEAD!!!
+
 public class Player {
 
 
