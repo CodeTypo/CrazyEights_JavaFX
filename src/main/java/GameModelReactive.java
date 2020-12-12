@@ -33,7 +33,7 @@ public class GameModelReactive {
     /**
      * Store cards in observable list to track
      * when elements changes.
-     * Only top card is must be tracked because
+     * Only top card must be tracked because
      * Controller needs to refresh its view.
      */
     private ObservableList<CardReactive> pile = FXCollections.observableArrayList();
@@ -225,5 +225,33 @@ public class GameModelReactive {
 
     public InteractivePlayerReactive getInteractivePlayer() {
         return interactivePlayer;
+    }
+
+    public List<BotPlayerReactive> getBotPlayers() {
+        return botPlayers;
+    }
+
+    public ObservableList<CardReactive> getStock() {
+        return stock;
+    }
+
+    public ObservableList<CardReactive> getPile() {
+        return pile;
+    }
+
+    public Suit getSuit() {
+        return suit.get();
+    }
+
+    public SimpleObjectProperty<Suit> suitProperty() {
+        return suit;
+    }
+
+    public PlayerReactive getTurnPlayer() {
+        return turnPlayer.get();
+    }
+
+    public SimpleObjectProperty<PlayerReactive> turnPlayerProperty() {
+        return turnPlayer;
     }
 }
