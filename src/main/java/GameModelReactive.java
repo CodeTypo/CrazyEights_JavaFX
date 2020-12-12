@@ -76,7 +76,7 @@ public class GameModelReactive {
 
     public void drawDealer(){
         //Set player who starts game randomly
-        int randInt = getRandomInt(0, botPlayers.size()+1);
+        int randInt = getRandomInt(0, botPlayers.size());
         if (randInt == BOTS) {
             turnPlayer.set(interactivePlayer); // if random int is out of bots array range
         } else {
@@ -90,8 +90,9 @@ public class GameModelReactive {
             int index = botPlayers.indexOf(getTurnPlayer());
             if (index == BOTS - 1) {
                 turnPlayer.set(interactivePlayer);
+            }else {
+                turnPlayer.set(botPlayers.get(index + 1));
             }
-            turnPlayer.set(botPlayers.get(index + 1));
         } else {
             // next turn belongs to bot
             turnPlayer.set(botPlayers.get(0));
@@ -138,13 +139,13 @@ public class GameModelReactive {
         prepareCardDeck();
         prepareBots();
 
+        drawDealer();
+
         getTurnPlayer().selectedSuitProperty().addListener((observable, oldValue, newValue) -> {
             // Change gameModel suit according to turnPlayer choice.
             // Player can select suit only after crazy eight is played
             suit.set(newValue);
         });
-
-        drawDealer();
     }
 
     /**
