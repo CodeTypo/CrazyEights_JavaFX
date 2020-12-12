@@ -165,7 +165,7 @@ public class GameModelReactive {
                 getTurnPlayer().removeSelectedCards(selCards);
                 return true;
             }else if(firstCard.getDenomination() == getTopCardFromPile().getDenomination()
-                    || firstCard.getSuit() == getTopCardFromPile().getSuit()){
+                    || firstCard.getSuit() == getSuit()){
                 pile.addAll(selCards);
                 getTurnPlayer().removeSelectedCards(selCards);
             }
