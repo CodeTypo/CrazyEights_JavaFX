@@ -158,7 +158,7 @@ class GameModelTest {
     }
 
     @Test
-    void playCards_When_PlayerDoesNotChooseCard_ShouldReturnFalse() {
+    void playCards_When_PlayerDoesNotSelectCard_ShouldReturnFalse() {
         //Arrange
         Player player = new Player();
         gameModel.setTurnPlayer(player);
@@ -171,7 +171,7 @@ class GameModelTest {
     }
 
     @Test
-    void playCards_When_PlayerChoosesEightAsFirst_ShouldReturnTrue() {
+    void playCards_When_PlayerSelectsEightAsFirst_ShouldReturnTrue() {
         //Arrange
         Player player = new Player();
         Card eightDiamonds = new Card(Suit.DIAMONDS, Denomination.EIGHT);
@@ -188,7 +188,7 @@ class GameModelTest {
     }
 
     @Test
-    void playCards_When_PlayerChoosesCardWithTheSameSuitLikeTheLastOneOnThePile_ShouldReturnTrue() {
+    void playCards_When_PlayerSelectsCardWithTheSameSuitsLikeTheLastOneOnThePile_ShouldReturnTrue() {
         //Arrange
         Player player = new Player();
         Card cardChosenByThePlayer = new Card(Suit.HEARTS, Denomination.THREE);
@@ -206,7 +206,7 @@ class GameModelTest {
     }
 
     @Test
-    void playCards_When_PlayerChoosesCardWithTheSameDenominationLikeTheLastOneOnThePile_ShouldReturnTrue() {
+    void playCards_When_PlayerSelectsCardWithTheSameDenominationsLikeTheLastOneOnThePile_ShouldReturnTrue() {
         //Arrange
         Player player = new Player();
         Card cardChosenByThePlayer = new Card(Suit.SPADES, Denomination.ACE);
@@ -224,7 +224,7 @@ class GameModelTest {
     }
 
     @Test
-    void playCards_When_PlayerChoosesCardWithTheDifferentDenominationAndSuitLikeTheLastOneOnThePile_ShouldReturnFalse() {
+    void playCards_When_PlayerSelectsCardWithDifferentDenominationsAndSuitsLikeTheLastOneOnThePile_ShouldReturnFalse() {
         //Arrange
         Player player = new Player();
         Card cardChosenByThePlayer = new Card(Suit.SPADES, Denomination.ACE);
