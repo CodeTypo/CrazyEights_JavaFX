@@ -35,7 +35,7 @@ public class BotPlayerReactive extends PlayerReactive{
      */
     private boolean crazyEightStrategy(){
         boolean selected = false;
-        for (Card card: getCards()) {
+        for (CardReactive card: getCards()) {
             if (card.getDenomination() == Denomination.EIGHT){
                 // botPlayer plays always all crazy eights in its collection at once
                 selectCard(card);
@@ -54,7 +54,7 @@ public class BotPlayerReactive extends PlayerReactive{
      */
     private boolean sameDenominationStrategy(Card topPile){
         boolean selected = false;
-        for (Card card: getCards()) {
+        for (CardReactive card: getCards()) {
             if (card.getDenomination() == topPile.getDenomination()){
                 selectCard(card);
                 selected = true;
@@ -71,7 +71,7 @@ public class BotPlayerReactive extends PlayerReactive{
      * @return true if strategy works (any card is selected)
      */
     private boolean sameSuitStrategy(Card topPile){
-        for (Card card: getCards()) {
+        for (CardReactive card: getCards()) {
             if (card.getSuit() == topPile.getSuit()){
                selectCard(card);
                return true;
