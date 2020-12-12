@@ -12,8 +12,8 @@ class PlayerTest {
     void dealCard_When_PlayerDealsTwoCards_ShouldPlayerGetsTwoCards() {
         //Arrange
         List<Card> cards = player.getCards();
-        Card sevenSpades = new Card(Suit.SPADES,Denomination.SEVEN);
-        Card queenHeart = new Card(Suit.HEARTS,Denomination.QUEEN);
+        Card sevenSpades = new Card(Suit.SPADES, Denomination.SEVEN);
+        Card queenHeart = new Card(Suit.HEARTS, Denomination.QUEEN);
 
         //Act
         player.dealCard(sevenSpades);
@@ -27,7 +27,7 @@ class PlayerTest {
     @Test
     void selectCard_When_PlayerHasZeroSelectedCardBeforeSelectsCard_ShouldReturnTrue() {
         //Arrange
-        Card randomCard = new Card(Suit.CLUBS,Denomination.QUEEN);
+        Card randomCard = new Card(Suit.CLUBS, Denomination.QUEEN);
 
         //Act
         boolean actual = player.selectCard(randomCard);
@@ -39,12 +39,12 @@ class PlayerTest {
     @Test
     void selectCard_When_PlayerSelectsSomeCardsWithTheSameDenominations_ShouldReturnTrue() {
         //Arrange
-        Card firstCardSelected = new Card(Suit.SPADES,Denomination.JACK);
-        Card secondCardSelected = new Card(Suit.HEARTS,Denomination.JACK);
+        Card firstCardSelected = new Card(Suit.SPADES, Denomination.JACK);
+        Card secondCardSelected = new Card(Suit.HEARTS, Denomination.JACK);
         List<Card> selectedCards = player.getSelectedCards();
+        selectedCards.add(firstCardSelected);
 
         //Act
-        selectedCards.add(firstCardSelected);
         boolean actual = player.selectCard(secondCardSelected);
 
         //Assert
@@ -52,14 +52,14 @@ class PlayerTest {
     }
 
     @Test
-    void selectCard_When_PlayerSelectsSomeCardsWithOtherDenominations_ShouldReturnFalse() {
+    void selectCard_When_PlayerSelectsSomeCardsWithOtherDenomination_ShouldReturnFalse() {
         //Arrange
-        Card firstCardSelected = new Card(Suit.SPADES,Denomination.JACK);
-        Card secondCardSelected = new Card(Suit.HEARTS,Denomination.QUEEN);
+        Card firstCardSelected = new Card(Suit.SPADES, Denomination.JACK);
+        Card secondCardSelected = new Card(Suit.HEARTS, Denomination.QUEEN);
         List<Card> selectedCards = player.getSelectedCards();
+        selectedCards.add(firstCardSelected);
 
         //Act
-        selectedCards.add(firstCardSelected);
         boolean actual = player.selectCard(secondCardSelected);
 
         //Assert
@@ -67,30 +67,18 @@ class PlayerTest {
     }
 
     @Test
-    void selectCard_When_PlayerSelectsSomeCardsWithOtherDenomination_ShouldReturnFalse() {
-    }
+    void removeSelectedCards_ShouldRemoveAllSelectedCards(){
+        //Arrange
+        List<Card> selectedCards = player.getSelectedCards();
+        selectedCards.add(new Card(Suit.CLUBS, Denomination.QUEEN));
+        selectedCards.add(new Card(Suit.SPADES, Denomination.JACK));
+        selectedCards.add(new Card(Suit.CLUBS, Denomination.THREE));
+        selectedCards.add(new Card(Suit.HEARTS, Denomination.ACE));
 
-    @Test
-    void putCardOnPile() {
-    }
+        //Act
+        player.removeSelectedCards();
 
-    @Test
-    void selectSuit() {
-    }
-
-    @Test
-    void getSelectedCards() {
-    }
-
-    @Test
-    void getSelectedSuit() {
-    }
-
-    @Test
-    void getCardsNumber() {
-    }
-
-    @Test
-    void getAllCards() {
+        //Assert
+        assertEquals(0, selectedCards.size());
     }
 }
