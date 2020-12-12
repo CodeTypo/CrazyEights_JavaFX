@@ -4,7 +4,7 @@ import javafx.collections.ObservableList;
 
 import java.util.List;
 
-public class PlayerReactive {
+public abstract class PlayerReactive {
     /**
      * We need to track player's cards to update them on screen.
      * Selected cards will be marked in CardReactive's selected field.
@@ -17,11 +17,6 @@ public class PlayerReactive {
      * can be somewhat updated on screen.
      */
     private ObservableList<Suit> selectedSuit = FXCollections.observableArrayList();
-
-    /**
-     * We need to track if player has turn. Only player who has turn can deal and play cards.
-     */
-    private SimpleBooleanProperty hasTurn = new SimpleBooleanProperty();
 
     public void selectCard(CardReactive card){
         card.setSelected(true);
@@ -60,15 +55,4 @@ public class PlayerReactive {
         this.selectedSuit = selectedSuit;
     }
 
-    public boolean isHasTurn() {
-        return hasTurn.get();
-    }
-
-    public SimpleBooleanProperty hasTurnProperty() {
-        return hasTurn;
-    }
-
-    public void setHasTurn(boolean hasTurn) {
-        this.hasTurn.set(hasTurn);
-    }
 }
