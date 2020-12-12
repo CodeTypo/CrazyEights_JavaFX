@@ -142,28 +142,52 @@ public class CrazyEightsReactiveController {
         hands.put(bots.get(1), box3);
         hands.put(bots.get(2), box4);
 
-        addCardsToHands();
-
-        gameModel.getTurnPlayer().getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
-            while (c.next()){
-                if (c.wasUpdated()){
-                    // rerender appropriate hand view
-                    // addCardToHand(gameModel.getTurnPlayer());
-                }
-            }
-        });
-
-
-
         // We may want to animate this (eg card position)
         //Deal 8 cards to each player
         gameModel.beginTheDeal();
 
         gameModel.putStarterOnPile();
 
+        bots.forEach(bot -> {
+            bot.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
+                while (c.next()) {
+                    if (c.wasAdded()) {
+                        List<CardReactive> addedCards = (List<CardReactive>) c.getAddedSubList();
+                        addedCards.forEach(cardReactive -> addCardToHand(cardReactive, bot));
+                    }
+
+                    if (c.wasRemoved()) {
+                        List<CardReactive> removedCards = (List<CardReactive>) c.getRemoved();
+                        removedCards.forEach(cardReactive -> {
+
+                        });
+
+                    }
+
+                }
+            });
+        });
+
+        player.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
+            while (c.next()){
+                if (c.wasAdded()){
+                    List<CardReactive> addedCards = (List<CardReactive>) c.getAddedSubList();
+                    addedCards.forEach(cardReactive -> addCardToHand(cardReactive, player));
+                }
+
+                if (c.wasRemoved()){
+                    c.getRemoved().get(0);
+                }
+
+            }
+        });
+
+
         System.out.println(gameModel.getTurnPlayer());
 
         initSuitSymbolSelector();
+
+        gameModel.setTurnPlayer(this.player);
     }
 
     public void initSuitSymbolSelector(){
@@ -176,6 +200,50 @@ public class CrazyEightsReactiveController {
         heartsIV.setImage(Suit.HEARTS.getSymbol());
         spadesIV.setImage(Suit.SPADES.getSymbol());
     }
+
+    public void addCardToHand(CardReactive card, PlayerReactive playerReactive){
+        Pane pane = hands.get(playerReactive);
+        ImageView imageView = createCardView(card, pane);
+        setupCardView(card, imageView, playerReactive);
+        pane.getChildren().add(imageView); // Adds the image view to the box
+    }
+
+    public void removeCardFromHand(PlayerReactive playerReactive, CardReactive card){
+
+    }
+
+    public ImageView createCardView(CardReactive card, Pane pane){
+        ImageView imageView = new ImageView();  //Creating a new ImageView
+        imageView.setId(card.getId()); // Set image id to card id. In this way we bind these two together.
+
+        imageView.setFitWidth(100);             //Setting its max width
+        imageView.setFitHeight(140);            //Setting its max height
+        imageView.setPreserveRatio(true);       //Keeps the original value of the image
+        imageView.setSmooth(true);              //Smoothens the image a litte bit
+        imageView.setCache(true);               //Sets image caching boolean value to true
+
+        // We do not need to differentiate between 0 and 180 degrees
+        // and between 270 and 90 because cards look the same from both sides.
+        // We need to only differentiate between horizontal and vertical orientation.
+        if(pane instanceof VBox){
+            imageView.setRotate(imageView.getRotate()+90); //Sets the appropriate imageview rotation depending on the box
+        }
+
+        return imageView;
+    }
+
+    public void setupCardView(CardReactive card, ImageView imageView, PlayerReactive playerReactive){
+        // Set click listeners for interactive Player cards
+        if (playerReactive == this.player){ //If the card is going to be added to a player box
+            //Then the card front image is being set and an onClick listener method is being added to it making it interactive
+            imageView.setOnMouseClicked(event -> onCardClicked(card, imageView));
+            imageView.setImage(card.getCardFront());
+        } else { //If the box belongs to one of the 3 bot players left
+            //Then the card back image is being shown
+            imageView.setImage(CardReactive.getCardBack()); //Populates the ImageView with selected image
+        }
+    }
+
 
     // Called only once at the beginning when we need to update whole cards at once.
     // After game is started, cards are updated individually
@@ -194,34 +262,9 @@ public class CrazyEightsReactiveController {
             }
 
             for (CardReactive card: playerReactive.getCards()) {
-
-                ImageView imageView = new ImageView();  //Creating a new ImageView
-
-                imageView.setFitWidth(100);             //Setting its max width
-                imageView.setFitHeight(140);            //Setting its max height
-                imageView.setPreserveRatio(true);       //Keeps the original value of the image
-                imageView.setSmooth(true);              //Smoothens the image a litte bit
-                imageView.setCache(true);               //Sets image caching boolean value to true
-
-                // We do not need to differentiate between 0 and 180 degrees
-                // and between 270 and 90 because cards look the same from both sides.
-                // We need to only differentiate between horizontal and vertical orientation.
-                if(pane instanceof VBox){
-                    imageView.setRotate(imageView.getRotate()+90); //Sets the appropriate imageview rotation depending on the box
-                }
-
+                ImageView imageView = createCardView(card, pane);
+                setupCardView(card,imageView, playerReactive);
                 pane.getChildren().add(imageView); // Adds the image view to the box
-
-                // Set click listeners for interactive Player cards
-                if (playerReactive == this.player){ //If the card is going to be added to a player box
-                    //Then the card front image is being set and an onClick listener method is being added to it making it interactive
-                    imageView.setOnMouseClicked(event -> onCardClicked(card, imageView));
-                    imageView.setImage(card.getCardFront());
-                } else { //If the box belongs to one of the 3 bot players left
-                    //Then the card back image is being shown
-                    imageView.setImage(CardReactive.getCardBack()); //Populates the ImageView with selected image
-                }
-
             }
         });
     }
@@ -240,7 +283,7 @@ public class CrazyEightsReactiveController {
         });
     }
 
-    public void onClickStart(){
+    public void onStartClick(){
         //A method that executes when a big start button is being clicked by the user
         addCardsToHands();
         startButton.setVisible(false);                              //A start button is being hidden
@@ -258,6 +301,7 @@ public class CrazyEightsReactiveController {
         }
 
         hBoxsOfSuits.setVisible(false);
+        gameModel.nextPlayerTurn();
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Preparing the game ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

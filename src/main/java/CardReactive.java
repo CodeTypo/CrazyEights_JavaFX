@@ -76,4 +76,8 @@ public class CardReactive {
                 ", denomination=" + denomination +
                 '}';
     }
+
+    public String getId() {
+        return denomination.getS()+suit.getS();
+    }
 }
