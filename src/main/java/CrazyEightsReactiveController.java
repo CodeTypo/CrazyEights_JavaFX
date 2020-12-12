@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.collections.ListChangeListener;
+import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -89,8 +90,10 @@ public class CrazyEightsReactiveController {
 
         pileImg.setFitWidth(100); //Setting its max width
         pileImg.setFitHeight(140); //Setting its max height
+        suitSymbol.setVisible(false);
 
         gameModel.getPile().addListener((ListChangeListener<? super CardReactive>) c -> {
+            System.out.println("Pile changed");
             while (c.next()){
                 if (c.wasAdded()){
                     // Card was added to pile
@@ -105,9 +108,10 @@ public class CrazyEightsReactiveController {
         });
 
         gameModel.getStock().addListener((ListChangeListener<? super CardReactive>) c -> {
+            System.out.println("Stock changed");
             while (c.next()){
                 if (c.wasRemoved()){
-                    if (c.getRemovedSize() == 0){
+                    if (c.getList().size()==0){
                         deckImg.setImage(null); //An image is being removed, we are out of cards
                     }
                 }
@@ -115,6 +119,7 @@ public class CrazyEightsReactiveController {
         });
 
         gameModel.turnPlayerProperty().addListener((observable, oldTurnPlayer, turnPlayer) -> {
+            System.out.println("TurnPlayer changed from: " + oldTurnPlayer + " to: " + turnPlayer );
             // Only interactive player must confirm his actions.
             // Bots make it automatically after they choose cards.
             // Disable confirmButton, when interactive player doesn't have turn.
@@ -122,6 +127,7 @@ public class CrazyEightsReactiveController {
         });
 
         gameModel.suitProperty().addListener((observable, oldSuit, newSuit) -> {
+            System.out.println("Suit changed from: " + oldSuit + " to: " + newSuit );
             //Automatically update suit symbol on respective change in gameModel
             suitSymbol.setImage(gameModel.getSuit().getSymbol());
         });
@@ -146,22 +152,25 @@ public class CrazyEightsReactiveController {
         //Deal 8 cards to each player
         gameModel.beginTheDeal();
 
-        gameModel.putStarterOnPile();
-
         bots.forEach(bot -> {
             bot.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
+                System.out.println(bot + " cards changed");
                 while (c.next()) {
                     if (c.wasAdded()) {
                         List<CardReactive> addedCards = (List<CardReactive>) c.getAddedSubList();
-                        addedCards.forEach(cardReactive -> addCardToHand(cardReactive, bot));
+                        addedCards.forEach(cardReactive -> {
+                            addCardToHand(cardReactive, bot);
+                            System.out.println(bot + ": card was added:" + cardReactive);
+                        });
                     }
 
                     if (c.wasRemoved()) {
+                        System.out.println(bot + " card was removed");
                         List<CardReactive> removedCards = (List<CardReactive>) c.getRemoved();
                         removedCards.forEach(cardReactive -> {
-
+                            removeCardFromHand(cardReactive, bot);
+                            System.out.println(bot + ": card was removed:" + cardReactive);
                         });
-
                     }
 
                 }
@@ -169,14 +178,24 @@ public class CrazyEightsReactiveController {
         });
 
         player.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
+            System.out.println(player + " cards changed");
             while (c.next()){
                 if (c.wasAdded()){
                     List<CardReactive> addedCards = (List<CardReactive>) c.getAddedSubList();
-                    addedCards.forEach(cardReactive -> addCardToHand(cardReactive, player));
+                    addedCards.forEach(cardReactive -> {
+                        addCardToHand(cardReactive, player);
+                        System.out.println(player + ": card was added:" + cardReactive);
+                    });
+
                 }
 
-                if (c.wasRemoved()){
-                    c.getRemoved().get(0);
+                if (c.wasRemoved()) {
+                    List<CardReactive> removedCards = (List<CardReactive>) c.getRemoved();
+                    removedCards.forEach(cardReactive -> {
+                        removeCardFromHand(cardReactive, player);
+                        System.out.println(player + ": card was removed:" + cardReactive);
+                    });
+
                 }
 
             }
@@ -208,12 +227,37 @@ public class CrazyEightsReactiveController {
         pane.getChildren().add(imageView); // Adds the image view to the box
     }
 
-    public void removeCardFromHand(PlayerReactive playerReactive, CardReactive card){
+    public void removeCardFromHand(CardReactive card, PlayerReactive playerReactive){
+        Pane pane = hands.get(playerReactive);
+        String cardId = card.getId();
+        System.out.println("Card id: " + cardId);
+        Node removeNode = null;
+        // we are sure there is only one card with given id, but method return sublist
+        for (Node node: pane.getChildren()) {
+            String nodeId = node.getId();
+            System.out.println("Node: "+ nodeId);
+            removeNode = node;
+            if (nodeId.equals(cardId)){
+                break;
+            }
+        }
+
+//        for (int i = 0; i < pane.getChildren().size(); i++) {
+//            Node node = pane.getChildren().get(i);
+//            String nodeId = node.getId();
+//            System.out.println("Node: "+ nodeId);
+//
+//            removeNode = node;
+//            if (nodeId.equals())
+//        }
+
+        pane.getChildren().remove(removeNode);
 
     }
 
     public ImageView createCardView(CardReactive card, Pane pane){
         ImageView imageView = new ImageView();  //Creating a new ImageView
+
         imageView.setId(card.getId()); // Set image id to card id. In this way we bind these two together.
 
         imageView.setFitWidth(100);             //Setting its max width
@@ -286,22 +330,24 @@ public class CrazyEightsReactiveController {
     public void onStartClick(){
         //A method that executes when a big start button is being clicked by the user
         addCardsToHands();
+        gameModel.putStarterOnPile();
         startButton.setVisible(false);                              //A start button is being hidden
         initDeckImage();
+        suitSymbol.setVisible(true);
     }
 
     @FXML
     void onSelectSuitClick(Event event) {
         ImageView object =  (ImageView) event.getSource();
         switch (object.getId()) {
-            case "spadesIV" -> player.selectSuit(Suit.SPADES);
-            case "diamondsIV" -> player.selectSuit(Suit.DIAMONDS);
-            case "heartsIV" -> player.selectSuit(Suit.HEARTS);
-            case "clubsIV" -> player.selectSuit(Suit.CLUBS);
+            case "spadesIV" -> gameModel.setSuit(Suit.SPADES);
+            case "diamondsIV" -> gameModel.setSuit(Suit.DIAMONDS);
+            case "heartsIV" -> gameModel.setSuit(Suit.HEARTS);
+            case "clubsIV" -> gameModel.setSuit(Suit.CLUBS);
         }
 
         hBoxsOfSuits.setVisible(false);
-        gameModel.nextPlayerTurn();
+        //gameModel.nextPlayerTurn();
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Preparing the game ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

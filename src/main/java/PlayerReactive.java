@@ -35,7 +35,7 @@ public abstract class PlayerReactive {
         selectedSuit.set(suit);
     }
 
-    public void playCards(List<CardReactive> playedCards){
+    public void removeSelectedCards(List<CardReactive> playedCards){
         cards.removeAll(playedCards);
     }
 

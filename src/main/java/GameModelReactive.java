@@ -1,7 +1,5 @@
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
@@ -138,14 +136,8 @@ public class GameModelReactive {
         // They are rather static and don't use observables.
         prepareCardDeck();
         prepareBots();
-
         drawDealer();
 
-        getTurnPlayer().selectedSuitProperty().addListener((observable, oldValue, newValue) -> {
-            // Change gameModel suit according to turnPlayer choice.
-            // Player can select suit only after crazy eight is played
-            suit.set(newValue);
-        });
     }
 
     /**
@@ -170,12 +162,12 @@ public class GameModelReactive {
             // ze juz na wstepie nie mozna zaznaczyc karty niezgodnie z regulaminem.
             if (firstCard.getDenomination() == Denomination.EIGHT){
                 pile.addAll(selCards);
-                getTurnPlayer().playCards(selCards);
+                getTurnPlayer().removeSelectedCards(selCards);
                 return true;
             }else if(firstCard.getDenomination() == getTopCardFromPile().getDenomination()
                     || firstCard.getSuit() == getTopCardFromPile().getSuit()){
                 pile.addAll(selCards);
-                getTurnPlayer().playCards(selCards);
+                getTurnPlayer().removeSelectedCards(selCards);
             }
         }
 
