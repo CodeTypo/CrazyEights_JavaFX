@@ -91,21 +91,25 @@ public class CrazyEightsReactiveController {
         pileImg.setFitHeight(140); //Setting its max height
 
         gameModel.getPile().addListener((ListChangeListener<? super CardReactive>) c -> {
-            if (c.wasAdded()){
-                // Card was added to pile
-                // it takes the first card from the stock and puts it on the pile
-                // When a GameModel putStarterOnPile() method is called, this event will be fired,
-                // as well as after every update
+            while (c.next()){
+                if (c.wasAdded()){
+                    // Card was added to pile
+                    // it takes the first card from the stock and puts it on the pile
+                    // When a GameModel putStarterOnPile() method is called, this event will be fired,
+                    // as well as after every update
 
-                //A card from the users box is being put on the pile
-                pileImg.setImage(gameModel.getTopCardFromPile().getCardFront()); //Filling the imageView with a card front image
+                    //A card from the users box is being put on the pile
+                    pileImg.setImage(gameModel.getTopCardFromPile().getCardFront()); //Filling the imageView with a card front image
+                }
             }
         });
 
         gameModel.getStock().addListener((ListChangeListener<? super CardReactive>) c -> {
-            if (c.wasRemoved()){
-                if (c.getRemovedSize() == 0){
-                    deckImg.setImage(null); //An image is being removed, we are out of cards
+            while (c.next()){
+                if (c.wasRemoved()){
+                    if (c.getRemovedSize() == 0){
+                        deckImg.setImage(null); //An image is being removed, we are out of cards
+                    }
                 }
             }
         });
@@ -141,9 +145,11 @@ public class CrazyEightsReactiveController {
         addCardsToHands();
 
         gameModel.getTurnPlayer().getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
-            if (c.wasUpdated()){
-                // rerender appropriate hand view
-                // addCardToHand(gameModel.getTurnPlayer());
+            while (c.next()){
+                if (c.wasUpdated()){
+                    // rerender appropriate hand view
+                    // addCardToHand(gameModel.getTurnPlayer());
+                }
             }
         });
 
