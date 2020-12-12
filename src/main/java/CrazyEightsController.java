@@ -2,6 +2,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -45,6 +46,21 @@ public class CrazyEightsController {
     @FXML
     private ImageView suitSymbol;
 
+    @FXML
+    private HBox hBoxsOfSuits;
+
+    @FXML
+    private ImageView spadesIV;
+
+    @FXML
+    private ImageView clubsIV;
+
+    @FXML
+    private ImageView heartsIV;
+
+    @FXML
+    private ImageView diamondsIV;
+
     //The whole game flow is being controlled by this class
     GameModel gameModel = new GameModel();
 
@@ -76,8 +92,12 @@ public class CrazyEightsController {
 
         suitSymbol.setFitWidth(100);
         suitSymbol.setFitHeight(100);
-        suitSymbol.setImage(Suit.CLUBS.getSymbol());
+        suitSymbol.setImage(Suit.SPADES.getSymbol());
 
+        clubsIV.setImage(Suit.CLUBS.getSymbol());
+        diamondsIV.setImage(Suit.DIAMONDS.getSymbol());
+        heartsIV.setImage(Suit.HEARTS.getSymbol());
+        spadesIV.setImage(Suit.SPADES.getSymbol());
     }
 
     public void onClickStart(){
@@ -113,6 +133,8 @@ public class CrazyEightsController {
         pileImg.setFitWidth(100);                                      //Setting its max width
         pileImg.setFitHeight(140);                                     //Setting its max height
         pileImg.setImage(gameModel.getTopCardFromPile().getCardFront());                                   //Filling the imageView with a card front image
+
+        render();
     }
 
     public void addImageViewToBox (String id, Card card, Pane box){
@@ -160,6 +182,28 @@ public class CrazyEightsController {
             }
             j++;
         }
+        suitSymbol.setImage(gameModel.getSuit().getSymbol());
+    }
+
+    @FXML
+    void onSelectSuitClick(Event event) {
+        ImageView object =  (ImageView) event.getSource();
+        switch (object.getId()){
+            case "spadesIV": gameModel.selectSuit(Suit.SPADES);
+                suitSymbol.setImage(Suit.SPADES.getSymbol());
+                break;
+            case "diamondsIV": gameModel.selectSuit(Suit.DIAMONDS);
+                suitSymbol.setImage(Suit.DIAMONDS.getSymbol());
+                break;
+            case "heartsIV": gameModel.selectSuit(Suit.HEARTS);
+                suitSymbol.setImage(Suit.HEARTS.getSymbol());
+                break;
+            case "clubsIV": gameModel.selectSuit(Suit.CLUBS);
+                suitSymbol.setImage(Suit.CLUBS.getSymbol());
+                break;
+
+        };
+        hBoxsOfSuits.setVisible(false);
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Preparing the game ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -205,9 +249,12 @@ public class CrazyEightsController {
     void onConfirmedClicked(ActionEvent event) {
         // A method executing when the user clicks a GUI "confirm" button
         gameModel.setTurnPlayer(p1);    // Usunąć w późniejszej wersji!!!!!!!!
-        if (gameModel.playCards()) {    // GameModel playCards() method is being called
+        if (p1.getSelectedCards().get(0).getDenomination() == Denomination.EIGHT && gameModel.playCards()) {// GameModel playCards() method is being called
+            hBoxsOfSuits.setVisible(true);
             render();
         }
+        else if (gameModel.playCards())
+            render();
         pileImg.setImage(gameModel.getTopCardFromPile().getCardFront()); //A card from the users box is being put on the pile
     }
 
