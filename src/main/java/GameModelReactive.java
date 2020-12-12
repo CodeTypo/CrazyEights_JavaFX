@@ -8,6 +8,10 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Rules taken from this source:
+ * https://bicyclecards.com/how-to-play/crazy-eights/
+ */
 public class GameModelReactive {
 
     private static final int FIRST_DEAL_CARDS = 8;

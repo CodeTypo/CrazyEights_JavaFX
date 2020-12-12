@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicInteger;
 
+// WILL BE REMOVED SOON!!! DO NOT EDIT!!!
+// EDIT GameModelReactive INSTEAD!!!
+
 /**
  * Rules taken from this source:
  * https://bicyclecards.com/how-to-play/crazy-eights/
