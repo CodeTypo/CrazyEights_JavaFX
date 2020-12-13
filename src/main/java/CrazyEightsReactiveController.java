@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.animation.TranslateTransition;
 import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
@@ -15,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
 // imports for loading and converting external svg files
 
 
@@ -69,6 +72,9 @@ public class CrazyEightsReactiveController {
 
     @FXML
     private ImageView diamondsIV;
+
+    @FXML
+    private AnchorPane table;
 
     //The whole game flow is being controlled by this class
     GameModelReactive gameModel = new GameModelReactive();
@@ -376,7 +382,31 @@ public class CrazyEightsReactiveController {
 
     private void onCardDealt() {
         //gameModel.setTurnPlayer(player); //Usunąć w późniejszych wersjach !!!
-        player.dealCard(gameModel.takeTopCardFromStock());
+
+        //Creating a new image view only for the animation purposes
+        ImageView animationIV = new ImageView();
+        animationIV.setImage(CardReactive.getCardBack());
+        table.getChildren().add(animationIV);//Adding the image view to the AnchorPane
+
+        //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(2),animationIV);
+        transition.setFromX(deckImg.getLayoutX());
+        transition.setFromY(deckImg.getLayoutY());
+        transition.setToX(box1.getWidth());
+        transition.setToY(box1.getLayoutY()-box1.getPrefHeight());
+
+        player.dealCard(gameModel.takeTopCardFromStock());//The card is being dealt
+
+        box1.getChildren().get(box1.getChildren().size()-1).setVisible(false);//It is invisible until the animation ends
+        transition.play();
+        transition.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {//When the animation finishes
+                table.getChildren().remove(animationIV);//The image view is being removed
+                box1.getChildren().get(box1.getChildren().size()-1).setVisible(true);//The card drawn is now visible
+
+            }
+        });
     }
 
 
