@@ -8,11 +8,11 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameModelTest {
-    GameModel gameModel = new GameModel();
 
     @Test
     void prepareCardDeck_ShouldSetAllCardsInDeck() {
         // Arrange
+        GameModel gameModel = new GameModel();
         Set<Card> cardSet = new HashSet<>();
 
         // Act
@@ -27,6 +27,7 @@ class GameModelTest {
     @Test
     void invitePlayers_ShouldCreatePlayerListWithAsManyPlayersAsManyCanBeInvited(){
         // Arrange
+        GameModel gameModel = new GameModel();
         Player player1 = new Player();
         Player player2 = new Player();
         Player player3 = new Player();
@@ -43,6 +44,7 @@ class GameModelTest {
     @Test
     void invitePlayers_ShouldCreatePlayerListWithNoMoreThanSevenPlayers() {
         // Arrange
+        GameModel gameModel = new GameModel();
         Player player1 = new Player();
         Player player2 = new Player();
         Player player3 = new Player();
@@ -63,6 +65,7 @@ class GameModelTest {
     @Test
     void invitePlayers_ShouldCreatePlayerListWithAtLeastTwoPlayers() {
         // Arrange
+        GameModel gameModel = new GameModel();
         Player player1 = new Player();
 
         // Act
@@ -76,6 +79,7 @@ class GameModelTest {
     @Test
     void beginTheDeal_ShouldSetPlayersHaveEightCards_When_InTheGameAreNoMoreThanSixPlayers() {
         // Arrange
+        GameModel gameModel = new GameModel();
         Player player1 = new Player();
         Player player2 = new Player();
         Player player3 = new Player();
@@ -94,6 +98,7 @@ class GameModelTest {
     @Test
     void beginTheDeal_ShouldSetThePlayersSevenCards_When_InTheGameAreSevenPlayers() {
         // Arrange
+        GameModel gameModel = new GameModel();
         Player player1 = new Player();
         Player player2 = new Player();
         Player player3 = new Player();
@@ -115,6 +120,7 @@ class GameModelTest {
     @Test
     void putStarterOnPile_ShouldSetFirstFiveCardsOnThePileOtherThanEight() {
         // Arrange
+        GameModel gameModel = new GameModel();
         List<Card> stock;
         gameModel.prepareCardDeck();
 
@@ -131,6 +137,7 @@ class GameModelTest {
     @Test
     void dealCard_When_OnThePileAreZeroCards_ShouldReturnOne() {
         // Arrange
+        GameModel gameModel = new GameModel();
         Player player = new Player();
         gameModel.getStock();
         gameModel.setTurnPlayer(player);
@@ -145,6 +152,7 @@ class GameModelTest {
     @Test
     void dealCard_When_OnThePileAreMoreThanZeroCards_ShouldReturnZero() {
         // Arrange
+        GameModel gameModel = new GameModel();
         Player player = new Player();
         gameModel.prepareCardDeck();
         gameModel.getStock();
@@ -160,6 +168,7 @@ class GameModelTest {
     @Test
     void playCards_When_PlayerDoesNotSelectCard_ShouldReturnFalse() {
         //Arrange
+        GameModel gameModel = new GameModel();
         Player player = new Player();
         gameModel.setTurnPlayer(player);
 
@@ -173,6 +182,7 @@ class GameModelTest {
     @Test
     void playCards_When_PlayerSelectsEightAsFirst_ShouldReturnTrue() {
         //Arrange
+        GameModel gameModel = new GameModel();
         Player player = new Player();
         Card eightDiamonds = new Card(Suit.DIAMONDS, Denomination.EIGHT);
         Card cardOtherThanEight = new Card(Suit.DIAMONDS, Denomination.JACK);
@@ -190,6 +200,7 @@ class GameModelTest {
     @Test
     void playCards_When_PlayerSelectsCardWithTheSameSuitsLikeTheLastOneOnThePile_ShouldReturnTrue() {
         //Arrange
+        GameModel gameModel = new GameModel();
         Player player = new Player();
         Card cardChosenByThePlayer = new Card(Suit.HEARTS, Denomination.THREE);
         Card lastOneCardOnThePile = new Card(Suit.HEARTS, Denomination.QUEEN);
@@ -208,6 +219,7 @@ class GameModelTest {
     @Test
     void playCards_When_PlayerSelectsCardWithTheSameDenominationsLikeTheLastOneOnThePile_ShouldReturnTrue() {
         //Arrange
+        GameModel gameModel = new GameModel();
         Player player = new Player();
         Card cardChosenByThePlayer = new Card(Suit.SPADES, Denomination.ACE);
         Card lastOneCardOnThePile = new Card(Suit.HEARTS, Denomination.ACE);
@@ -226,6 +238,7 @@ class GameModelTest {
     @Test
     void playCards_When_PlayerSelectsCardWithDifferentDenominationsAndSuitsLikeTheLastOneOnThePile_ShouldReturnFalse() {
         //Arrange
+        GameModel gameModel = new GameModel();
         Player player = new Player();
         Card cardChosenByThePlayer = new Card(Suit.SPADES, Denomination.ACE);
         Card lastOneCardOnThePile = new Card(Suit.HEARTS, Denomination.QUEEN);
@@ -244,6 +257,7 @@ class GameModelTest {
     @Test
     void turnPlayerIsWinner_When_TurnPlayerHasZeroCards_ShouldReturnTrue() {
         //Arrange
+        GameModel gameModel = new GameModel();
         Player player = new Player();
         gameModel.setTurnPlayer(player);
 
@@ -257,6 +271,7 @@ class GameModelTest {
     @Test
     void turnPlayerIsWinner_When_TurnPlayerHasMoreThanZeroCards_ShouldReturnFalse() {
         //Arrange
+        GameModel gameModel = new GameModel();
         Player player = new Player();
         gameModel.setTurnPlayer(player);
         player.selectCard(new Card(Suit.SPADES, Denomination.KING));
@@ -271,6 +286,7 @@ class GameModelTest {
     @Test
     void nextPlayerTurn_When_TurnPlayerIsTheLastOne_WillSetTurnPlayerAsFirstOne() {
         //Arrange
+        GameModel gameModel = new GameModel();
         Player player1 = new Player();
         Player player2 = new Player();
         Player player3 = new Player();
@@ -289,6 +305,7 @@ class GameModelTest {
     @Test
     void nextPlayerTurn_When_TurnPlayerIsTheSecondOfFour_WillSetTurnPlayerAsThirdOne() {
         //Arrange
+        GameModel gameModel = new GameModel();
         Player player1 = new Player();
         Player player2 = new Player();
         Player player3 = new Player();
@@ -307,6 +324,7 @@ class GameModelTest {
     @Test
     void winnerPoints_When_PlayerPutQueenThreeAceEightOnThePile_ShouldReturnSixtyOne() {
         //Arrange
+        GameModel gameModel = new GameModel();
         Player player1 = new Player();
         Player player2 = new Player();
         Player player3 = new Player();
