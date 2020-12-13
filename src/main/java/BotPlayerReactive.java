@@ -21,7 +21,7 @@ public class BotPlayerReactive extends PlayerReactive{
      * Because gameModel watch for turnPLayer and let to call methods only on
      * current turnPlayer, we don't need to deal with it.
      */
-    public boolean makeMove(Card topPile){
+    public boolean makeMove(CardReactive topPile){
         if (!crazyEightStrategy()) // if first strategy doesnt work
             if (!sameDenominationStrategy(topPile)) // then go to second strategy
                 if (!sameSuitStrategy(topPile)) // and finally to the last
@@ -52,7 +52,7 @@ public class BotPlayerReactive extends PlayerReactive{
      * @param topPile
      * @return true if strategy works (any card is selected)
      */
-    private boolean sameDenominationStrategy(Card topPile){
+    private boolean sameDenominationStrategy(CardReactive topPile){
         boolean selected = false;
         for (CardReactive card: getCards()) {
             if (card.getDenomination() == topPile.getDenomination()){
@@ -70,7 +70,7 @@ public class BotPlayerReactive extends PlayerReactive{
      * @param topPile
      * @return true if strategy works (any card is selected)
      */
-    private boolean sameSuitStrategy(Card topPile){
+    private boolean sameSuitStrategy(CardReactive topPile){
         for (CardReactive card: getCards()) {
             if (card.getSuit() == topPile.getSuit()){
                selectCard(card);
