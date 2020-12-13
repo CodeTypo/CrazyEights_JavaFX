@@ -207,6 +207,8 @@ public class CrazyEightsReactiveController {
 
         initSuitSymbolSelector();
 
+        gameModel.setupBots();
+
         gameModel.setTurnPlayer(this.player);
     }
 
@@ -326,7 +328,7 @@ public class CrazyEightsReactiveController {
         }
 
         hBoxsOfSuits.setVisible(false);
-        //gameModel.nextPlayerTurn();
+        gameModel.nextPlayerTurn();
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Preparing the game ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -144,6 +144,25 @@ public class GameModelReactive {
 
     }
 
+    public void setupBots(){
+        turnPlayer.addListener((observable, oldTurnPlayer, newTurnPlayer) -> {
+            if (newTurnPlayer instanceof BotPlayerReactive){
+                // Game Model should make move for bot
+                BotPlayerReactive bot = (BotPlayerReactive) newTurnPlayer;
+                while (!bot.makeMove(getTopCardFromPile(), getSuit())){
+                    dealCard();
+                }
+
+                if(playCards()){
+                    // let bot select suit
+                    setSuit(bot.getSelectedSuit());
+                    nextPlayerTurn();
+                }
+
+            }
+        });
+    }
+
     /**
      *
      * @return true if suit selector should be shown
@@ -172,6 +191,7 @@ public class GameModelReactive {
                     || firstCard.getSuit() == getSuit()){
                 pile.addAll(selCards);
                 getTurnPlayer().removeSelectedCards(selCards);
+                nextPlayerTurn();
             }
         }
 
@@ -210,7 +230,9 @@ public class GameModelReactive {
      * @return card removed from stock
      */
     public CardReactive takeTopCardFromStock(){
-        return stock.remove(stock.size()-1);
+        if (!stock.isEmpty())
+            return stock.remove(stock.size()-1);
+        return null;
     }
 
     /**
