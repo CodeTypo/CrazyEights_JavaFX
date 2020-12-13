@@ -20,7 +20,11 @@ public abstract class PlayerReactive {
     private SimpleObjectProperty<Suit> selectedSuit = new SimpleObjectProperty<>();
 
     public void selectCard(CardReactive card){
+        List<CardReactive> selCards = getSelectedCards();
+        if (selCards.isEmpty()
+                || selCards.get(0).getDenomination() == card.getDenomination()){
             card.setSelected(true);
+        }
     }
 
     public void unselectCard(CardReactive card){

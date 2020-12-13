@@ -359,18 +359,17 @@ public class CrazyEightsReactiveController {
         if (card.isSelected()){
             //unselect card
             imageView.getStyleClass().remove("clicked"); //removes card css class that styles it as selected
-            card.setSelected(false);                        //sets the card boolean "selected" value to false
+            player.unselectCard(card);                      //sets the card boolean "selected" value to false
             //It is not necessary anymore, because card hold info about if is selected or not
 //            player.unselectCard(card);                          //removes the card from player selected cards list
         } else {
             //select card if it agree with rules
             // only cards of interactive player can be selected
-            card.setSelected(true);
-            imageView.getStyleClass().add("clicked");
-//            if (p1.selectCard(card)){                       //Checks if the game rules allow player to select this particular card
-//                card.setSelected(true);                     //sets the card boolean "selected" value to true
-//                imageView.getStyleClass().add("clicked");   //adds card css class that styles it as selected
-//            }
+            player.selectCard(card); //Checks if the game rules allow player to select this particular card
+            if (card.isSelected()){ //sets the card boolean "selected" value to true if player can select this card
+                imageView.getStyleClass().add("clicked"); //adds card css class that styles it as selected
+            }
+
         }
         System.out.println(card.toString() + " selected: " + card.isSelected()); //An output statement to check if everything worked well
     }
