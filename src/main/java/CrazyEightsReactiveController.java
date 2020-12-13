@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -172,7 +173,16 @@ public class CrazyEightsReactiveController {
                             removeCardFromHand(cardReactive, bot);
                             System.out.println(bot + ": card was removed:" + cardReactive);
                         });
-                    }
+
+                        if (c.getList().isEmpty()){
+                            // Player is winner
+                            // create a alert
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setContentText(bot + " is winner");
+                            alert.show();
+                        }
+
+                    } // if c.was removed
 
                 }
             });
@@ -196,6 +206,14 @@ public class CrazyEightsReactiveController {
                         removeCardFromHand(cardReactive, player);
                         System.out.println(player + ": card was removed:" + cardReactive);
                     });
+
+                    if (c.getList().isEmpty()){
+                        // Player is winner
+                        // create a alert
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setContentText(player+ " is winner");
+                        alert.show();
+                    }
 
                 }
 

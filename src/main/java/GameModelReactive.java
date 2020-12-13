@@ -150,7 +150,12 @@ public class GameModelReactive {
                 // Game Model should make move for bot
                 BotPlayerReactive bot = (BotPlayerReactive) newTurnPlayer;
                 while (!bot.makeMove(getTopCardFromPile(), getSuit())){
-                    dealCard();
+                    if (stock.isEmpty()){
+                        nextPlayerTurn();
+                        break;
+                    } else{
+                        dealCard();
+                    }
                 }
 
                 if(playCards()){
@@ -230,9 +235,7 @@ public class GameModelReactive {
      * @return card removed from stock
      */
     public CardReactive takeTopCardFromStock(){
-        if (!stock.isEmpty())
-            return stock.remove(stock.size()-1);
-        return null;
+        return stock.remove(stock.size()-1);
     }
 
     /**
