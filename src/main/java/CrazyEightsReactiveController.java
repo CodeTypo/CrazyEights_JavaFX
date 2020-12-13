@@ -170,6 +170,46 @@ public class CrazyEightsReactiveController {
                             addCardToHand(cardReactive, bot);
                             System.out.println(bot + ": card was added:" + cardReactive);
                         });
+
+                        // Animate
+
+                        //Creating a new image view only for the animation purposes
+                        ImageView animationIV = new ImageView();
+                        animationIV.setImage(CardReactive.getCardBack());
+                        table.getChildren().add(animationIV);//Adding the image view to the AnchorPane
+
+                        Pane box = hands.get(bot);
+
+                        //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
+                        TranslateTransition transition = new TranslateTransition(Duration.seconds(2),animationIV);
+                        transition.setFromX(deckImg.getLayoutX());
+                        transition.setFromY(deckImg.getLayoutY());
+                        if (box instanceof HBox){
+                            transition.setToX(box2.getWidth());
+                            transition.setToY(box.getLayoutY()-box.getPrefHeight());
+                        } else {
+                            transition.setToX(box.getLayoutX()-box.getPrefWidth());
+                            transition.setToY(box3.getHeight());
+                        }
+
+
+
+                        player.dealCard(gameModel.takeTopCardFromStock());//The card is being dealt
+
+                        box.getChildren().get(box.getChildren().size()-1).setVisible(false);//It is invisible until the animation ends
+                        transition.play();
+                        transition.setOnFinished(new EventHandler<ActionEvent>() {
+                            @Override
+                            public void handle(ActionEvent event) {//When the animation finishes
+                                table.getChildren().remove(animationIV);//The image view is being removed
+                                box.getChildren().get(box.getChildren().size()-1).setVisible(true);//The card drawn is now visible
+
+                            }
+                        });
+
+
+
+
                     }
 
                     if (c.wasRemoved()) {
@@ -437,6 +477,7 @@ public class CrazyEightsReactiveController {
             //Dodać tutaj usunięcie karty z listy Selected!!!!
             //TO DO
         }
+
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Handling interactions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
