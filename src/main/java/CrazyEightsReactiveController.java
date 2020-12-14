@@ -223,8 +223,6 @@ public class CrazyEightsReactiveController {
             //unselect card
             imageView.getStyleClass().remove("clicked"); //removes card css class that styles it as selected
             player.unselectCard(card);                      //sets the card boolean "selected" value to false
-            //It is not necessary anymore, because card hold info about if is selected or not
-//            player.unselectCard(card);                          //removes the card from player selected cards list
         } else {
             //select card if it agree with rules
             // only cards of interactive player can be selected
@@ -295,12 +293,6 @@ public class CrazyEightsReactiveController {
             // on pile, he can select suit
             hBoxsOfSuits.setVisible(true);
         }
-
-
-//        if (gameModel.getTopCardFromPile().getDenomination() == Denomination.EIGHT){
-//            hBoxsOfSuits.setVisible(true);
-//        }
-
     }
 
     @FXML
@@ -375,7 +367,7 @@ public class CrazyEightsReactiveController {
 
         List<BotPlayerReactive> bots = gameModel.getBotPlayers();
 
-        // Craete mapping between players and their hands
+        // Create mapping between players and their hands
         //A set of four boxes representing players hands is being created
         hands.put(this.player, box1);
         hands.put(bots.get(0), box2);
