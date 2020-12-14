@@ -122,6 +122,7 @@ public class CrazyEightsReactiveController {
                 if (c.wasRemoved()){
                     if (c.getList().size()==0){
                         deckImg.setImage(null); //An image is being removed, we are out of cards
+                        deckImg.setDisable(true);
                     }
                 }
             }
@@ -387,6 +388,21 @@ public class CrazyEightsReactiveController {
         player.dealCard(gameModel.takeTopCardFromStock());//The card is being dealt
     }
 
+    /**
+     * animateCard is called from addCardToHand method
+     * and animates automatically when any player deals card
+     * but for now it doesn't work.
+     * I have even tried to give direct reference to imageView as an argument
+     * to animateCard() but card positions in vboxes are managed by layout manager
+     * and they looks to not make a sense if I try to use then in animation.
+     * i tried literally every method that accesses node's position property, eg.
+     * getX, getLayoutX, getLocalToScene etc
+     * and nothing gives satisfying results.
+     * I think that this method usage should be like animateCard(ImageView from, ImageView to)
+     * where "from" is card imageView from where animation should start and "to" is imageView
+     * where animation should and.
+     * Then we would be able to use it directly in addCardToHand() and removeCardFromHand() methods.
+     */
     private void animateCard(){
         //Creating a new image view only for the animation purposes
         ImageView animationIV = new ImageView();
