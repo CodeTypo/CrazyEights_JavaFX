@@ -92,152 +92,6 @@ public class CrazyEightsReactiveController {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Preparing the game ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @FXML
-    void initialize() {
-        // Set everything what doesn't change during whole game in this initialize method
-
-        pileImg.setFitWidth(100); //Setting its max width
-        pileImg.setFitHeight(140); //Setting its max height
-        suitSymbol.setVisible(false);
-
-        gameModel.getPile().addListener((ListChangeListener<? super CardReactive>) c -> {
-            System.out.println("Pile changed");
-            while (c.next()){
-                if (c.wasAdded()){
-                    // Card was added to pile
-                    // it takes the first card from the stock and puts it on the pile
-                    // When a GameModel putStarterOnPile() method is called, this event will be fired,
-                    // as well as after every update
-
-                    //A card from the users box is being put on the pile
-                    pileImg.setImage(gameModel.getTopCardFromPile().getCardFront()); //Filling the imageView with a card front image
-                    gameModel.setSuit(gameModel.getTopCardFromPile().getSuit());
-                }
-            }
-        });
-
-        gameModel.getStock().addListener((ListChangeListener<? super CardReactive>) c -> {
-            System.out.println("Stock changed");
-            while (c.next()){
-                if (c.wasRemoved()){
-                    if (c.getList().size()==0){
-                        deckImg.setImage(null); //An image is being removed, we are out of cards
-                        deckImg.setDisable(true);
-                    }
-                }
-            }
-        });
-
-        gameModel.turnPlayerProperty().addListener((observable, oldTurnPlayer, turnPlayer) -> {
-            System.out.println("TurnPlayer changed from: " + oldTurnPlayer + " to: " + turnPlayer );
-            // Only interactive player must confirm his actions.
-            // Bots make it automatically after they choose cards.
-            // Disable confirmButton, when interactive player doesn't have turn.
-            confirmButton.setDisable(turnPlayer != this.player);
-        });
-
-        gameModel.suitProperty().addListener((observable, oldSuit, newSuit) -> {
-            System.out.println("Suit changed from: " + oldSuit + " to: " + newSuit );
-            //Automatically update suit symbol on respective change in gameModel
-            suitSymbol.setImage(gameModel.getSuit().getSymbol());
-        });
-
-
-        //Prepares a fresh, brand new deck of cards
-        //Adds four players to the game
-
-        gameModel.init();
-        this.player = gameModel.getInteractivePlayer();
-
-        List<BotPlayerReactive> bots = gameModel.getBotPlayers();
-
-        // Craete mapping between players and their hands
-        //A set of four boxes representing players hands is being created
-        hands.put(this.player, box1);
-        hands.put(bots.get(0), box2);
-        hands.put(bots.get(1), box3);
-        hands.put(bots.get(2), box4);
-
-        // We may want to animate this (eg card position)
-        //Deal 8 cards to each player
-        gameModel.beginTheDeal();
-
-        bots.forEach(bot -> {
-            bot.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
-                System.out.println(bot + " cards changed");
-                while (c.next()) {
-                    if (c.wasAdded()) {
-                        List<CardReactive> addedCards = (List<CardReactive>) c.getAddedSubList();
-                        addedCards.forEach(cardReactive -> {
-                            addCardToHand(cardReactive, bot);
-                            System.out.println(bot + ": card was added:" + cardReactive);
-                        });
-                    }
-
-                    if (c.wasRemoved()) {
-                        System.out.println(bot + " card was removed");
-                        List<CardReactive> removedCards = (List<CardReactive>) c.getRemoved();
-                        removedCards.forEach(cardReactive -> {
-                            removeCardFromHand(cardReactive, bot);
-                            System.out.println(bot + ": card was removed:" + cardReactive);
-                        });
-
-                        if (c.getList().isEmpty()){
-                            // Player is winner
-                            // create a alert
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setContentText(bot + " is winner");
-                            alert.show();
-                        }
-
-                    } // if c.was removed
-
-                }
-            });
-        });
-
-        player.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
-            System.out.println(player + " cards changed");
-            while (c.next()){
-                if (c.wasAdded()){
-                    List<CardReactive> addedCards = (List<CardReactive>) c.getAddedSubList();
-                    addedCards.forEach(cardReactive -> {
-                        addCardToHand(cardReactive, player);
-                        System.out.println(player + ": card was added:" + cardReactive);
-                    });
-
-                }
-
-                if (c.wasRemoved()) {
-                    List<CardReactive> removedCards = (List<CardReactive>) c.getRemoved();
-                    removedCards.forEach(cardReactive -> {
-                        removeCardFromHand(cardReactive, player);
-                        System.out.println(player + ": card was removed:" + cardReactive);
-                    });
-
-                    if (c.getList().isEmpty()){
-                        // Player is winner
-                        // create a alert
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setContentText(player+ " is winner");
-                        alert.show();
-                    }
-
-                }
-
-            }
-        });
-
-
-        System.out.println(gameModel.getTurnPlayer());
-
-        initSuitSymbolSelector();
-
-        gameModel.setupBots();
-
-        gameModel.setTurnPlayer(this.player);
-    }
-
     public void initSuitSymbolSelector(){
         suitSymbol.setFitWidth(100);
         suitSymbol.setFitHeight(100);
@@ -461,5 +315,151 @@ public class CrazyEightsReactiveController {
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Handling interactions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @FXML
+    void initialize() {
+        // Set everything what doesn't change during whole game in this initialize method
+
+        pileImg.setFitWidth(100); //Setting its max width
+        pileImg.setFitHeight(140); //Setting its max height
+        suitSymbol.setVisible(false);
+
+        gameModel.getPile().addListener((ListChangeListener<? super CardReactive>) c -> {
+            System.out.println("Pile changed");
+            while (c.next()){
+                if (c.wasAdded()){
+                    // Card was added to pile
+                    // it takes the first card from the stock and puts it on the pile
+                    // When a GameModel putStarterOnPile() method is called, this event will be fired,
+                    // as well as after every update
+
+                    //A card from the users box is being put on the pile
+                    pileImg.setImage(gameModel.getTopCardFromPile().getCardFront()); //Filling the imageView with a card front image
+                    gameModel.setSuit(gameModel.getTopCardFromPile().getSuit());
+                }
+            }
+        });
+
+        gameModel.getStock().addListener((ListChangeListener<? super CardReactive>) c -> {
+            System.out.println("Stock changed");
+            while (c.next()){
+                if (c.wasRemoved()){
+                    if (c.getList().size()==0){
+                        deckImg.setImage(null); //An image is being removed, we are out of cards
+                        deckImg.setDisable(true);
+                    }
+                }
+            }
+        });
+
+        gameModel.turnPlayerProperty().addListener((observable, oldTurnPlayer, turnPlayer) -> {
+            System.out.println("TurnPlayer changed from: " + oldTurnPlayer + " to: " + turnPlayer );
+            // Only interactive player must confirm his actions.
+            // Bots make it automatically after they choose cards.
+            // Disable confirmButton, when interactive player doesn't have turn.
+            confirmButton.setDisable(turnPlayer != this.player);
+        });
+
+        gameModel.suitProperty().addListener((observable, oldSuit, newSuit) -> {
+            System.out.println("Suit changed from: " + oldSuit + " to: " + newSuit );
+            //Automatically update suit symbol on respective change in gameModel
+            suitSymbol.setImage(gameModel.getSuit().getSymbol());
+        });
+
+
+        //Prepares a fresh, brand new deck of cards
+        //Adds four players to the game
+
+        gameModel.init();
+        this.player = gameModel.getInteractivePlayer();
+
+        List<BotPlayerReactive> bots = gameModel.getBotPlayers();
+
+        // Craete mapping between players and their hands
+        //A set of four boxes representing players hands is being created
+        hands.put(this.player, box1);
+        hands.put(bots.get(0), box2);
+        hands.put(bots.get(1), box3);
+        hands.put(bots.get(2), box4);
+
+        // We may want to animate this (eg card position)
+        //Deal 8 cards to each player
+        gameModel.beginTheDeal();
+
+        bots.forEach(bot -> {
+            bot.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
+                System.out.println(bot + " cards changed");
+                while (c.next()) {
+                    if (c.wasAdded()) {
+                        List<CardReactive> addedCards = (List<CardReactive>) c.getAddedSubList();
+                        addedCards.forEach(cardReactive -> {
+                            addCardToHand(cardReactive, bot);
+                            System.out.println(bot + ": card was added:" + cardReactive);
+                        });
+                    }
+
+                    if (c.wasRemoved()) {
+                        System.out.println(bot + " card was removed");
+                        List<CardReactive> removedCards = (List<CardReactive>) c.getRemoved();
+                        removedCards.forEach(cardReactive -> {
+                            removeCardFromHand(cardReactive, bot);
+                            System.out.println(bot + ": card was removed:" + cardReactive);
+                        });
+
+                        if (c.getList().isEmpty()){
+                            // Player is winner
+                            // create a alert
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setContentText(bot + " is winner");
+                            alert.show();
+                        }
+
+                    } // if c.was removed
+
+                }
+            });
+        });
+
+        player.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
+            System.out.println(player + " cards changed");
+            while (c.next()){
+                if (c.wasAdded()){
+                    List<CardReactive> addedCards = (List<CardReactive>) c.getAddedSubList();
+                    addedCards.forEach(cardReactive -> {
+                        addCardToHand(cardReactive, player);
+                        System.out.println(player + ": card was added:" + cardReactive);
+                    });
+
+                }
+
+                if (c.wasRemoved()) {
+                    List<CardReactive> removedCards = (List<CardReactive>) c.getRemoved();
+                    removedCards.forEach(cardReactive -> {
+                        removeCardFromHand(cardReactive, player);
+                        System.out.println(player + ": card was removed:" + cardReactive);
+                    });
+
+                    if (c.getList().isEmpty()){
+                        // Player is winner
+                        // create a alert
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setContentText(player+ " is winner");
+                        alert.show();
+                    }
+
+                }
+
+            }
+        });
+
+
+        System.out.println(gameModel.getTurnPlayer());
+
+        initSuitSymbolSelector();
+
+        gameModel.setupBots();
+
+        gameModel.setTurnPlayer(this.player);
+    }
 
 }//End of controller class file
