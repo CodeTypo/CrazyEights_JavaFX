@@ -254,7 +254,7 @@ public class CrazyEightsReactiveController {
         ImageView imageView = createCardView(card, pane);
         setupCardView(card, imageView, playerReactive);
         pane.getChildren().add(imageView); // Adds the image view to the box
-        animateCard();
+        //animateCard();
     }
 
     public void removeCardFromHand(CardReactive card, PlayerReactive playerReactive){
@@ -386,6 +386,7 @@ public class CrazyEightsReactiveController {
     private void onCardDealt() {
         //gameModel.setTurnPlayer(player); //Usunąć w późniejszych wersjach !!!
         player.dealCard(gameModel.takeTopCardFromStock());//The card is being dealt
+        animateCard();
     }
 
     /**
