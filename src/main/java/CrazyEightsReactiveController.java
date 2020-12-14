@@ -4,16 +4,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+import javafx.animation.TranslateTransition;
 import javafx.collections.ListChangeListener;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.util.Duration;
 // imports for loading and converting external svg files
 
 
@@ -68,6 +73,9 @@ public class CrazyEightsReactiveController {
 
     @FXML
     private ImageView diamondsIV;
+
+    @FXML
+    private AnchorPane table;
 
     //The whole game flow is being controlled by this class
     GameModelReactive gameModel = new GameModelReactive();
@@ -172,7 +180,16 @@ public class CrazyEightsReactiveController {
                             removeCardFromHand(cardReactive, bot);
                             System.out.println(bot + ": card was removed:" + cardReactive);
                         });
-                    }
+
+                        if (c.getList().isEmpty()){
+                            // Player is winner
+                            // create a alert
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setContentText(bot + " is winner");
+                            alert.show();
+                        }
+
+                    } // if c.was removed
 
                 }
             });
@@ -197,6 +214,14 @@ public class CrazyEightsReactiveController {
                         System.out.println(player + ": card was removed:" + cardReactive);
                     });
 
+                    if (c.getList().isEmpty()){
+                        // Player is winner
+                        // create a alert
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setContentText(player+ " is winner");
+                        alert.show();
+                    }
+
                 }
 
             }
@@ -206,6 +231,8 @@ public class CrazyEightsReactiveController {
         System.out.println(gameModel.getTurnPlayer());
 
         initSuitSymbolSelector();
+
+        gameModel.setupBots();
 
         gameModel.setTurnPlayer(this.player);
     }
@@ -226,6 +253,35 @@ public class CrazyEightsReactiveController {
         ImageView imageView = createCardView(card, pane);
         setupCardView(card, imageView, playerReactive);
         pane.getChildren().add(imageView); // Adds the image view to the box
+        imageView.setVisible(false);
+
+
+        // Animation
+
+        //Creating a new image view only for the animation purposes
+        ImageView animationIV = new ImageView();
+        animationIV.setImage(CardReactive.getCardBack());
+        table.getChildren().add(animationIV);//Adding the image view to the AnchorPane
+
+        //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(2),animationIV);
+        transition.setFromX(deckImg.getLayoutX());
+        transition.setFromY(deckImg.getLayoutY());
+
+        Bounds boundsInScene = imageView.localToScene(imageView.getBoundsInLocal());
+
+        transition.setToX(boundsInScene.getMaxX());
+        transition.setToY(boundsInScene.getCenterY()-boundsInScene.getMaxY());
+
+        transition.play();
+        transition.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {//When the animation finishes
+                table.getChildren().remove(animationIV);//The image view is being removed
+                imageView.setVisible(true); // make card visible now
+            }
+        });
+
     }
 
     public void removeCardFromHand(CardReactive card, PlayerReactive playerReactive){
@@ -326,7 +382,7 @@ public class CrazyEightsReactiveController {
         }
 
         hBoxsOfSuits.setVisible(false);
-        //gameModel.nextPlayerTurn();
+        gameModel.nextPlayerTurn();
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Preparing the game ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -339,25 +395,48 @@ public class CrazyEightsReactiveController {
         if (card.isSelected()){
             //unselect card
             imageView.getStyleClass().remove("clicked"); //removes card css class that styles it as selected
-            card.setSelected(false);                        //sets the card boolean "selected" value to false
+            player.unselectCard(card);                      //sets the card boolean "selected" value to false
             //It is not necessary anymore, because card hold info about if is selected or not
 //            player.unselectCard(card);                          //removes the card from player selected cards list
         } else {
             //select card if it agree with rules
             // only cards of interactive player can be selected
-            card.setSelected(true);
-            imageView.getStyleClass().add("clicked");
-//            if (p1.selectCard(card)){                       //Checks if the game rules allow player to select this particular card
-//                card.setSelected(true);                     //sets the card boolean "selected" value to true
-//                imageView.getStyleClass().add("clicked");   //adds card css class that styles it as selected
-//            }
+            player.selectCard(card); //Checks if the game rules allow player to select this particular card
+            if (card.isSelected()){ //sets the card boolean "selected" value to true if player can select this card
+                imageView.getStyleClass().add("clicked"); //adds card css class that styles it as selected
+            }
+
         }
         System.out.println(card.toString() + " selected: " + card.isSelected()); //An output statement to check if everything worked well
     }
 
     private void onCardDealt() {
         //gameModel.setTurnPlayer(player); //Usunąć w późniejszych wersjach !!!
-        player.dealCard(gameModel.takeTopCardFromStock());
+
+        //Creating a new image view only for the animation purposes
+        ImageView animationIV = new ImageView();
+        animationIV.setImage(CardReactive.getCardBack());
+        table.getChildren().add(animationIV);//Adding the image view to the AnchorPane
+
+        //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(2),animationIV);
+        transition.setFromX(deckImg.getLayoutX());
+        transition.setFromY(deckImg.getLayoutY());
+        transition.setToX(box1.getWidth());
+        transition.setToY(box1.getLayoutY()-box1.getPrefHeight());
+
+        player.dealCard(gameModel.takeTopCardFromStock());//The card is being dealt
+
+        box1.getChildren().get(box1.getChildren().size()-1).setVisible(false);//It is invisible until the animation ends
+        transition.play();
+        transition.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {//When the animation finishes
+                table.getChildren().remove(animationIV);//The image view is being removed
+                box1.getChildren().get(box1.getChildren().size()-1).setVisible(true);//The card drawn is now visible
+
+            }
+        });
     }
 
 
@@ -388,6 +467,7 @@ public class CrazyEightsReactiveController {
             //Dodać tutaj usunięcie karty z listy Selected!!!!
             //TO DO
         }
+
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Handling interactions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
