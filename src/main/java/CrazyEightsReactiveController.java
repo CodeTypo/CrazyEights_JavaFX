@@ -108,13 +108,82 @@ public class CrazyEightsReactiveController {
         ImageView imageView = createCardView(card, pane);
         setupCardView(card, imageView, playerReactive);
         pane.getChildren().add(imageView); // Adds the image view to the box
-        //animateCard();
+        animateCardDeal(deckImg, imageView);
     }
+
 
     public void removeCardFromHand(CardReactive card, PlayerReactive playerReactive){
         Pane pane = hands.get(playerReactive);
         FilteredList<Node> toRemove = pane.getChildren().filtered(node -> node.getId().equals(card.getId()));
+        Node node = toRemove.get(0);
+
+        animateCardRemove(node, pileImg);
+
         pane.getChildren().remove(toRemove.get(0));
+    }
+
+    private void animateCardDeal(Node from, Node to){
+        to.setVisible(false); // The card is invisible until animation ends
+        //Creating a new image view only for the animation purposes
+        ImageView animationIV = new ImageView();
+        animationIV.setImage(CardReactive.getCardBack());
+        table.getChildren().add(animationIV);//Adding the image view to the AnchorPane
+
+        //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(1),animationIV);
+        transition.setFromX(deckImg.getLayoutX());
+        transition.setFromY(deckImg.getLayoutY());
+
+        Bounds fromBoundsInScene = from.localToScene(from.getBoundsInLocal());
+        System.out.println(fromBoundsInScene);
+
+        Bounds boundsInScene = to.localToScene(to.getBoundsInLocal());
+        System.out.println(boundsInScene);
+
+        transition.setToX(700 - boundsInScene.getMinX());
+        transition.setToY(boundsInScene.getMinY()-boundsInScene.getHeight());
+
+        transition.play();
+        transition.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {//When the animation finishes
+                table.getChildren().remove(animationIV);//The image view is being removed
+                to.setVisible(true);//The card drawn is now visible
+            }
+        });
+    }
+
+    private void animateCardRemove(Node from, Node to) {
+
+        //to.setVisible(false); // The card is invisible until animation ends
+        //Creating a new image view only for the animation purposes
+        ImageView animationIV = new ImageView();
+
+        animationIV.setImage(gameModel.getTopCardFromPile().getCardFront());
+        table.getChildren().add(animationIV);//Adding the image view to the AnchorPane
+
+        Bounds fromBoundsInScene = from.localToScene(from.getBoundsInLocal());
+        System.out.println(fromBoundsInScene);
+
+        //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(1),animationIV);
+
+        // Tutaj to 700 jest hardcoded! to trzeba koniecznie zmienic, bo sie krupierowi prawa z lewa myli
+        transition.setFromX(700 - fromBoundsInScene.getMinX());
+        transition.setFromY(fromBoundsInScene.getMinY()-fromBoundsInScene.getHeight());
+
+        transition.setToX(to.getLayoutX());
+        transition.setToY(to.getLayoutY());
+
+        transition.play();
+        transition.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {//When the animation finishes
+                table.getChildren().remove(animationIV);//The image view is being removed
+                //to.setVisible(true);//The card drawn is now visible
+            }
+        });
+
     }
 
     public ImageView createCardView(CardReactive card, Pane pane){
@@ -238,7 +307,7 @@ public class CrazyEightsReactiveController {
     private void onCardDealt() {
         //gameModel.setTurnPlayer(player); //Usunąć w późniejszych wersjach !!!
         player.dealCard(gameModel.takeTopCardFromStock());//The card is being dealt
-        animateCard();
+//        animateCard();
     }
 
     /**
