@@ -253,35 +253,7 @@ public class CrazyEightsReactiveController {
         ImageView imageView = createCardView(card, pane);
         setupCardView(card, imageView, playerReactive);
         pane.getChildren().add(imageView); // Adds the image view to the box
-        imageView.setVisible(false);
-
-
-        // Animation
-
-        //Creating a new image view only for the animation purposes
-        ImageView animationIV = new ImageView();
-        animationIV.setImage(CardReactive.getCardBack());
-        table.getChildren().add(animationIV);//Adding the image view to the AnchorPane
-
-        //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(2),animationIV);
-        transition.setFromX(deckImg.getLayoutX());
-        transition.setFromY(deckImg.getLayoutY());
-
-        Bounds boundsInScene = imageView.localToScene(imageView.getBoundsInLocal());
-
-        transition.setToX(boundsInScene.getMaxX());
-        transition.setToY(boundsInScene.getCenterY()-boundsInScene.getMaxY());
-
-        transition.play();
-        transition.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {//When the animation finishes
-                table.getChildren().remove(animationIV);//The image view is being removed
-                imageView.setVisible(true); // make card visible now
-            }
-        });
-
+        animateCard();
     }
 
     public void removeCardFromHand(CardReactive card, PlayerReactive playerReactive){
@@ -412,7 +384,10 @@ public class CrazyEightsReactiveController {
 
     private void onCardDealt() {
         //gameModel.setTurnPlayer(player); //Usunąć w późniejszych wersjach !!!
+        player.dealCard(gameModel.takeTopCardFromStock());//The card is being dealt
+    }
 
+    private void animateCard(){
         //Creating a new image view only for the animation purposes
         ImageView animationIV = new ImageView();
         animationIV.setImage(CardReactive.getCardBack());
@@ -424,8 +399,6 @@ public class CrazyEightsReactiveController {
         transition.setFromY(deckImg.getLayoutY());
         transition.setToX(box1.getWidth());
         transition.setToY(box1.getLayoutY()-box1.getPrefHeight());
-
-        player.dealCard(gameModel.takeTopCardFromStock());//The card is being dealt
 
         box1.getChildren().get(box1.getChildren().size()-1).setVisible(false);//It is invisible until the animation ends
         transition.play();
