@@ -23,3 +23,16 @@
 .actionButton{
     -fx-background-color: rgb(25,201,76);
 }
+
+.suits {
+    -fx-border-color: blue;
+    -fx-border-insets: 5;
+    -fx-border-width: 3;
+    -fx-border-style: dashed;
+}
+
+
+.suits:hover{
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+}
