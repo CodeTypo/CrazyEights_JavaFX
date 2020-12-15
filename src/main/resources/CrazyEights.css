@@ -23,3 +23,8 @@
 .actionButton{
     -fx-background-color: rgb(25,201,76);
 }
+
+.suits:hover{
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+}
