@@ -92,151 +92,6 @@ public class CrazyEightsReactiveController {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Preparing the game ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    @FXML
-    void initialize() {
-        // Set everything what doesn't change during whole game in this initialize method
-
-        pileImg.setFitWidth(100); //Setting its max width
-        pileImg.setFitHeight(140); //Setting its max height
-        suitSymbol.setVisible(false);
-
-        gameModel.getPile().addListener((ListChangeListener<? super CardReactive>) c -> {
-            System.out.println("Pile changed");
-            while (c.next()){
-                if (c.wasAdded()){
-                    // Card was added to pile
-                    // it takes the first card from the stock and puts it on the pile
-                    // When a GameModel putStarterOnPile() method is called, this event will be fired,
-                    // as well as after every update
-
-                    //A card from the users box is being put on the pile
-                    pileImg.setImage(gameModel.getTopCardFromPile().getCardFront()); //Filling the imageView with a card front image
-                    gameModel.setSuit(gameModel.getTopCardFromPile().getSuit());
-                }
-            }
-        });
-
-        gameModel.getStock().addListener((ListChangeListener<? super CardReactive>) c -> {
-            System.out.println("Stock changed");
-            while (c.next()){
-                if (c.wasRemoved()){
-                    if (c.getList().size()==0){
-                        deckImg.setImage(null); //An image is being removed, we are out of cards
-                    }
-                }
-            }
-        });
-
-        gameModel.turnPlayerProperty().addListener((observable, oldTurnPlayer, turnPlayer) -> {
-            System.out.println("TurnPlayer changed from: " + oldTurnPlayer + " to: " + turnPlayer );
-            // Only interactive player must confirm his actions.
-            // Bots make it automatically after they choose cards.
-            // Disable confirmButton, when interactive player doesn't have turn.
-            confirmButton.setDisable(turnPlayer != this.player);
-        });
-
-        gameModel.suitProperty().addListener((observable, oldSuit, newSuit) -> {
-            System.out.println("Suit changed from: " + oldSuit + " to: " + newSuit );
-            //Automatically update suit symbol on respective change in gameModel
-            suitSymbol.setImage(gameModel.getSuit().getSymbol());
-        });
-
-
-        //Prepares a fresh, brand new deck of cards
-        //Adds four players to the game
-
-        gameModel.init();
-        this.player = gameModel.getInteractivePlayer();
-
-        List<BotPlayerReactive> bots = gameModel.getBotPlayers();
-
-        // Craete mapping between players and their hands
-        //A set of four boxes representing players hands is being created
-        hands.put(this.player, box1);
-        hands.put(bots.get(0), box2);
-        hands.put(bots.get(1), box3);
-        hands.put(bots.get(2), box4);
-
-        // We may want to animate this (eg card position)
-        //Deal 8 cards to each player
-        gameModel.beginTheDeal();
-
-        bots.forEach(bot -> {
-            bot.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
-                System.out.println(bot + " cards changed");
-                while (c.next()) {
-                    if (c.wasAdded()) {
-                        List<CardReactive> addedCards = (List<CardReactive>) c.getAddedSubList();
-                        addedCards.forEach(cardReactive -> {
-                            addCardToHand(cardReactive, bot);
-                            System.out.println(bot + ": card was added:" + cardReactive);
-                        });
-                    }
-
-                    if (c.wasRemoved()) {
-                        System.out.println(bot + " card was removed");
-                        List<CardReactive> removedCards = (List<CardReactive>) c.getRemoved();
-                        removedCards.forEach(cardReactive -> {
-                            removeCardFromHand(cardReactive, bot);
-                            System.out.println(bot + ": card was removed:" + cardReactive);
-                        });
-
-                        if (c.getList().isEmpty()){
-                            // Player is winner
-                            // create a alert
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setContentText(bot + " is winner");
-                            alert.show();
-                        }
-
-                    } // if c.was removed
-
-                }
-            });
-        });
-
-        player.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
-            System.out.println(player + " cards changed");
-            while (c.next()){
-                if (c.wasAdded()){
-                    List<CardReactive> addedCards = (List<CardReactive>) c.getAddedSubList();
-                    addedCards.forEach(cardReactive -> {
-                        addCardToHand(cardReactive, player);
-                        System.out.println(player + ": card was added:" + cardReactive);
-                    });
-
-                }
-
-                if (c.wasRemoved()) {
-                    List<CardReactive> removedCards = (List<CardReactive>) c.getRemoved();
-                    removedCards.forEach(cardReactive -> {
-                        removeCardFromHand(cardReactive, player);
-                        System.out.println(player + ": card was removed:" + cardReactive);
-                    });
-
-                    if (c.getList().isEmpty()){
-                        // Player is winner
-                        // create a alert
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setContentText(player+ " is winner");
-                        alert.show();
-                    }
-
-                }
-
-            }
-        });
-
-
-        System.out.println(gameModel.getTurnPlayer());
-
-        initSuitSymbolSelector();
-
-        gameModel.setupBots();
-
-        gameModel.setTurnPlayer(this.player);
-    }
-
     public void initSuitSymbolSelector(){
         suitSymbol.setFitWidth(100);
         suitSymbol.setFitHeight(100);
@@ -253,41 +108,82 @@ public class CrazyEightsReactiveController {
         ImageView imageView = createCardView(card, pane);
         setupCardView(card, imageView, playerReactive);
         pane.getChildren().add(imageView); // Adds the image view to the box
-        imageView.setVisible(false);
+        animateCardDeal(deckImg, imageView);
+    }
 
 
-        // Animation
+    public void removeCardFromHand(CardReactive card, PlayerReactive playerReactive){
+        Pane pane = hands.get(playerReactive);
+        FilteredList<Node> toRemove = pane.getChildren().filtered(node -> node.getId().equals(card.getId()));
+        Node node = toRemove.get(0);
 
+        animateCardRemove(node, pileImg);
+
+        pane.getChildren().remove(toRemove.get(0));
+    }
+
+    private void animateCardDeal(Node from, Node to){
+        to.setVisible(false); // The card is invisible until animation ends
         //Creating a new image view only for the animation purposes
         ImageView animationIV = new ImageView();
         animationIV.setImage(CardReactive.getCardBack());
         table.getChildren().add(animationIV);//Adding the image view to the AnchorPane
 
         //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(2),animationIV);
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(1),animationIV);
         transition.setFromX(deckImg.getLayoutX());
         transition.setFromY(deckImg.getLayoutY());
 
-        Bounds boundsInScene = imageView.localToScene(imageView.getBoundsInLocal());
+        Bounds fromBoundsInScene = from.localToScene(from.getBoundsInLocal());
+        System.out.println(fromBoundsInScene);
 
-        transition.setToX(boundsInScene.getMaxX());
-        transition.setToY(boundsInScene.getCenterY()-boundsInScene.getMaxY());
+        Bounds boundsInScene = to.localToScene(to.getBoundsInLocal());
+        System.out.println(boundsInScene);
+
+        transition.setToX(700 - boundsInScene.getMinX());
+        transition.setToY(boundsInScene.getMinY()-boundsInScene.getHeight());
 
         transition.play();
         transition.setOnFinished(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {//When the animation finishes
                 table.getChildren().remove(animationIV);//The image view is being removed
-                imageView.setVisible(true); // make card visible now
+                to.setVisible(true);//The card drawn is now visible
+            }
+        });
+    }
+
+    private void animateCardRemove(Node from, Node to) {
+
+        //to.setVisible(false); // The card is invisible until animation ends
+        //Creating a new image view only for the animation purposes
+        ImageView animationIV = new ImageView();
+
+        animationIV.setImage(gameModel.getTopCardFromPile().getCardFront());
+        table.getChildren().add(animationIV);//Adding the image view to the AnchorPane
+
+        Bounds fromBoundsInScene = from.localToScene(from.getBoundsInLocal());
+        System.out.println(fromBoundsInScene);
+
+        //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(1),animationIV);
+
+        // Tutaj to 700 jest hardcoded! to trzeba koniecznie zmienic, bo sie krupierowi prawa z lewa myli
+        transition.setFromX(700 - fromBoundsInScene.getMinX());
+        transition.setFromY(fromBoundsInScene.getMinY()-fromBoundsInScene.getHeight());
+
+        transition.setToX(to.getLayoutX());
+        transition.setToY(to.getLayoutY());
+
+        transition.play();
+        transition.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {//When the animation finishes
+                table.getChildren().remove(animationIV);//The image view is being removed
+                //to.setVisible(true);//The card drawn is now visible
             }
         });
 
-    }
-
-    public void removeCardFromHand(CardReactive card, PlayerReactive playerReactive){
-        Pane pane = hands.get(playerReactive);
-        FilteredList<Node> toRemove = pane.getChildren().filtered(node -> node.getId().equals(card.getId()));
-        pane.getChildren().remove(toRemove.get(0));
     }
 
     public ImageView createCardView(CardReactive card, Pane pane){
@@ -396,8 +292,6 @@ public class CrazyEightsReactiveController {
             //unselect card
             imageView.getStyleClass().remove("clicked"); //removes card css class that styles it as selected
             player.unselectCard(card);                      //sets the card boolean "selected" value to false
-            //It is not necessary anymore, because card hold info about if is selected or not
-//            player.unselectCard(card);                          //removes the card from player selected cards list
         } else {
             //select card if it agree with rules
             // only cards of interactive player can be selected
@@ -412,7 +306,26 @@ public class CrazyEightsReactiveController {
 
     private void onCardDealt() {
         //gameModel.setTurnPlayer(player); //Usunąć w późniejszych wersjach !!!
+        player.dealCard(gameModel.takeTopCardFromStock());//The card is being dealt
+//        animateCard();
+    }
 
+    /**
+     * animateCard is called from addCardToHand method
+     * and animates automatically when any player deals card
+     * but for now it doesn't work.
+     * I have even tried to give direct reference to imageView as an argument
+     * to animateCard() but card positions in vboxes are managed by layout manager
+     * and they looks to not make a sense if I try to use then in animation.
+     * i tried literally every method that accesses node's position property, eg.
+     * getX, getLayoutX, getLocalToScene etc
+     * and nothing gives satisfying results.
+     * I think that this method usage should be like animateCard(ImageView from, ImageView to)
+     * where "from" is card imageView from where animation should start and "to" is imageView
+     * where animation should and.
+     * Then we would be able to use it directly in addCardToHand() and removeCardFromHand() methods.
+     */
+    private void animateCard(){
         //Creating a new image view only for the animation purposes
         ImageView animationIV = new ImageView();
         animationIV.setImage(CardReactive.getCardBack());
@@ -424,8 +337,6 @@ public class CrazyEightsReactiveController {
         transition.setFromY(deckImg.getLayoutY());
         transition.setToX(box1.getWidth());
         transition.setToY(box1.getLayoutY()-box1.getPrefHeight());
-
-        player.dealCard(gameModel.takeTopCardFromStock());//The card is being dealt
 
         box1.getChildren().get(box1.getChildren().size()-1).setVisible(false);//It is invisible until the animation ends
         transition.play();
@@ -451,12 +362,6 @@ public class CrazyEightsReactiveController {
             // on pile, he can select suit
             hBoxsOfSuits.setVisible(true);
         }
-
-
-//        if (gameModel.getTopCardFromPile().getDenomination() == Denomination.EIGHT){
-//            hBoxsOfSuits.setVisible(true);
-//        }
-
     }
 
     @FXML
@@ -471,5 +376,151 @@ public class CrazyEightsReactiveController {
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Handling interactions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+    @FXML
+    void initialize() {
+        // Set everything what doesn't change during whole game in this initialize method
+
+        pileImg.setFitWidth(100); //Setting its max width
+        pileImg.setFitHeight(140); //Setting its max height
+        suitSymbol.setVisible(false);
+
+        gameModel.getPile().addListener((ListChangeListener<? super CardReactive>) c -> {
+            System.out.println("Pile changed");
+            while (c.next()){
+                if (c.wasAdded()){
+                    // Card was added to pile
+                    // it takes the first card from the stock and puts it on the pile
+                    // When a GameModel putStarterOnPile() method is called, this event will be fired,
+                    // as well as after every update
+
+                    //A card from the users box is being put on the pile
+                    pileImg.setImage(gameModel.getTopCardFromPile().getCardFront()); //Filling the imageView with a card front image
+                    gameModel.setSuit(gameModel.getTopCardFromPile().getSuit());
+                }
+            }
+        });
+
+        gameModel.getStock().addListener((ListChangeListener<? super CardReactive>) c -> {
+            System.out.println("Stock changed");
+            while (c.next()){
+                if (c.wasRemoved()){
+                    if (c.getList().size()==0){
+                        deckImg.setImage(null); //An image is being removed, we are out of cards
+                        deckImg.setDisable(true);
+                    }
+                }
+            }
+        });
+
+        gameModel.turnPlayerProperty().addListener((observable, oldTurnPlayer, turnPlayer) -> {
+            System.out.println("TurnPlayer changed from: " + oldTurnPlayer + " to: " + turnPlayer );
+            // Only interactive player must confirm his actions.
+            // Bots make it automatically after they choose cards.
+            // Disable confirmButton, when interactive player doesn't have turn.
+            confirmButton.setDisable(turnPlayer != this.player);
+        });
+
+        gameModel.suitProperty().addListener((observable, oldSuit, newSuit) -> {
+            System.out.println("Suit changed from: " + oldSuit + " to: " + newSuit );
+            //Automatically update suit symbol on respective change in gameModel
+            suitSymbol.setImage(gameModel.getSuit().getSymbol());
+        });
+
+
+        //Prepares a fresh, brand new deck of cards
+        //Adds four players to the game
+
+        gameModel.init();
+        this.player = gameModel.getInteractivePlayer();
+
+        List<BotPlayerReactive> bots = gameModel.getBotPlayers();
+
+        // Create mapping between players and their hands
+        //A set of four boxes representing players hands is being created
+        hands.put(this.player, box1);
+        hands.put(bots.get(0), box2);
+        hands.put(bots.get(1), box3);
+        hands.put(bots.get(2), box4);
+
+        // We may want to animate this (eg card position)
+        //Deal 8 cards to each player
+        gameModel.beginTheDeal();
+
+        bots.forEach(bot -> {
+            bot.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
+                System.out.println(bot + " cards changed");
+                while (c.next()) {
+                    if (c.wasAdded()) {
+                        List<CardReactive> addedCards = (List<CardReactive>) c.getAddedSubList();
+                        addedCards.forEach(cardReactive -> {
+                            addCardToHand(cardReactive, bot);
+                            System.out.println(bot + ": card was added:" + cardReactive);
+                        });
+                    }
+
+                    if (c.wasRemoved()) {
+                        System.out.println(bot + " card was removed");
+                        List<CardReactive> removedCards = (List<CardReactive>) c.getRemoved();
+                        removedCards.forEach(cardReactive -> {
+                            removeCardFromHand(cardReactive, bot);
+                            System.out.println(bot + ": card was removed:" + cardReactive);
+                        });
+
+                        if (c.getList().isEmpty()){
+                            // Player is winner
+                            // create a alert
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setContentText(bot + " is winner");
+                            alert.show();
+                        }
+
+                    } // if c.was removed
+
+                }
+            });
+        });
+
+        player.getCards().addListener((ListChangeListener<? super CardReactive>) c -> {
+            System.out.println(player + " cards changed");
+            while (c.next()){
+                if (c.wasAdded()){
+                    List<CardReactive> addedCards = (List<CardReactive>) c.getAddedSubList();
+                    addedCards.forEach(cardReactive -> {
+                        addCardToHand(cardReactive, player);
+                        System.out.println(player + ": card was added:" + cardReactive);
+                    });
+
+                }
+
+                if (c.wasRemoved()) {
+                    List<CardReactive> removedCards = (List<CardReactive>) c.getRemoved();
+                    removedCards.forEach(cardReactive -> {
+                        removeCardFromHand(cardReactive, player);
+                        System.out.println(player + ": card was removed:" + cardReactive);
+                    });
+
+                    if (c.getList().isEmpty()){
+                        // Player is winner
+                        // create a alert
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setContentText(player+ " is winner");
+                        alert.show();
+                    }
+
+                }
+
+            }
+        });
+
+
+        System.out.println(gameModel.getTurnPlayer());
+
+        initSuitSymbolSelector();
+
+        gameModel.setupBots();
+
+        gameModel.setTurnPlayer(this.player);
+    }
 
 }//End of controller class file
