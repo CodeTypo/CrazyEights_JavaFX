@@ -22,9 +22,9 @@ public class BotPlayerReactive extends PlayerReactive{
      * current turnPlayer, we don't need to deal with it.
      */
     public boolean makeMove(CardReactive topPile, Suit suit){
-        if (!crazyEightStrategy()) // if first strategy doesnt work
+        if (!sameSuitStrategy(suit)) // and finally to the last
             if (!sameDenominationStrategy(topPile)) // then go to second strategy
-                if (!sameSuitStrategy(suit)) // and finally to the last
+                if (!crazyEightStrategy()) // if first strategy doesnt work
                     return false; // if no strategy works return false
         return true;
     }
