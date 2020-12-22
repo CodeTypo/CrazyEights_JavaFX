@@ -74,15 +74,53 @@ class PlayerTest {
         //Arrange
         Player player = new Player();
         List<Card> selectedCards = player.getSelectedCards();
-        selectedCards.add(new Card(Suit.CLUBS, Denomination.QUEEN));
+        selectedCards.add(new Card(Suit.SPADES, Denomination.KING));
+        selectedCards.add(new Card(Suit.SPADES, Denomination.TWO));
         selectedCards.add(new Card(Suit.SPADES, Denomination.JACK));
-        selectedCards.add(new Card(Suit.CLUBS, Denomination.THREE));
-        selectedCards.add(new Card(Suit.HEARTS, Denomination.ACE));
+        selectedCards.add(new Card(Suit.SPADES, Denomination.FIVE));
 
         //Act
         player.removeSelectedCards();
 
         //Assert
         assertEquals(0, selectedCards.size());
+    }
+
+    @Test
+    void unselectCard_When_PlayerResignsFromSelectedCard_ShouldRemoveThatCardFromSelectedCards(){
+        //Arrange
+        Player player = new Player();
+        List<Card> selectedCards = player.getSelectedCards();
+        Card randomUnselectedCard = new Card(Suit.CLUBS, Denomination.QUEEN);
+        selectedCards.add(randomUnselectedCard);
+        selectedCards.add(new Card(Suit.CLUBS, Denomination.JACK));
+        selectedCards.add(new Card(Suit.CLUBS, Denomination.THREE));
+        selectedCards.add(new Card(Suit.CLUBS, Denomination.ACE));
+
+        //Act
+        player.unselectCard(randomUnselectedCard);
+
+        //Assert
+        for(Card card : selectedCards)
+            assertNotEquals(randomUnselectedCard,card);
+    }
+
+    @Test
+    void unselectCard_When_PlayerResignsFromSelectedCard_ShouldAddThatCardToOtherPlayerCards(){
+        //Arrange
+        Player player = new Player();
+        List<Card> selectedCards = player.getSelectedCards();
+        List<Card> cards = player.getCards();
+        Card randomUnselectedCard = new Card(Suit.CLUBS, Denomination.QUEEN);
+        selectedCards.add(randomUnselectedCard);
+        cards.add(new Card(Suit.CLUBS, Denomination.JACK));
+        cards.add(new Card(Suit.CLUBS, Denomination.THREE));
+        cards.add(new Card(Suit.CLUBS, Denomination.ACE));
+
+        //Act
+        player.unselectCard(randomUnselectedCard);
+
+        //Assert
+        assertEquals(4,cards.size());
     }
 }
