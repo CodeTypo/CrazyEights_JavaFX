@@ -1,10 +1,13 @@
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter
+@Setter
 public abstract class PlayerReactive {
     /**
      * We need to track player's cards to update them on screen.
@@ -12,11 +15,13 @@ public abstract class PlayerReactive {
      */
     private ObservableList<CardReactive> cards = FXCollections.observableArrayList();
 
+
     /**
      * We need to track actual suit, because when crazy eight
      * is selected, player can select appropriate symbol which
      * can be somewhat updated on screen.
-     */
+     *
+     * **/
     private SimpleObjectProperty<Suit> selectedSuit = new SimpleObjectProperty<>();
 
     public void selectCard(CardReactive card){
@@ -47,14 +52,6 @@ public abstract class PlayerReactive {
         return cards.filtered(CardReactive::isSelected);
     }
 
-    public ObservableList<CardReactive> getCards() {
-        return cards;
-    }
-
-    public void setCards(ObservableList<CardReactive> cards) {
-        this.cards = cards;
-    }
-
     public Suit getSelectedSuit() {
         return selectedSuit.get();
     }
@@ -62,5 +59,4 @@ public abstract class PlayerReactive {
     public SimpleObjectProperty<Suit> selectedSuitProperty() {
         return selectedSuit;
     }
-
 }

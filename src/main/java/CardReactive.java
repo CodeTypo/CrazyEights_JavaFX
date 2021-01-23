@@ -1,6 +1,10 @@
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.image.Image;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class CardReactive {
     private static Image cardBack = SVGUtils.getImageFromSVG("/imagesSVG/1B.svg");
 
@@ -29,24 +33,8 @@ public class CardReactive {
         return selected.get();
     }
 
-    public SimpleBooleanProperty selectedProperty() {
-        return selected;
-    }
-
     public void setSelected(boolean selected) {
         this.selected.set(selected);
-    }
-
-    public Suit getSuit() {
-        return suit;
-    }
-
-    public void setSuit(Suit suit) {
-        this.suit = suit;
-    }
-
-    public Denomination getDenomination() {
-        return denomination;
     }
 
     public void setDenomination(Denomination denomination) {

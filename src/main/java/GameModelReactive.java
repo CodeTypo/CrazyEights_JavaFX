@@ -1,6 +1,8 @@
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,6 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Rules taken from this source:
  * https://bicyclecards.com/how-to-play/crazy-eights/
  */
+@Getter
+@Setter
 public class GameModelReactive {
 
     private static final int FIRST_DEAL_CARDS = 8;
@@ -256,22 +260,6 @@ public class GameModelReactive {
         return ThreadLocalRandom
                 .current()
                 .nextInt(a, b);
-    }
-
-    public InteractivePlayerReactive getInteractivePlayer() {
-        return interactivePlayer;
-    }
-
-    public List<BotPlayerReactive> getBotPlayers() {
-        return botPlayers;
-    }
-
-    public ObservableList<CardReactive> getStock() {
-        return stock;
-    }
-
-    public ObservableList<CardReactive> getPile() {
-        return pile;
     }
 
     public Suit getSuit() {
