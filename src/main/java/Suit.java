@@ -1,5 +1,9 @@
 import javafx.scene.image.Image;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
+@AllArgsConstructor
 public enum Suit {
     DIAMONDS("D"),
     CLUBS("C"),
@@ -7,10 +11,6 @@ public enum Suit {
     SPADES("S");
 
     private String s;
-
-    Suit(String s) {
-        this.s = s;
-    }
 
     public String getS() {
         return s;

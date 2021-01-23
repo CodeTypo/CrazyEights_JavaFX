@@ -16,7 +16,6 @@ public class Card {
         this.denomination = denomination;
         this.cardFront = SVGUtils.getImageFromSVG(SVGUtils.getSVGCardResourcePath(suit, denomination));
     }
-
     //private WritableImage wimg;
 
     public static Image getCardBack() {
