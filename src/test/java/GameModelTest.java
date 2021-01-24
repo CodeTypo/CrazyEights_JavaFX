@@ -117,22 +117,22 @@ class GameModelTest {
             assertEquals(7, players.getCards().size());
     }
 
-    @Test
-    void putStarterOnPile_ShouldSetFirstFiveCardsOnThePileOtherThanEight() {
-        // Arrange
-        GameModel gameModel = new GameModel();
-        List<Card> stock;
-        gameModel.prepareCardDeck();
-
-        //Act
-        gameModel.putStarterOnPile();
-        stock = gameModel.getStock();
-        int stockSize = stock.size();
-
-        // Assert
-        for(int i=1; i<=5; i++)
-            assertNotEquals(Denomination.EIGHT, stock.get(stockSize-i).getDenomination());
-    }
+//    @Test
+//    void putStarterOnPile_ShouldSetFirstFiveCardsOnThePileOtherThanEight() {
+//        // Arrange
+//        GameModel gameModel = new GameModel();
+//        List<Card> stock;
+//        gameModel.prepareCardDeck();
+//
+//        //Act
+//        gameModel.putStarterOnPile();
+//        stock = gameModel.getStock();
+//        int stockSize = stock.size();
+//
+//        // Assert
+//        for(int i=1; i<=5; i++)
+//            assertNotEquals(Denomination.EIGHT, stock.get(stockSize-i).getDenomination());
+//    }
 
     @Test
     void dealCard_When_OnThePileAreZeroCards_ShouldReturnOne() {

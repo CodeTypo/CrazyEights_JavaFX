@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -76,6 +77,12 @@ public class GameModel {
 
             players.add(player);
         }
+
+        if(players.size() == 1) players.add(new Player());
+        else if(players.size() == 0){
+            players.add(new Player());
+            players.add(new Player());
+        }
     }
 
     /**
@@ -90,9 +97,14 @@ public class GameModel {
      */
     public void beginTheDeal() {
         for (Player player : players) {
-            for (int i = 0; i < 8; i++) {
-                player.dealCard(stock.remove(stock.size() - 1));
-            }
+            if(players.size()<7)
+                for (int i = 0; i < 8; i++) {
+                    player.dealCard(stock.remove(stock.size() - 1));
+                }
+            else
+                for (int i = 0; i < 7; i++) {
+                    player.dealCard(stock.remove(stock.size() - 1));
+                }
         }
     }
 
