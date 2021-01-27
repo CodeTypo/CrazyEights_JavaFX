@@ -207,10 +207,12 @@ public class GameModelReactive {
             if (firstCard.getDenomination() == Denomination.EIGHT){
                 pile.addAll(selCards);
                 getTurnPlayer().removeSelectedCards(selCards);
+                getTurnPlayer().getSelectedCards().clear();
                 return true;
             }else if(firstCard.getSuit() == getSuit() || firstCard.getDenomination() == getTopCardFromPile().getDenomination()){
                 pile.addAll(selCards);
                 getTurnPlayer().removeSelectedCards(selCards);
+                getTurnPlayer().getSelectedCards().clear();
                 nextPlayerTurn();
             }
         }
