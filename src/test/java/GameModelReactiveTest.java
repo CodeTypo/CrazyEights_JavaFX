@@ -1,6 +1,6 @@
+import javafx.collections.ObservableList;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,21 +39,7 @@ class GameModelReactiveTest {
     }
 
     @Test
-    void beginTheDeal_ShouldSetPlayersEightCards() {
-        // Arrange
-        GameModelReactive gameModelReactive = new GameModelReactive();
-        gameModelReactive.init();
-
-        // Act
-        gameModelReactive.beginTheDeal();
-
-        // Assert
-        for(BotPlayerReactive players : gameModelReactive.getBotPlayers())
-            assertEquals(8, players.getCards().size());
-    }
-
-    @Test
-    void drawDeal_ShouldSetPlayerWhoStartsGameRandomly(){
+    void drawDealer_ShouldSetPlayerWhoStartsGameRandomly(){
         // Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
         gameModelReactive.prepareBots();
@@ -128,6 +114,37 @@ class GameModelReactiveTest {
 
         // Assert
         assertTrue(actual);
+    }
+
+    @Test
+    void beginTheDeal_ShouldSetPlayersEightCards() {
+        // Arrange
+        GameModelReactive gameModelReactive = new GameModelReactive();
+        gameModelReactive.init();
+
+        // Act
+        gameModelReactive.beginTheDeal();
+
+        // Assert
+        for(BotPlayerReactive players : gameModelReactive.getBotPlayers())
+            assertEquals(8, players.getCards().size());
+    }
+
+    @Test
+    void putStarterOnPile_ShouldSetFirstFiveCardsOnThePileOtherThanEight() {
+        // Arrange
+        GameModelReactive gameModelReactive = new GameModelReactive();
+        ObservableList<CardReactive> stock;
+        gameModelReactive.prepareCardDeck();
+
+        //Act
+        gameModelReactive.putStarterOnPile();
+        stock = gameModelReactive.getStock();
+        int stockSize = stock.size();
+
+        // Assert
+        for(int i=1; i<=5; i++)
+            assertNotEquals(Denomination.EIGHT, stock.get(stockSize-i).getDenomination());
     }
 
     @Test
