@@ -50,4 +50,19 @@ class GameModelReactiveTest {
         for(BotPlayerReactive players : gameModelReactive.getBotPlayers())
             assertEquals(8, players.getCards().size());
     }
+
+    @Test
+    void drawDeal_ShouldSetPlayerWhoStartsGameRandomly(){
+        // Arrange
+        GameModelReactive gameModelReactive = new GameModelReactive();
+        gameModelReactive.prepareBots();
+        gameModelReactive.getInteractivePlayer();
+
+        // Act
+        gameModelReactive.drawDealer();
+        boolean actual = (gameModelReactive.getTurnPlayer() instanceof PlayerReactive);
+
+        // Assert
+        assertEquals(true,actual);
+    }
 }
