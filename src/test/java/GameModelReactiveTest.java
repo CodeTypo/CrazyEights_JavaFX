@@ -68,6 +68,69 @@ class GameModelReactiveTest {
     }
 
     @Test
+    void nextPlayerTurn_WhenTurnPlayerIsLastOne_ShouldBeInteractivePlayerTurn(){
+        // Arrange
+        GameModelReactive gameModelReactive = new GameModelReactive();
+        gameModelReactive.init();
+        List<BotPlayerReactive> botPlayerReactiveList = gameModelReactive.getBotPlayers();
+        gameModelReactive.setTurnPlayer(botPlayerReactiveList.get(2));
+
+        // Act
+        gameModelReactive.nextPlayerTurn();
+        boolean actual = (gameModelReactive.getTurnPlayer() instanceof  InteractivePlayerReactive);
+
+        // Assert
+        assertTrue(actual);
+    }
+
+    @Test
+    void nextPlayerTurn_WhenTurnPlayerIsFirstOne_ShouldBeBotPlayerTurn(){
+        // Arrange
+        GameModelReactive gameModelReactive = new GameModelReactive();
+        gameModelReactive.init();
+        gameModelReactive.setTurnPlayer(new InteractivePlayerReactive());
+
+        // Act
+        gameModelReactive.nextPlayerTurn();
+        boolean actual = (gameModelReactive.getTurnPlayer() instanceof  BotPlayerReactive);
+
+        // Assert
+        assertTrue(actual);
+    }
+
+    @Test
+    void nextPlayerTurn_WhenTurnPlayerIsSecondOne_ShouldBeBotPlayerTurn(){
+        // Arrange
+        GameModelReactive gameModelReactive = new GameModelReactive();
+        gameModelReactive.init();
+        List<BotPlayerReactive> botPlayerReactiveList = gameModelReactive.getBotPlayers();
+        gameModelReactive.setTurnPlayer(botPlayerReactiveList.get(0));
+
+        // Act
+        gameModelReactive.nextPlayerTurn();
+        boolean actual = (gameModelReactive.getTurnPlayer() instanceof  BotPlayerReactive);
+
+        // Assert
+        assertTrue(actual);
+    }
+
+    @Test
+    void nextPlayerTurn_WhenTurnPlayerIsThirdOne_ShouldBeBotPlayerTurn(){
+        // Arrange
+        GameModelReactive gameModelReactive = new GameModelReactive();
+        gameModelReactive.init();
+        List<BotPlayerReactive> botPlayerReactiveList = gameModelReactive.getBotPlayers();
+        gameModelReactive.setTurnPlayer(botPlayerReactiveList.get(1));
+
+        // Act
+        gameModelReactive.nextPlayerTurn();
+        boolean actual = (gameModelReactive.getTurnPlayer() instanceof  BotPlayerReactive);
+
+        // Assert
+        assertTrue(actual);
+    }
+
+    @Test
     void playCards_WhenTurnPlayerSelectEight_ShouldReturnTrue(){
         // Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();

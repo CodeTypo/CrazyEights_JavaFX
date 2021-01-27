@@ -214,7 +214,6 @@ public class GameModelReactive {
                 getTurnPlayer().removeSelectedCards(selCards);
                 getTurnPlayer().getSelectedCards().clear();
                 nextPlayerTurn();
-                return false;
             }
         }
 
