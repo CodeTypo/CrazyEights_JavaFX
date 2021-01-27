@@ -32,10 +32,6 @@ public class SVGUtils {
         transcoder.addTranscodingHint(ImageTranscoder.KEY_HEIGHT, 140F);
         transcoder.addTranscodingHint(ImageTranscoder.KEY_BACKGROUND_COLOR, SVGColor.red);
 
-        return getImage(path, image, transcoder);
-    }
-
-    private static Image getImage(String path, Image image, BufferedImageTranscoder transcoder) {
         try (InputStream file = SVGUtils.class.getResourceAsStream(path)) {
             TranscoderInput transIn = new TranscoderInput(file);
             try {
@@ -72,6 +68,13 @@ public class SVGUtils {
         transcoder.addTranscodingHint(ImageTranscoder.KEY_AOI, aoi);
 
 
-        return getImage(path, image, transcoder);
+        try (InputStream file = SVGUtils.class.getResourceAsStream(path)) {
+            TranscoderInput transIn = new TranscoderInput(file);
+            try {
+                transcoder.transcode(transIn, null);
+                image = SwingFXUtils.toFXImage(transcoder.getBufferedImage(), null);
+            } catch (TranscoderException ex) {ex.printStackTrace();}
+        } catch (IOException io) {io.printStackTrace();}
+        return image;
     }
 }
