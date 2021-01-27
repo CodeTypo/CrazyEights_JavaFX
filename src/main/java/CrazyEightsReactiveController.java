@@ -367,14 +367,8 @@ public class CrazyEightsReactiveController {
     }
 
     @FXML
-    void onResetClicked(ActionEvent event) {
-        // A method executing when the user clicks a GUI "reset" button
-        for(Node node : box1.getChildren()){
-            node.getStyleClass().remove("clicked"); //removes "clicked" styling from all of the players cards
-            //Dodać tutaj usunięcie karty z listy Selected!!!!
-            //TO DO
-        }
-
+    void onPassClicked(ActionEvent event) {
+        gameModel.nextPlayerTurn();
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Handling interactions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
