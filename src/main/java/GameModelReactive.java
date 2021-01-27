@@ -136,6 +136,7 @@ public class GameModelReactive {
         }
 
         pile.add(starter);
+        suitProperty().set(starter.getSuit());
     }
 
     // Add event listeners to react for changes
@@ -164,7 +165,7 @@ public class GameModelReactive {
 
                 if(playCards()){
                     // let bot select suit
-                    setSuit(bot.getSelectedSuit());
+                    // setSuit(bot.getSelectedSuit()); // TODO */ maybe unlock
                     nextPlayerTurn();
                 }
 
