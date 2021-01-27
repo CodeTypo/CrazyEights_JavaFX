@@ -1,3 +1,5 @@
+import java.util.concurrent.ThreadLocalRandom;
+
 public class BotPlayerReactive extends PlayerReactive{
     /**
      * BotPlayer contains additional method
@@ -41,8 +43,8 @@ public class BotPlayerReactive extends PlayerReactive{
             }
         }
         // pick suit at random
-        // selectSuit(Suit.values()[ThreadLocalRandom.current().nextInt(0, Suit.values().length)]);
-        selectSuit(Suit.HEARTS);
+        selectSuit(Suit.values()[ThreadLocalRandom.current().nextInt(0, Suit.values().length)]);
+
         return selected;
     }
 
