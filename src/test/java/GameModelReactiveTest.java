@@ -1,10 +1,11 @@
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class GameModelReactiveTest {
 
@@ -63,50 +64,42 @@ class GameModelReactiveTest {
         boolean actual = (gameModelReactive.getTurnPlayer() instanceof PlayerReactive);
 
         // Assert
-        assertEquals(true,actual);
+        assertTrue(actual);
     }
 
     @Test
-    void init_ShouldPrepareCardDeck(){
+    void playCards_WhenTurnPlayerSelectEight_ShouldReturnTrue(){
         // Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
-        Set<CardReactive> cardSet = new HashSet<>();
+        gameModelReactive.init();
+        gameModelReactive.putStarterOnPile();
+        gameModelReactive.setTurnPlayer(new InteractivePlayerReactive());
+        PlayerReactive turnPlayer = gameModelReactive.getTurnPlayer();
+        turnPlayer.selectCard(new CardReactive(Suit.SPADES,Denomination.EIGHT));
 
         // Act
-        gameModelReactive.init();
-        cardSet.addAll(gameModelReactive.getStock());
-        int actual = cardSet.size();
+        boolean actual = gameModelReactive.playCards();
+
 
         // Assert
-        assertEquals(52, actual);
+        assertTrue(actual);
     }
 
     @Test
-    void init_ShouldPrepareBots(){
+    void playCards_WhenTurnPlayerSelectOtherCardThanEight_ShouldReturnFalse(){
         // Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
-        List<BotPlayerReactive> botPlayerReactiveList = gameModelReactive.getBotPlayers();
-
-        //Act
-        gameModelReactive.prepareBots();
-        int numberOfBotPlayers = botPlayerReactiveList.size();
-
-        //Assert
-        assertEquals(3,numberOfBotPlayers);
-    }
-
-    @Test
-    void init_ShouldDrawDealer(){
-        // Arrange
-        GameModelReactive gameModelReactive = new GameModelReactive();
-        gameModelReactive.prepareBots();
-        gameModelReactive.getInteractivePlayer();
+        gameModelReactive.init();
+        gameModelReactive.putStarterOnPile();
+        gameModelReactive.setTurnPlayer(new InteractivePlayerReactive());
+        PlayerReactive turnPlayer = gameModelReactive.getTurnPlayer();
+        turnPlayer.selectCard(new CardReactive(Suit.SPADES,Denomination.TWO));
 
         // Act
-        gameModelReactive.init();
-        boolean actual = (gameModelReactive.getTurnPlayer() instanceof PlayerReactive);
+        boolean actual = gameModelReactive.playCards();
+
 
         // Assert
-        assertEquals(true,actual);
+        assertFalse(actual);
     }
 }
