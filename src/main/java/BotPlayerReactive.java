@@ -1,5 +1,3 @@
-import java.util.concurrent.ThreadLocalRandom;
-
 public class BotPlayerReactive extends PlayerReactive{
     /**
      * BotPlayer contains additional method
