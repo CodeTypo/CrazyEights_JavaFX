@@ -170,7 +170,6 @@ public class CrazyEightsReactiveController {
         //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
         TranslateTransition transition = new TranslateTransition(Duration.seconds(1),animationIV);
 
-        // Tutaj to 700 jest hardcoded! to trzeba koniecznie zmienic, bo sie krupierowi prawa z lewa myli
         transition.setFromX(fromBoundsInScene.getMinX());
         transition.setFromY(fromBoundsInScene.getMinY()-fromBoundsInScene.getHeight());
 
