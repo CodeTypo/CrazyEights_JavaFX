@@ -15,7 +15,7 @@ public abstract class PlayerReactive {
      * Selected cards will be marked in CardReactive's selected field.
      */
     private ObservableList<CardReactive> cards = FXCollections.observableArrayList();
-
+    private ObservableList<CardReactive> selectedCards = FXCollections.observableArrayList();
 
     /**
      * We need to track actual suit, because when crazy eight
@@ -26,11 +26,18 @@ public abstract class PlayerReactive {
     private SimpleObjectProperty<Suit> selectedSuit = new SimpleObjectProperty<>();
 
     public void selectCard(CardReactive card){
-        List<CardReactive> selCards = getSelectedCards();
-        if (selCards.isEmpty()
-                || selCards.get(0).getDenomination().equals(card.getDenomination())){
+//        List<CardReactive> selCards = getSelectedCards();
+        if (selectedCards.isEmpty()
+                || selectedCards.get(0).getDenomination().equals(card.getDenomination())){
             card.setSelected(true);
+//            System.out.println("LISTA");
+//            System.out.println(getSelectedCards().toString());
+//            cards.remove(card);
+            selectedCards.add(card);
+
         }
+
+
     }
 
     public ObservableList<CardReactive> getCards() {
@@ -38,6 +45,9 @@ public abstract class PlayerReactive {
     }
 
     public void unselectCard(CardReactive card){
+
+        selectedCards.remove(card);
+//        cards.add(card);
         card.setSelected(false);
     }
 
@@ -54,7 +64,8 @@ public abstract class PlayerReactive {
     }
 
     public List<CardReactive> getSelectedCards(){
-        return cards.filtered(CardReactive::isSelected);
+        return selectedCards;
+//        return cards.filtered(CardReactive::isSelected);
     }
 
     public Suit getSelectedSuit() {
