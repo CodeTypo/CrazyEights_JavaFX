@@ -262,6 +262,10 @@ public class GameModelReactive {
                 .nextInt(a, b);
     }
 
+    public List<BotPlayerReactive> getBotPlayers() {
+        return botPlayers;
+    }
+
     public Suit getSuit() {
         return suit.get();
     }

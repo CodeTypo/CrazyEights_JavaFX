@@ -32,6 +32,10 @@ public abstract class PlayerReactive {
         }
     }
 
+    public ObservableList<CardReactive> getCards() {
+        return cards;
+    }
+
     public void unselectCard(CardReactive card){
         card.setSelected(false);
     }
