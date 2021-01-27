@@ -43,7 +43,8 @@ public class BotPlayerReactive extends PlayerReactive{
             }
         }
         // pick suit at random
-        selectSuit(Suit.values()[ThreadLocalRandom.current().nextInt(0, Suit.values().length)]);
+        // selectSuit(Suit.values()[ThreadLocalRandom.current().nextInt(0, Suit.values().length)]);
+        selectSuit(Suit.HEARTS);
         return selected;
     }
 

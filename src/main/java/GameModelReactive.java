@@ -136,6 +136,7 @@ public class GameModelReactive {
         }
 
         pile.add(starter);
+        suitProperty().set(starter.getSuit());
     }
 
     // Add event listeners to react for changes
@@ -153,18 +154,29 @@ public class GameModelReactive {
             if (newTurnPlayer instanceof BotPlayerReactive){
                 // Game Model should make move for bot
                 BotPlayerReactive bot = (BotPlayerReactive) newTurnPlayer;
-                while (!bot.makeMove(getTopCardFromPile(), getSuit())){
+                if (!bot.makeMove(getTopCardFromPile(), getSuit())) {
                     if (stock.isEmpty()){
                         nextPlayerTurn();
-                        break;
                     } else{
                         dealCard();
+                        if (!bot.makeMove(getTopCardFromPile(), getSuit())) {
+                            nextPlayerTurn();
+                        }
                     }
                 }
+//
+//                while (!bot.makeMove(getTopCardFromPile(), getSuit())){
+//                    if (stock.isEmpty()){
+//                        nextPlayerTurn();
+//                        break;
+//                    } else{
+//                        dealCard();
+//                    }
+//                }
 
                 if(playCards()){
                     // let bot select suit
-                    setSuit(bot.getSelectedSuit());
+//                    setSuit(bot.getSelectedSuit()); // TODO */ maybe unlock
                     nextPlayerTurn();
                 }
 
@@ -182,8 +194,8 @@ public class GameModelReactive {
      */
     public boolean playCards(){
         List<CardReactive> selCards = getTurnPlayer().getSelectedCards();
+        CardReactive firstCard = selCards.get(0);
         if (!selCards.isEmpty()){
-            CardReactive firstCard = selCards.get(0);
 
             // Uwaga!!! tutaj jest mala niescislosc,
             // bo false jest zwracany zarowno wtedy gdy zagrana jest osemka
@@ -196,8 +208,7 @@ public class GameModelReactive {
                 pile.addAll(selCards);
                 getTurnPlayer().removeSelectedCards(selCards);
                 return true;
-            }else if(firstCard.getDenomination() == getTopCardFromPile().getDenomination()
-                    || firstCard.getSuit() == getSuit()){
+            }else if(firstCard.getSuit() == getSuit() || firstCard.getDenomination() == getTopCardFromPile().getDenomination()){
                 pile.addAll(selCards);
                 getTurnPlayer().removeSelectedCards(selCards);
                 nextPlayerTurn();

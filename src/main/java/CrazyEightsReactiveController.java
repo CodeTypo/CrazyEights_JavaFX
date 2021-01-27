@@ -170,8 +170,7 @@ public class CrazyEightsReactiveController {
         //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
         TranslateTransition transition = new TranslateTransition(Duration.seconds(1),animationIV);
 
-        // Tutaj to 700 jest hardcoded! to trzeba koniecznie zmienic, bo sie krupierowi prawa z lewa myli
-        transition.setFromX(700 - fromBoundsInScene.getMinX());
+        transition.setFromX(fromBoundsInScene.getMinX());
         transition.setFromY(fromBoundsInScene.getMinY()-fromBoundsInScene.getHeight());
 
         transition.setToX(to.getLayoutX());
@@ -367,14 +366,8 @@ public class CrazyEightsReactiveController {
     }
 
     @FXML
-    void onResetClicked(ActionEvent event) {
-        // A method executing when the user clicks a GUI "reset" button
-        for(Node node : box1.getChildren()){
-            node.getStyleClass().remove("clicked"); //removes "clicked" styling from all of the players cards
-            //Dodać tutaj usunięcie karty z listy Selected!!!!
-            //TO DO
-        }
-
+    void onPassClicked(ActionEvent event) {
+        gameModel.nextPlayerTurn();
     }
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Handling interactions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
