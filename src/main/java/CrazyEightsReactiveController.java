@@ -361,8 +361,14 @@ public class CrazyEightsReactiveController {
         // A method executing when the user clicks a GUI "confirm" button
         // This button is enabled only when interactive player has turn
 
+        if(gameModel.getInteractivePlayer().getSelectedCards().size() == 0){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setContentText("Please select a card!");
+            alert.show();
+        }
+
         // gameModel.playCards() calls corresponding method from Player class
-        if (gameModel.playCards()){ // Play selected cards and check if show selector
+        else if (gameModel.playCards()){ // Play selected cards and check if show selector
             // If after interactive player's turn, there is crazy eight
             // on pile, he can select suit
             hBoxsOfSuits.setVisible(true);
@@ -503,7 +509,7 @@ public class CrazyEightsReactiveController {
                         // Player is winner
                         // create a alert
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setContentText(player+ " is winner");
+                        alert.setContentText(player + " is winner");
                         alert.show();
                     }
 

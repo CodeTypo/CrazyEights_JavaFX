@@ -3,6 +3,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -27,7 +28,7 @@ public abstract class PlayerReactive {
     public void selectCard(CardReactive card){
         List<CardReactive> selCards = getSelectedCards();
         if (selCards.isEmpty()
-                || selCards.get(0).getDenomination() == card.getDenomination()){
+                || selCards.get(0).getDenomination().equals(card.getDenomination())){
             card.setSelected(true);
         }
     }
