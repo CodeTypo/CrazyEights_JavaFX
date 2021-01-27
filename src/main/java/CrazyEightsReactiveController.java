@@ -14,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -78,6 +79,9 @@ public class CrazyEightsReactiveController {
 
     @FXML
     private AnchorPane table;
+
+    @FXML
+    private Button exitButton;
 
     //The whole game flow is being controlled by this class
     GameModelReactive gameModel = new GameModelReactive();
@@ -516,6 +520,11 @@ public class CrazyEightsReactiveController {
         gameModel.setupBots();
 
         gameModel.setTurnPlayer(this.player);
+    }
+
+    public void onExitClicked(ActionEvent actionEvent) {
+        Stage stage = (Stage) exitButton.getScene().getWindow();
+        stage.close();
     }
 
 }//End of controller class file
