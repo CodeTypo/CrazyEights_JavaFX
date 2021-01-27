@@ -27,7 +27,7 @@
                   <Font name="Gill Sans Ultra Bold" size="12.0" />
                </font>
             </Button>
-            <Button layoutX="321.0" layoutY="286.0" mnemonicParsing="false" onAction="#onResetClicked" styleClass="actionButton" text="Reset" textFill="WHITE">
+            <Button layoutX="321.0" layoutY="286.0" mnemonicParsing="false" onAction="#onPassClicked" styleClass="actionButton" text="Pass" textFill="WHITE">
                <font>
                   <Font name="Gill Sans Ultra Bold" size="12.0" />
                </font>
