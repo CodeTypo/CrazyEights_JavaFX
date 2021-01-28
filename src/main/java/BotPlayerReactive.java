@@ -2,13 +2,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class BotPlayerReactive extends PlayerReactive{
     /**
-     * BotPlayer contains additional method
+     * legacy.BotPlayer contains additional method
      * that takes info about actual game state
      * and automatically selects cards to play.
-     * BotPlayer doesn't have any extra info.
+     * legacy.BotPlayer doesn't have any extra info.
      * It knows only about what every other player knows
      * and have its own programmed intuition.
-     * When BotPlayer has its turn, use it like this:
+     * When legacy.BotPlayer has its turn, use it like this:
      * botPlayer.makeMove(...) and nothing more.
      * All the rest is controlled by gameModel itself.
      *

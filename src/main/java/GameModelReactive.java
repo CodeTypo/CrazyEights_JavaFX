@@ -106,7 +106,7 @@ public class GameModelReactive {
     }
 
     /**
-     * Card can be dealt only by current player
+     * legacy.Card can be dealt only by current player
      */
     public void dealCard(){
         turnPlayer.get().dealCard(takeTopCardFromStock());
