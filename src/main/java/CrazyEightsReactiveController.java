@@ -141,10 +141,8 @@ public class CrazyEightsReactiveController {
         transition.setFromY(deckImg.getLayoutY());
 
         Bounds fromBoundsInScene = from.localToScene(from.getBoundsInLocal());
-        System.out.println(fromBoundsInScene);
 
         Bounds boundsInScene = to.localToScene(to.getBoundsInLocal());
-        System.out.println(boundsInScene);
 
 //        transition.setToX(700 - boundsInScene.getMinX());
         transition.setToX(boundsInScene.getMinX() - boundsInScene.getWidth());
@@ -170,7 +168,6 @@ public class CrazyEightsReactiveController {
         table.getChildren().add(animationIV);//Adding the image view to the AnchorPane
 
         Bounds fromBoundsInScene = from.localToScene(from.getBoundsInLocal());
-        System.out.println(fromBoundsInScene);
 
         //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
         TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5),animationIV);
@@ -412,7 +409,6 @@ public class CrazyEightsReactiveController {
         });
 
         gameModel.getStock().addListener((ListChangeListener<? super CardReactive>) c -> {
-            System.out.println("Stock changed");
             while (c.next()){
                 if (c.wasRemoved()){
                     if (c.getList().size()==0){
