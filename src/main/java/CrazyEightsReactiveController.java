@@ -9,6 +9,7 @@ import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.DialogPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -535,7 +536,17 @@ public class CrazyEightsReactiveController {
                         // legacy.Player is winner
                         // create a alert
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setContentText(player + " is winner");
+                        DialogPane dialogPane = alert.getDialogPane();
+                        dialogPane.setHeader(null);
+                        dialogPane.getStylesheets().add(
+                                getClass().getResource("myDialog.css").toExternalForm());
+                        dialogPane.getStyleClass().add("myDialog");
+                        if (player instanceof InteractivePlayerReactive) {
+                            alert.setContentText("You are the winner!" );
+                        } else {
+                            alert.setContentText("Johnny is the winner!" );
+                        }
+
                         alert.show();
                     }
 

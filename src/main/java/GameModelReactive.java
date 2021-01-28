@@ -176,7 +176,7 @@ public class GameModelReactive {
 
                 if(playCards()){
                     // let bot select suit
-//                    setSuit(bot.getSelectedSuit()); // TODO */ maybe unlock
+                    setSuit(bot.getSelectedSuit()); // TODO */ maybe unlock
                     nextPlayerTurn();
                 }
 
@@ -279,6 +279,9 @@ public class GameModelReactive {
     }
 
     public Suit getSuit() {
+        if (suit.get() == null) {
+            return Suit.HEARTS;
+        }
         return suit.get();
     }
 
