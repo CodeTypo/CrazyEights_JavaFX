@@ -194,9 +194,9 @@ public class GameModelReactive {
      */
     public boolean playCards(){
         List<CardReactive> selCards = getTurnPlayer().getSelectedCards();
-        CardReactive firstCard = selCards.get(0);
-        if (!selCards.isEmpty()){
 
+        if (!selCards.isEmpty()){
+            CardReactive firstCard = selCards.get(0);
             // Uwaga!!! tutaj jest mala niescislosc,
             // bo false jest zwracany zarowno wtedy gdy zagrana jest osemka
             // lub nic nie zostalo zagrane wiec mozna oszukiwac i wybierac
