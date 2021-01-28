@@ -90,7 +90,7 @@ public class CrazyEightsReactiveController {
     //The whole game flow is being controlled by this class
     GameModelReactive gameModel = new GameModelReactive();
 
-    //Only p1 Player is interactive and controlled by user
+    //Only p1 legacy.Player is interactive and controlled by user
     InteractivePlayerReactive player;
 
     // Map player hands to panes
@@ -219,7 +219,7 @@ public class CrazyEightsReactiveController {
     }
 
     public void setupCardView(CardReactive card, ImageView imageView, PlayerReactive playerReactive){
-        // Set click listeners for interactive Player cards
+        // Set click listeners for interactive legacy.Player cards
         if (playerReactive == this.player){ //If the card is going to be added to a player box
             //Then the card front image is being set and an onClick listener method is being added to it making it interactive
             imageView.setOnMouseClicked(event -> onCardClicked(card, imageView));
@@ -263,7 +263,7 @@ public class CrazyEightsReactiveController {
         //Adding a onclick listener to the card laying on the top of the deck. While clicked, it executes cardDeal()
         deckImg.setOnMouseClicked(event -> {
             if (gameModel.getTurnPlayer() == this.player){
-                // Call method only if interactive Player has turn
+                // Call method only if interactive legacy.Player has turn
                 onCardDealt();
             }
 //            System.out.println("deck clicked");
@@ -380,7 +380,7 @@ public class CrazyEightsReactiveController {
             alert.show();
         }
 
-        // gameModel.playCards() calls corresponding method from Player class
+        // gameModel.playCards() calls corresponding method from legacy.Player class
         else if (gameModel.playCards()){ // Play selected cards and check if show selector
             // If after interactive player's turn, there is crazy eight
             // on pile, he can select suit
@@ -421,9 +421,9 @@ public class CrazyEightsReactiveController {
             System.out.println("Pile changed");
             while (c.next()){
                 if (c.wasAdded()){
-                    // Card was added to pile
+                    // legacy.Card was added to pile
                     // it takes the first card from the stock and puts it on the pile
-                    // When a GameModel putStarterOnPile() method is called, this event will be fired,
+                    // When a legacy.GameModel putStarterOnPile() method is called, this event will be fired,
                     // as well as after every update
 
                     //A card from the users box is being put on the pile
@@ -499,7 +499,7 @@ public class CrazyEightsReactiveController {
                         });
 
                         if (c.getList().isEmpty()){
-                            // Player is winner
+                            // legacy.Player is winner
                             // create a alert
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             alert.setContentText(bot + " is winner");
@@ -532,7 +532,7 @@ public class CrazyEightsReactiveController {
                     });
 
                     if (c.getList().isEmpty()){
-                        // Player is winner
+                        // legacy.Player is winner
                         // create a alert
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         alert.setContentText(player + " is winner");
