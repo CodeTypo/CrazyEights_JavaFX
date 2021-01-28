@@ -133,23 +133,6 @@ class GameModelReactiveTest {
         assertEquals(8,numberOfInteractivePlayerCards);
     }
 
-//    @Test
-//    void putStarterOnPile_ShouldSetFirstFiveCardsOnThePileOtherThanEight() {
-//        //Arrange
-//        GameModelReactive gameModelReactive = new GameModelReactive();
-//        ObservableList<CardReactive> stock;
-//        gameModelReactive.prepareCardDeck();
-//
-//        //Act
-//        gameModelReactive.putStarterOnPile();
-//        stock = gameModelReactive.getStock();
-//        int stockSize = stock.size();
-//
-//        //Assert
-//        for(int i=1; i<=5; i++)
-//            assertNotEquals(Denomination.EIGHT, stock.get(stockSize-i).getDenomination());
-//    }
-
     @Test
     void playCards_WhenTurnPlayerSelectEight_ShouldReturnTrue(){
         //Arrange
