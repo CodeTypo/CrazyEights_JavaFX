@@ -3,6 +3,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.util.List;
 
@@ -35,6 +36,8 @@ public abstract class PlayerReactive {
             selectedCards.add(card);
 
         }
+
+
     }
 
     public ObservableList<CardReactive> getCards() {
