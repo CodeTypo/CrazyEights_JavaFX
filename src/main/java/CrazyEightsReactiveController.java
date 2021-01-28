@@ -275,7 +275,8 @@ public class CrazyEightsReactiveController {
         //A method that executes when a big start button is being clicked by the user
         addCardsToHands();
         gameModel.putStarterOnPile();
-        startButton.setVisible(false);                              //A start button is being hidden
+        startButton.setVisible(false);//A start button is being hidden
+
         initDeckImage();
         suitSymbol.setVisible(true);
         suitSymbol.setRotate(suitSymbol.getRotate() + 180);
@@ -505,12 +506,17 @@ public class CrazyEightsReactiveController {
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
                             DialogPane dialogPane = alert.getDialogPane();
                             dialogPane.setHeader(null);
+                            dialogPane.setHeaderText(null);
+                            dialogPane.setGraphic(null);
                             dialogPane.getStylesheets().add(
                                     getClass().getResource("myDialog.css").toExternalForm());
                             dialogPane.getStyleClass().add("myDialog");
                             alert.setContentText("Johnny is the winner!" );
 
                             alert.show();
+
+                            Stage stage = (Stage) exitButton.getScene().getWindow();
+                            stage.close();
                         }
 
                     } // if c.was removed
@@ -544,15 +550,18 @@ public class CrazyEightsReactiveController {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
                         DialogPane dialogPane = alert.getDialogPane();
                         dialogPane.setHeader(null);
+                        dialogPane.setHeaderText(null);
+                        dialogPane.setGraphic(null);
                         dialogPane.getStylesheets().add(
                                 getClass().getResource("myDialog.css").toExternalForm());
                         dialogPane.getStyleClass().add("myDialog");
                         alert.setContentText("You are the winner!" );
 
-
                         alert.show();
-                    }
 
+                        Stage stage = (Stage) exitButton.getScene().getWindow();
+                        stage.close();
+                    }
                 }
 
             }

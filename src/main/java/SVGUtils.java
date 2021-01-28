@@ -33,14 +33,7 @@ public class SVGUtils {
         transcoder.addTranscodingHint(ImageTranscoder.KEY_BACKGROUND_COLOR, new Color(0.72f, 0.71f, 0.23f));
 //        transcoder.addTranscodingHint(ImageTranscoder.KEY_BACKGROUND_COLOR, SVGColor.yellow);
 
-        try (InputStream file = SVGUtils.class.getResourceAsStream(path)) {
-            TranscoderInput transIn = new TranscoderInput(file);
-            try {
-                transcoder.transcode(transIn, null);
-                image = SwingFXUtils.toFXImage(transcoder.getBufferedImage(), null);
-            } catch (TranscoderException ex) {ex.printStackTrace();}
-        } catch (IOException io) {io.printStackTrace();}
-        return image;
+        return getImage(path, image, transcoder);
     }
 
     public static String getSVGCardResourcePath(Suit suit, Denomination denomination){
@@ -69,6 +62,10 @@ public class SVGUtils {
         transcoder.addTranscodingHint(ImageTranscoder.KEY_AOI, aoi);
 
 
+        return getImage(path, image, transcoder);
+    }
+
+    private static Image getImage(String path, Image image, BufferedImageTranscoder transcoder) {
         try (InputStream file = SVGUtils.class.getResourceAsStream(path)) {
             TranscoderInput transIn = new TranscoderInput(file);
             try {
