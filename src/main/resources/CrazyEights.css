@@ -1,30 +1,31 @@
-.table{
-    -fx-background-color: rgb(61, 136, 43);
-}
 .start-button{
-    -fx-font-family: "Helvetica";
     -fx-background-color: rgb(7, 0, 0);
     -fx-text-color: rgb(255,255,255);
 }
 
 .start-button:hover{
-    -fx-font-family: "Helvetica";
-    -fx-text-color: rgb(7, 0, 0);
-    -fx-background-color: rgb(255,255,255);
+    -fx-text-fill: rgb(124, 109, 45);
 }
+
 .clicked{
-    -fx-opacity:0.75;
+    -fx-translate-y:-40;
+}
+
+.playerCard:hover{
+    -fx-translate-y:-25;
 }
 
 .table{
     -fx-background-image: url('background.jpg');
 }
 
-.actionButton{
-    -fx-background-color: rgb(25,201,76);
-}
-
 .suits:hover{
     -fx-scale-x: 1.2;
     -fx-scale-y: 1.2;
+}
+
+.actionButton{
+    -fx-text-fill: #c8b620;
+    -fx-background-color: #051432;
+    -fx-border-radius: 20 20 20 20;
 }

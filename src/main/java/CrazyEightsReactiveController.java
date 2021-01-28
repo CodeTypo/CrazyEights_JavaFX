@@ -14,6 +14,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -72,6 +73,9 @@ public class CrazyEightsReactiveController {
     private ImageView clubsIV;
 
     @FXML
+    private Button passButton;
+
+    @FXML
     private ImageView heartsIV;
 
     @FXML
@@ -99,8 +103,8 @@ public class CrazyEightsReactiveController {
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Preparing the game ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
     public void initSuitSymbolSelector(){
-        suitSymbol.setFitWidth(100);
-        suitSymbol.setFitHeight(100);
+        suitSymbol.setFitWidth(75);
+        suitSymbol.setFitHeight(75);
         suitSymbol.setImage(Suit.SPADES.getSymbol());
 
         clubsIV.setImage(Suit.CLUBS.getSymbol());
@@ -219,6 +223,7 @@ public class CrazyEightsReactiveController {
         if (playerReactive == this.player){ //If the card is going to be added to a player box
             //Then the card front image is being set and an onClick listener method is being added to it making it interactive
             imageView.setOnMouseClicked(event -> onCardClicked(card, imageView));
+            imageView.getStyleClass().add("playerCard");
             imageView.setImage(card.getCardFront());
         } else { //If the box belongs to one of the 3 bot players left
             //Then the card back image is being shown
@@ -253,7 +258,7 @@ public class CrazyEightsReactiveController {
 
     public void initDeckImage(){
         deckImg.setFitWidth(100);                                   //Setting its max width
-        deckImg.setFitHeight(120);                                  //Setting its max height
+        deckImg.setFitHeight(140);                                  //Setting its max height
         deckImg.setImage(CardReactive.getCardBack());  //Filling the imageView with a card back image. An image of deck laying on the table is being set
         //Adding a onclick listener to the card laying on the top of the deck. While clicked, it executes cardDeal()
         deckImg.setOnMouseClicked(event -> {
@@ -272,6 +277,10 @@ public class CrazyEightsReactiveController {
         startButton.setVisible(false);                              //A start button is being hidden
         initDeckImage();
         suitSymbol.setVisible(true);
+        suitSymbol.setRotate(suitSymbol.getRotate() + 180);
+        passButton.setVisible(true);
+        confirmButton.setVisible(true);
+        exitButton.setVisible(true);
     }
 
     @FXML
@@ -298,12 +307,14 @@ public class CrazyEightsReactiveController {
         if (card.isSelected()){
             //unselect card
             imageView.getStyleClass().remove("clicked"); //removes card css class that styles it as selected
+            imageView.getStyleClass().add("playerCard");
             player.unselectCard(card);                      //sets the card boolean "selected" value to false
         } else {
             //select card if it agree with rules
             // only cards of interactive player can be selected
             player.selectCard(card); //Checks if the game rules allow player to select this particular card
             if (card.isSelected()){ //sets the card boolean "selected" value to true if player can select this card
+                imageView.getStyleClass().remove("playerCard");
                 imageView.getStyleClass().add("clicked"); //adds card css class that styles it as selected
             }
 
@@ -391,6 +402,20 @@ public class CrazyEightsReactiveController {
         pileImg.setFitWidth(100); //Setting its max width
         pileImg.setFitHeight(140); //Setting its max height
         suitSymbol.setVisible(false);
+
+
+        Rectangle clip = new Rectangle(
+                suitSymbol.getFitWidth(), suitSymbol.getFitHeight()
+        );
+        clip.setArcWidth(45);
+        clip.setArcHeight(45);
+        suitSymbol.setClip(clip);
+
+        passButton.setVisible(false);
+        confirmButton.setVisible(false);
+        exitButton.setVisible(false);
+        hBoxsOfSuits.setRotate(hBoxsOfSuits.getRotate()+180);
+
 
         gameModel.getPile().addListener((ListChangeListener<? super CardReactive>) c -> {
             System.out.println("Pile changed");

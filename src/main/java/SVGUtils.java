@@ -30,7 +30,7 @@ public class SVGUtils {
         BufferedImageTranscoder transcoder = new BufferedImageTranscoder();
         transcoder.addTranscodingHint(ImageTranscoder.KEY_WIDTH, 100F);
         transcoder.addTranscodingHint(ImageTranscoder.KEY_HEIGHT, 140F);
-        transcoder.addTranscodingHint(ImageTranscoder.KEY_BACKGROUND_COLOR, SVGColor.red);
+        transcoder.addTranscodingHint(ImageTranscoder.KEY_BACKGROUND_COLOR, SVGColor.yellow);
 
         try (InputStream file = SVGUtils.class.getResourceAsStream(path)) {
             TranscoderInput transIn = new TranscoderInput(file);
@@ -55,7 +55,7 @@ public class SVGUtils {
     public static Image getSVGSuitSymbol(Suit suit){
         String path = getSVGCardResourcePath(suit, Denomination.TWO);
 
-        Rectangle aoi = new Rectangle(-50,50,100,100);
+        Rectangle aoi = new Rectangle(-37,62,75,75);
 
         Image image = null;
 
