@@ -136,17 +136,16 @@ public class CrazyEightsReactiveController {
         table.getChildren().add(animationIV);//Adding the image view to the AnchorPane
 
         //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(1),animationIV);
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5),animationIV);
         transition.setFromX(deckImg.getLayoutX());
         transition.setFromY(deckImg.getLayoutY());
 
         Bounds fromBoundsInScene = from.localToScene(from.getBoundsInLocal());
-        System.out.println(fromBoundsInScene);
 
         Bounds boundsInScene = to.localToScene(to.getBoundsInLocal());
-        System.out.println(boundsInScene);
 
-        transition.setToX(700 - boundsInScene.getMinX());
+//        transition.setToX(700 - boundsInScene.getMinX());
+        transition.setToX(boundsInScene.getMinX() - boundsInScene.getWidth());
         transition.setToY(boundsInScene.getMinY()-boundsInScene.getHeight());
 
         transition.play();
@@ -169,13 +168,16 @@ public class CrazyEightsReactiveController {
         table.getChildren().add(animationIV);//Adding the image view to the AnchorPane
 
         Bounds fromBoundsInScene = from.localToScene(from.getBoundsInLocal());
-        System.out.println(fromBoundsInScene);
 
         //A new TranslateTransformation is being created, so far it works only with the interactivePlayer hand, bot support coming soon
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(1),animationIV);
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(0.5),animationIV);
 
-        transition.setFromX(fromBoundsInScene.getMinX());
+//        transition.setFromX(fromBoundsInScene.getMinX());
+//        transition.setFromY(fromBoundsInScene.getMinY()-fromBoundsInScene.getHeight());
+
+        transition.setFromX(fromBoundsInScene.getMinX() - 2*fromBoundsInScene.getWidth());
         transition.setFromY(fromBoundsInScene.getMinY()-fromBoundsInScene.getHeight());
+
 
         transition.setToX(to.getLayoutX());
         transition.setToY(to.getLayoutY());
@@ -407,7 +409,6 @@ public class CrazyEightsReactiveController {
         });
 
         gameModel.getStock().addListener((ListChangeListener<? super CardReactive>) c -> {
-            System.out.println("Stock changed");
             while (c.next()){
                 if (c.wasRemoved()){
                     if (c.getList().size()==0){
