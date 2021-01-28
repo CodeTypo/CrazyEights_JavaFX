@@ -1,18 +1,38 @@
 .myDialog{
-    -fx-background-color: #c86900;
+    -fx-background-color: #a59c31;
+    -fx-border-color: #3b3939;
+    -fx-border-width: 20px;
 }
 .myDialog > *.button-bar > *.container{
-    -fx-background-color: #c86900;
+    -fx-background-color: #a59c31;
 }
 .myDialog > *.label.content{
     -fx-font-size: 18px;
     -fx-font-weight: bold;
+    -fx-background-color: #a59c31;
+    -fx-text-fill:white;
 }
-/*.myDialog *.header-panel{*/
-/*    -fx-background-color: #a59c31;*/
-/*}*/
-/*.myDialog *.header-panel *.label{*/
-/*    -fx-font-size: 18px;*/
-/*    -fx-font-style: italic;*/
-/*    -fx-fill: #292929;*/
-/*}*/
+
+.myDialog > *.header-panel{
+    -fx-background-color: #a59c31;
+}
+.myDialog > *.header-panel *.label{
+    -fx-font-size: 18px;
+    -fx-font-style: italic;
+    -fx-fill: #292929;
+}
+
+/**Costumization of Buttons**/
+.myDialog > .button{
+    -fx-background-color:black;
+    -fx-text-fill:white;
+    -fx-wrap-text: true;
+    -fx-effect: dropshadow( three-pass-box, yellow, 10.0, 0.0, 0.0, 0.0);
+    -fx-cursor:hand;
+}
+
+.myDialog > .button:hover{
+    -fx-background-color:white;
+    -fx-text-fill:black;
+    -fx-font-weight:bold;
+}

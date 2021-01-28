@@ -503,7 +503,13 @@ public class CrazyEightsReactiveController {
                             // legacy.Player is winner
                             // create a alert
                             Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setContentText(bot + " is winner");
+                            DialogPane dialogPane = alert.getDialogPane();
+                            dialogPane.setHeader(null);
+                            dialogPane.getStylesheets().add(
+                                    getClass().getResource("myDialog.css").toExternalForm());
+                            dialogPane.getStyleClass().add("myDialog");
+                            alert.setContentText("Johnny is the winner!" );
+
                             alert.show();
                         }
 
@@ -541,11 +547,8 @@ public class CrazyEightsReactiveController {
                         dialogPane.getStylesheets().add(
                                 getClass().getResource("myDialog.css").toExternalForm());
                         dialogPane.getStyleClass().add("myDialog");
-                        if (player instanceof InteractivePlayerReactive) {
-                            alert.setContentText("You are the winner!" );
-                        } else {
-                            alert.setContentText("Johnny is the winner!" );
-                        }
+                        alert.setContentText("You are the winner!" );
+
 
                         alert.show();
                     }
