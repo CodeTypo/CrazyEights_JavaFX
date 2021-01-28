@@ -146,7 +146,8 @@ public class CrazyEightsReactiveController {
         Bounds boundsInScene = to.localToScene(to.getBoundsInLocal());
         System.out.println(boundsInScene);
 
-        transition.setToX(700 - boundsInScene.getMinX());
+//        transition.setToX(700 - boundsInScene.getMinX());
+        transition.setToX(boundsInScene.getMinX() - boundsInScene.getWidth());
         transition.setToY(boundsInScene.getMinY()-boundsInScene.getHeight());
 
         transition.play();
