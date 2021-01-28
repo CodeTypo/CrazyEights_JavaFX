@@ -39,12 +39,12 @@ public class BotPlayerReactive extends PlayerReactive{
             if (card.getDenomination() == Denomination.EIGHT){
                 // botPlayer plays always all crazy eights in its collection at once
                 selectCard(card);
+                selectSuit(Suit.DIAMONDS);
                 selected = true;
             }
         }
         // pick suit at random
 //        selectSuit(Suit.values()[ThreadLocalRandom.current().nextInt(0, Suit.values().length)]);
-        selectSuit(Suit.DIAMONDS);
 
         return selected;
     }

@@ -279,6 +279,9 @@ public class GameModelReactive {
     }
 
     public Suit getSuit() {
+        if (suit.get() == null) {
+            return Suit.HEARTS;
+        }
         return suit.get();
     }
 
