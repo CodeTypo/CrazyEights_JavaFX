@@ -11,22 +11,22 @@ class GameModelReactiveTest {
 
     @Test
     void prepareCardDeck_ShouldSetAllCardsInDeck() {
-        // Arrange
+        //Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
         Set<CardReactive> cardSet = new HashSet<>();
 
-        // Act
+        //Act
         gameModelReactive.prepareCardDeck();
         cardSet.addAll(gameModelReactive.getStock());
         int actual = cardSet.size();
 
-        // Assert
+        //Assert
         assertEquals(52, actual);
     }
 
     @Test
     void prepareBots_ShouldCreateThreeBotPlayer(){
-        // Arrange
+        //Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
         List<BotPlayerReactive> botPlayerReactiveList = gameModelReactive.getBotPlayers();
 
@@ -40,99 +40,102 @@ class GameModelReactiveTest {
 
     @Test
     void drawDealer_ShouldSetPlayerWhoStartsGameRandomly(){
-        // Arrange
+        //Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
         gameModelReactive.prepareBots();
         gameModelReactive.getInteractivePlayer();
 
-        // Act
+        //Act
         gameModelReactive.drawDealer();
         boolean actual = (gameModelReactive.getTurnPlayer() instanceof PlayerReactive);
 
-        // Assert
+        //Assert
         assertTrue(actual);
     }
 
     @Test
     void nextPlayerTurn_WhenTurnPlayerIsLastOne_ShouldBeInteractivePlayerTurn(){
-        // Arrange
+        //Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
         gameModelReactive.init();
         List<BotPlayerReactive> botPlayerReactiveList = gameModelReactive.getBotPlayers();
         gameModelReactive.setTurnPlayer(botPlayerReactiveList.get(2));
 
-        // Act
+        //Act
         gameModelReactive.nextPlayerTurn();
         boolean actual = (gameModelReactive.getTurnPlayer() instanceof  InteractivePlayerReactive);
 
-        // Assert
+        //Assert
         assertTrue(actual);
     }
 
     @Test
     void nextPlayerTurn_WhenTurnPlayerIsFirstOne_ShouldBeBotPlayerTurn(){
-        // Arrange
+        //Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
         gameModelReactive.init();
         gameModelReactive.setTurnPlayer(new InteractivePlayerReactive());
 
-        // Act
+        //Act
         gameModelReactive.nextPlayerTurn();
         boolean actual = (gameModelReactive.getTurnPlayer() instanceof  BotPlayerReactive);
 
-        // Assert
+        //Assert
         assertTrue(actual);
     }
 
     @Test
     void nextPlayerTurn_WhenTurnPlayerIsSecondOne_ShouldBeBotPlayerTurn(){
-        // Arrange
+        //Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
         gameModelReactive.init();
         List<BotPlayerReactive> botPlayerReactiveList = gameModelReactive.getBotPlayers();
         gameModelReactive.setTurnPlayer(botPlayerReactiveList.get(0));
 
-        // Act
+        //Act
         gameModelReactive.nextPlayerTurn();
         boolean actual = (gameModelReactive.getTurnPlayer() instanceof  BotPlayerReactive);
 
-        // Assert
+        //Assert
         assertTrue(actual);
     }
 
     @Test
     void nextPlayerTurn_WhenTurnPlayerIsThirdOne_ShouldBeBotPlayerTurn(){
-        // Arrange
+        //Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
         gameModelReactive.init();
         List<BotPlayerReactive> botPlayerReactiveList = gameModelReactive.getBotPlayers();
         gameModelReactive.setTurnPlayer(botPlayerReactiveList.get(1));
 
-        // Act
+        //Act
         gameModelReactive.nextPlayerTurn();
         boolean actual = (gameModelReactive.getTurnPlayer() instanceof  BotPlayerReactive);
 
-        // Assert
+        //Assert
         assertTrue(actual);
     }
 
     @Test
     void beginTheDeal_ShouldSetPlayersEightCards() {
-        // Arrange
+        //Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
         gameModelReactive.init();
 
-        // Act
+        //Act
         gameModelReactive.beginTheDeal();
+        int numberOfInteractivePlayerCards = gameModelReactive.getInteractivePlayer().getCards().size();
 
-        // Assert
+        //Assert
         for(BotPlayerReactive players : gameModelReactive.getBotPlayers())
             assertEquals(8, players.getCards().size());
+
+        assertEquals(8,numberOfInteractivePlayerCards);
     }
 
     @Test
     void putStarterOnPile_ShouldSetFirstFiveCardsOnThePileOtherThanEight() {
-        // Arrange
+        //Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
         ObservableList<CardReactive> stock;
         gameModelReactive.prepareCardDeck();
@@ -142,14 +145,14 @@ class GameModelReactiveTest {
         stock = gameModelReactive.getStock();
         int stockSize = stock.size();
 
-        // Assert
+        //Assert
         for(int i=1; i<=5; i++)
             assertNotEquals(Denomination.EIGHT, stock.get(stockSize-i).getDenomination());
     }
 
     @Test
     void playCards_WhenTurnPlayerSelectEight_ShouldReturnTrue(){
-        // Arrange
+        //Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
         gameModelReactive.init();
         gameModelReactive.putStarterOnPile();
@@ -157,17 +160,16 @@ class GameModelReactiveTest {
         PlayerReactive turnPlayer = gameModelReactive.getTurnPlayer();
         turnPlayer.selectCard(new CardReactive(Suit.SPADES,Denomination.EIGHT));
 
-        // Act
+        //Act
         boolean actual = gameModelReactive.playCards();
 
-
-        // Assert
+        //Assert
         assertTrue(actual);
     }
 
     @Test
     void playCards_WhenTurnPlayerSelectOtherCardThanEight_ShouldReturnFalse(){
-        // Arrange
+        //Arrange
         GameModelReactive gameModelReactive = new GameModelReactive();
         gameModelReactive.init();
         gameModelReactive.putStarterOnPile();
@@ -175,11 +177,10 @@ class GameModelReactiveTest {
         PlayerReactive turnPlayer = gameModelReactive.getTurnPlayer();
         turnPlayer.selectCard(new CardReactive(Suit.SPADES,Denomination.TWO));
 
-        // Act
+        //Act
         boolean actual = gameModelReactive.playCards();
 
-
-        // Assert
+        //Assert
         assertFalse(actual);
     }
 }
