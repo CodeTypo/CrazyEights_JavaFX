@@ -36,8 +36,6 @@ public abstract class PlayerReactive {
             selectedCards.add(card);
 
         }
-
-
     }
 
     public ObservableList<CardReactive> getCards() {
