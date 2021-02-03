@@ -1,3 +1,11 @@
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+/**
+ * This enum represents denomination of the card.
+ */
+@Getter
+@AllArgsConstructor
 public enum Denomination {
     TWO("2"),
     THREE("3"),
@@ -14,12 +22,4 @@ public enum Denomination {
     ACE("A");
 
     private String s;
-
-    Denomination(String s) {
-        this.s = s;
-    }
-
-    public String getS() {
-        return this.s;
-    }
 }

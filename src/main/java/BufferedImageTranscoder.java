@@ -1,4 +1,3 @@
-import org.apache.batik.transcoder.TranscoderException;
 import org.apache.batik.transcoder.TranscoderOutput;
 import org.apache.batik.transcoder.image.ImageTranscoder;
 
@@ -14,7 +13,7 @@ public class BufferedImageTranscoder extends ImageTranscoder {
     }
 
     @Override
-    public void writeImage(BufferedImage img, TranscoderOutput to) throws TranscoderException {
+    public void writeImage(BufferedImage img, TranscoderOutput to) {
         this.img = img;
     }
 

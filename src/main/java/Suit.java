@@ -2,6 +2,9 @@ import javafx.scene.image.Image;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * This enum represents suit of the card.
+ */
 @Getter
 @AllArgsConstructor
 public enum Suit {
@@ -11,10 +14,6 @@ public enum Suit {
     SPADES("S");
 
     private String s;
-
-    public String getS() {
-        return s;
-    }
 
     public Image getSymbol() {
         return SVGUtils.getSymbol(this);
