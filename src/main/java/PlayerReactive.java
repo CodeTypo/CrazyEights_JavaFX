@@ -55,6 +55,10 @@ public abstract class PlayerReactive {
         card.setSelected(false);
     }
 
+    /**
+     *
+     * @param card represents the card to deal
+     */
     public void dealCard(CardReactive card) {
         cards.add(card);
     }

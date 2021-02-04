@@ -95,7 +95,9 @@ public class CrazyEightsReactiveController {
      */
     InteractivePlayerReactive player;
 
-    // Map player hands to panes
+    /**
+     * Map player hands to panes
+     */
     Map<PlayerReactive, Pane> hands = new HashMap<>();
 
     public CrazyEightsReactiveController() {
@@ -105,6 +107,9 @@ public class CrazyEightsReactiveController {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Preparing the game ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    /**
+     * Prepares a suit selector
+     */
     public void initSuitSymbolSelector() {
         suitSymbol.setFitWidth(75);
         suitSymbol.setFitHeight(75);
@@ -116,6 +121,11 @@ public class CrazyEightsReactiveController {
         spadesIV.setImage(Suit.SPADES.getSymbol());
     }
 
+    /**
+     * adds a card to hand
+     * @param card represents the card the player wants to add
+     * @param playerReactive represents the player who want to take the card
+     */
     public void addCardToHand(CardReactive card, PlayerReactive playerReactive) {
         Pane pane = hands.get(playerReactive);
         ImageView imageView = createCardView(card, pane);
@@ -125,6 +135,11 @@ public class CrazyEightsReactiveController {
     }
 
 
+    /**
+     * removes the card from hand
+     * @param card represents the card the player wants to remove
+     * @param playerReactive represents the player who want to remove the card
+     */
     public void removeCardFromHand(CardReactive card, PlayerReactive playerReactive) {
         Pane pane = hands.get(playerReactive);
         FilteredList<Node> toRemove = pane.getChildren().filtered(node -> node.getId().equals(card.getId()));
@@ -135,6 +150,11 @@ public class CrazyEightsReactiveController {
         pane.getChildren().remove(toRemove.get(0));
     }
 
+    /**
+     * Called to animate when a card is added to hand
+     * @param from the Node FROM which the card will be animated
+     * @param to the Node where the card will be
+     */
     private void animateCardDeal(Node from, Node to) {
         to.setVisible(false);
         ImageView animationIV = new ImageView();
@@ -157,6 +177,11 @@ public class CrazyEightsReactiveController {
         });
     }
 
+    /**
+     * Called to animate when a card is removed from hand
+     * @param from the Node FROM which the card will be animated
+     * @param to the Node where the card will be
+     */
     private void animateCardRemove(Node from, Node to) {
         ImageView animationIV = new ImageView();
 
@@ -179,6 +204,12 @@ public class CrazyEightsReactiveController {
 
     }
 
+    /**
+     * Creates a ImageView for every card we want to show
+     * @param card represents the card to show
+     * @param pane represents the pane where the card should be
+     * @return the ImageView of the card
+     */
     public ImageView createCardView(CardReactive card, Pane pane) {
         ImageView imageView = new ImageView();
 
@@ -197,6 +228,13 @@ public class CrazyEightsReactiveController {
         return imageView;
     }
 
+    /**
+     * We want to see the front of our cards and the back of bot cards
+     * @param card represents card we want to show / don't want to show
+     * @param imageView represents the place where the card will be showed
+     * @param playerReactive represents the playerReactive
+     *
+     */
     public void setupCardView(CardReactive card, ImageView imageView, PlayerReactive playerReactive) {
         if (playerReactive == this.player) {
             imageView.setOnMouseClicked(event -> onCardClicked(card, imageView));
@@ -229,6 +267,9 @@ public class CrazyEightsReactiveController {
         });
     }
 
+    /**
+     * Prepares the deck
+     */
     public void initDeckImage() {
         deckImg.setFitWidth(100);
         deckImg.setFitHeight(140);
@@ -241,6 +282,9 @@ public class CrazyEightsReactiveController {
         });
     }
 
+    /**
+     * after pressed start, cards are added to the hand of each player
+     */
     public void onStartClick() {
         addCardsToHands();
         gameModel.putStarterOnPile();
@@ -254,6 +298,10 @@ public class CrazyEightsReactiveController {
         exitButton.setVisible(true);
     }
 
+    /**
+     * When player puts EIGHT on the table he must to select a suit
+     * @param event used for get source of which suit was selected
+     */
     @FXML
     void onSelectSuitClick(Event event) {
         ImageView object = (ImageView) event.getSource();
@@ -272,6 +320,11 @@ public class CrazyEightsReactiveController {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Handling interactions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    /**
+     * if a player clicks on a card, it is selected and added to his selected cards
+     * @param card represents the clicked card
+     * @param imageView represents the imageView of this card
+     */
     private void onCardClicked(CardReactive card, ImageView imageView) {
         if (card.isSelected()) {
             imageView.getStyleClass().remove("clicked");
@@ -288,11 +341,18 @@ public class CrazyEightsReactiveController {
         System.out.println(card.toString() + " selected: " + card.isSelected());
     }
 
+
+    /**
+     * is used to get the top card from the stock
+     */
     private void onCardDealt() {
         player.dealCard(gameModel.takeTopCardFromStock());
     }
 
-
+    /**
+     * when a player clicked the confirm button the selected cards are added to the stock
+     * if the list of selected cards is empty, an alert is shown
+     */
     @FXML
     void onConfirmedClicked(ActionEvent event) {
         if (gameModel.getInteractivePlayer().getSelectedCards().size() == 0) {
@@ -304,6 +364,9 @@ public class CrazyEightsReactiveController {
         }
     }
 
+    /**
+     * when a player clicked the pass button the turn is passed on to the next player
+     */
     @FXML
     void onPassClicked(ActionEvent event) {
         gameModel.nextPlayerTurn();
@@ -311,6 +374,10 @@ public class CrazyEightsReactiveController {
 
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ /Handling interactions ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+    /**
+     * the whole game is prepared here
+     * the listeners are added
+     */
     @FXML
     void initialize() {
 
@@ -469,6 +536,9 @@ public class CrazyEightsReactiveController {
         gameModel.setTurnPlayer(this.player);
     }
 
+    /**
+     * when the player clicked exit button the the game window is closed
+     */
     public void onExitClicked(ActionEvent actionEvent) {
         Stage stage = (Stage) exitButton.getScene().getWindow();
         stage.close();
