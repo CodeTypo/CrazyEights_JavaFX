@@ -17,8 +17,8 @@ First round
 Interactive card selecting
 ![image](https://user-images.githubusercontent.com/61741336/123695110-749c7900-d85a-11eb-9e0f-f92489c9599b.png)
 
-A freeze-frame of bots playing their cards (animations look much better than this screenshot)
-![image](https://user-images.githubusercontent.com/61741336/123695391-c93ff400-d85a-11eb-85f3-1e9556b2f86f.png)
+A gif of a few in-game rounds played
+![Animation2](https://user-images.githubusercontent.com/61741336/123698627-ad3e5180-d85e-11eb-9792-d4545ce156cc.gif)
 
 # UML diagram
 
